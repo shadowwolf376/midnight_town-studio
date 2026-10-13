@@ -293,3 +293,299 @@ load();
 </script>
 </body>
 </html>
+
+
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Town Studio</title>
+    <style>
+        :root {
+            --bg-main: #0f0c1b;
+            --bg-header: rgba(15, 12, 27, 0.9);
+            --bg-message: rgba(30, 27, 75, 0.8);
+            --bg-input: rgba(0, 0, 0, 0.3);
+            --text-main: #e2e8f0;
+            --accent: #7c3aed;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="starlight"] {
+            --bg-main: #0f172a;
+            --bg-header: rgba(15, 23, 42, 0.9);
+            --bg-message: rgba(30, 41, 59, 0.8);
+            --bg-input: rgba(15, 23, 42, 0.5);
+            --text-main: #f8fafc;
+            --accent: #3b82f6;
+            --border: rgba(255, 255, 255, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #121212;
+            --bg-header: rgba(18, 18, 18, 0.95);
+            --bg-message: rgba(30, 30, 30, 0.9);
+            --bg-input: rgba(0, 0, 0, 0.5);
+            --text-main: #ffffff;
+            --accent: #10b981;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-header);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .character-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #9333ea);
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        select, button {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-main);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button.primary {
+            background: var(--accent);
+            border: none;
+            font-weight: bold;
+        }
+
+        .chat-container {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: var(--bg-message);
+            border: 1px solid var(--border);
+            line-height: 1.5;
+        }
+
+        .input-bar {
+            padding: 16px;
+            background: var(--bg-header);
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-main);
+            outline: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: var(--bg-header);
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-main);
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="character-info">
+            <div class="avatar" id="headerAvatar"></div>
+            <div>
+                <div style="font-weight: bold;" id="charNameDisplay">Aira</div>
+                <div style="font-size: 12px; opacity: 0.7;" id="charDescDisplay">Archivist of the Lost Starlight</div>
+            </div>
+        </div>
+        <div class="toolbar">
+            <select id="themeSelector" onchange="changeTheme(this.value)">
+                <option value="midnight">Midnight</option>
+                <option value="starlight">Starlight</option>
+                <option value="dark">Pure Dark</option>
+            </select>
+            <button onclick="openPersonaModal()">+ Persona</button>
+            <button onclick="exportChat('json')">Export JSON</button>
+            <button onclick="exportChat('md')">Export MD</button>
+        </div>
+    </header>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="message">
+            Greetings, traveler of flesh and bone. Step into the candlelight.
+        </div>
+    </div>
+
+    <div class="input-bar">
+        <input type="text" id="userInput" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        <button class="primary" onclick="sendMessage()">Send</button>
+    </div>
+
+    <!-- Custom Persona Creator Modal -->
+    <div class="modal" id="personaModal">
+        <div class="modal-content">
+            <h3>Create Custom Persona</h3>
+            <input type="text" id="newPersonaName" placeholder="Character Name">
+            <input type="text" id="newPersonaTitle" placeholder="Short Title / Role">
+            <textarea id="newPersonaGreeting" placeholder="First greeting message..." rows="3"></textarea>
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+                <button onclick="closePersonaModal()">Cancel</button>
+                <button class="primary" onclick="savePersona()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPersona = {
+            name: "Aira",
+            title: "Archivist of the Lost Starlight",
+            greeting: "Greetings, traveler of flesh and bone. Step into the candlelight."
+        };
+
+        let messages = [
+            { sender: "Aira", text: "Greetings, traveler of flesh and bone. Step into the candlelight." }
+        ];
+
+        function changeTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        function openPersonaModal() {
+            document.getElementById('personaModal').style.display = 'flex';
+        }
+
+        function closePersonaModal() {
+            document.getElementById('personaModal').style.display = 'none';
+        }
+
+        function savePersona() {
+            const name = document.getElementById('newPersonaName').value;
+            const title = document.getElementById('newPersonaTitle').value;
+            const greeting = document.getElementById('newPersonaGreeting').value;
+
+            if(!name) return alert("Please enter a character name!");
+
+            currentPersona = { name, title, greeting };
+            document.getElementById('charNameDisplay').innerText = name;
+            document.getElementById('charDescDisplay').innerText = title || 'Custom Character';
+
+            messages = [{ sender: name, text: greeting || "Hello!" }];
+            renderChat();
+            closePersonaModal();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if(!text) return;
+
+            messages.push({ sender: "You", text: text });
+            input.value = "";
+            renderChat();
+
+            // Simulate bot reply
+            setTimeout(() => {
+                messages.push({ sender: currentPersona.name, text: `I hear you talking about "${text}". Tell me more.` });
+                renderChat();
+            }, 1000);
+        }
+
+        function renderChat() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = messages.map(m => `
+                <div class="message" style="${m.sender === 'You' ? 'margin-left: auto; background: var(--accent); color: white;' : ''}">
+                    <strong>${m.sender}:</strong> ${m.text}
+                </div>
+            `).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function exportChat(format) {
+            let dataStr, filename;
+            if (format === 'json') {
+                dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(messages, null, 2));
+                filename = "chat-export.json";
+            } else {
+                let mdContent = messages.map(m => `**${m.sender}**: ${m.text}\n`).join('\n');
+                dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(mdContent);
+                filename = "chat-export.md";
+            }
+            let downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", filename);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+    </script>
+</body>
+</html>
+
