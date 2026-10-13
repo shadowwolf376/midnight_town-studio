@@ -6,172 +6,316 @@
     <title>Midnight Town Studio</title>
     <style>
         :root {
-            --bg-main: #0c0a14;
-            --bg-header: rgba(15, 12, 27, 0.95);
-            --bg-card: rgba(25, 20, 45, 0.85);
-            --text-main: #e2e8f0;
-            --accent: #7c3aed;
-            --border: rgba(255, 255, 255, 0.12);
-        }
-
-        [data-theme="starlight"] {
-            --bg-main: #0b1329;
-            --bg-header: rgba(15, 23, 42, 0.95);
-            --bg-card: rgba(30, 41, 59, 0.85);
-            --text-main: #f8fafc;
-            --accent: #3b82f6;
-            --border: rgba(255, 255, 255, 0.15);
-        }
-
-        [data-theme="dark"] {
-            --bg-main: #080808;
-            --bg-header: rgba(18, 18, 18, 0.95);
-            --bg-card: rgba(30, 30, 30, 0.85);
-            --text-main: #ffffff;
-            --accent: #10b981;
+            --bg-main: #0a0812;
+            --bg-card: rgba(22, 18, 38, 0.9);
+            --bg-nav: rgba(15, 12, 27, 0.95);
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --accent: #8b5cf6;
             --border: rgba(255, 255, 255, 0.1);
         }
 
-        * { box-sizing: border-box; }
-
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body {
             background-color: var(--bg-main);
             color: var(--text-main);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            flex-direction: column;
             height: 100vh;
             height: 100dvh;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
 
-        header {
-            padding: 10px;
-            background: var(--bg-header);
+        /* Top Brand Header */
+        .brand-header {
+            padding: 12px 16px;
+            background: var(--bg-nav);
             border-bottom: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
 
-        .character-info {
+        .logo-text {
+            font-weight: 800;
+            font-size: 18px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
         }
 
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), #9333ea);
+        /* Main View Container */
+        .view-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 70px;
         }
 
-        .nav-buttons {
+        /* Hero Banner */
+        .hero-banner {
+            position: relative;
+            margin: 12px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(10,8,18,0.95) 100%), 
+                        url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80') center/cover;
+            padding: 24px 16px 16px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            justify-content: flex-end;
+            flex-direction: column;
+            gap: 8px;
+            border: 1px solid var(--border);
         }
 
-        .nav-buttons button, .toolbar button, .toolbar select {
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            font-size: 11px;
+        .hero-title {
+            font-size: 20px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .hero-desc {
+            font-size: 12px;
+            color: var(--text-sub);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 13px;
             cursor: pointer;
         }
 
-        .toolbar {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .dropdown-bar {
-            width: 100%;
-            padding: 6px 10px;
-            border-radius: 6px;
+        .btn-secondary {
+            background: rgba(255,255,255,0.15);
+            color: #ffffff;
             border: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.4);
-            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
             font-size: 13px;
-            outline: none;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
         }
 
-        .chat-container {
+        /* Section Headlines */
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            padding: 12px 16px 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Card Horizontal / Grid Containers */
+        .card-grid {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 6px 16px 12px;
+            scrollbar-width: none;
+        }
+        .card-grid::-webkit-scrollbar { display: none; }
+
+        .bot-card {
+            min-width: 150px;
+            width: 150px;
+            height: 200px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 10px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+        .bot-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(10,8,18,0.95) 100%);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-name {
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-creator {
+            font-size: 10px;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+
+        .card-desc {
+            font-size: 10px;
+            color: #cbd5e1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+
+        /* Bottom Fixed Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            height: 60px;
+            background: var(--bg-nav);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 50;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: var(--text-sub);
+            font-size: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        /* Chat View Overlay */
+        .chat-view {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-main);
+            z-index: 80;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 10px 14px;
+            background: var(--bg-nav);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-body {
             flex: 1;
             padding: 12px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            background: radial-gradient(circle at top, rgba(124, 58, 237, 0.15), transparent 70%), var(--bg-main);
+            background: radial-gradient(circle at top, rgba(139, 92, 246, 0.15), transparent 70%), var(--bg-main);
         }
 
-        .message-box {
+        .msg-box {
             max-width: 85%;
             padding: 10px 14px;
-            border-radius: 10px;
+            border-radius: 12px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            line-height: 1.4;
             font-size: 14px;
+            line-height: 1.4;
         }
 
-        .input-bar {
+        .chat-input-bar {
             padding: 10px;
-            background: var(--bg-header);
+            background: var(--bg-nav);
+            border-top: 1px solid var(--border);
             display: flex;
             gap: 8px;
-            border-top: 1px solid var(--border);
-            flex-shrink: 0;
         }
 
-        input[type="text"] {
+        .chat-input-bar input {
             flex: 1;
             padding: 10px;
             border-radius: 8px;
             border: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0,0,0,0.4);
             color: var(--text-main);
             outline: none;
-            font-size: 14px;
         }
 
-        .send-btn {
+        .chat-input-bar button {
             padding: 10px 16px;
             border-radius: 8px;
             border: none;
-            background: #8b5cf6;
+            background: var(--accent);
             color: white;
             font-weight: bold;
-            font-size: 14px;
             cursor: pointer;
         }
 
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0,0,0,0.8);
             justify-content: center;
             align-items: center;
             z-index: 100;
         }
         .modal-content {
-            background: var(--bg-header);
+            background: var(--bg-nav);
             padding: 20px;
             border-radius: 12px;
             width: 85%;
@@ -186,156 +330,170 @@
             padding: 8px;
             border-radius: 6px;
             border: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0,0,0,0.3);
             color: var(--text-main);
             box-sizing: border-box;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-top">
-            <div class="character-info">
-                <div class="avatar" id="headerAvatar"></div>
-                <div>
-                    <div style="font-weight: bold; font-size: 14px;" id="charNameDisplay">Aira</div>
-                    <div style="font-size: 11px; opacity: 0.7;" id="charDescDisplay">Archivist of the Lost Starlight</div>
-                </div>
-            </div>
-            <div class="nav-buttons">
-                <button onclick="openPersonaModal()">+ Create Bot</button>
-                <button>Settings</button>
-                <button onclick="resetChat()">Reset</button>
-            </div>
-        </div>
 
-        <!-- Bot Selector Dropdown -->
-        <select class="dropdown-bar" id="botSelector" onchange="switchBot(this.value)">
-            <option value="aira">Aira - Archivist of the Lost Starlight</option>
-            <option value="kael">Kael - Rogue Cyberpunk Hacker</option>
-            <option value="luna">Luna - Celestial Oracle</option>
-        </select>
-
-        <div class="toolbar">
-            <select id="themeSelector" onchange="changeTheme(this.value)">
-                <option value="midnight">Midnight</option>
-                <option value="starlight">Starlight</option>
-                <option value="dark">Pure Dark</option>
-            </select>
-            <button onclick="openPersonaModal()">+ Persona</button>
-            <button onclick="exportChat('json')">Export JSON</button>
-            <button onclick="exportChat('md')">Export MD</button>
-        </div>
-    </header>
-
-    <div class="chat-container" id="chatContainer"></div>
-
-    <div class="input-bar">
-        <input type="text" id="userInput" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
-        <button class="send-btn" onclick="sendMessage()">Send</button>
+    <!-- Top Brand Header -->
+    <div class="brand-header">
+        <div class="logo-text">⚡ MidnightLab</div>
+        <button onclick="openModal()" style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;">+ Create</button>
     </div>
 
-    <!-- Custom Bot Creator Modal -->
-    <div class="modal" id="personaModal">
+    <!-- Main View / Feed -->
+    <div class="view-container">
+        
+        <!-- Featured Hero Banner -->
+        <div class="hero-banner">
+            <div style="font-size: 10px; font-weight: bold; color: var(--accent); text-transform: uppercase;">Featured Scenario</div>
+            <div class="hero-title" id="heroTitle">The Lost Archivist</div>
+            <div class="hero-desc" id="heroDesc">Step into the candlelight of the lost starlight archive and unearth forgotten realms.</div>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="startChat('aira')">💬 Start Chat</button>
+                <button class="btn-secondary">ℹ️ Details</button>
+            </div>
+        </div>
+
+        <!-- Trending Scenarios Section -->
+        <div class="section-title">🔥 Trending Scenarios</div>
+        <div class="card-grid" id="trendingGrid"></div>
+
+        <!-- Community Choice Section -->
+        <div class="section-title">⭐ Community's Choice</div>
+        <div class="card-grid" id="communityGrid"></div>
+
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <span class="nav-icon">🟧</span>
+            <span>Home</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">🔍</span>
+            <span>Search</span>
+        </div>
+        <div class="nav-item" onclick="openModal()">
+            <span class="nav-icon">➕</span>
+            <span>Create</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">💬</span>
+            <span>Chats</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </div>
+    </div>
+
+    <!-- Full Chat Room Overlay -->
+    <div class="chat-view" id="chatView">
+        <div class="chat-header">
+            <button class="back-btn" onclick="closeChat()">←</button>
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent);" id="chatAvatar"></div>
+            <div>
+                <div style="font-weight: bold; font-size: 14px;" id="chatName">Aira</div>
+                <div style="font-size: 10px; opacity: 0.7;" id="chatTitle">Archivist of the Lost Starlight</div>
+            </div>
+        </div>
+
+        <div class="chat-body" id="chatMessages"></div>
+
+        <div class="chat-input-bar">
+            <input type="text" id="userInput" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Create Custom Bot Modal -->
+    <div class="modal" id="createModal">
         <div class="modal-content">
-            <h3>Create Custom Bot</h3>
-            <input type="text" id="newPersonaName" placeholder="Bot Name (e.g., Orion)">
-            <input type="text" id="newPersonaTitle" placeholder="Title/Role (e.g., Space Explorer)">
-            <textarea id="newPersonaGreeting" placeholder="First greeting message..." rows="3"></textarea>
+            <h3>Create New Persona</h3>
+            <input type="text" id="newName" placeholder="Character Name">
+            <input type="text" id="newTitle" placeholder="Short Role / Title">
+            <input type="text" id="newImage" placeholder="Image URL (optional)">
+            <textarea id="newGreeting" placeholder="First greeting..." rows="3"></textarea>
             <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                <button onclick="closePersonaModal()">Cancel</button>
-                <button style="background: var(--accent); color: white;" onclick="savePersona()">Save Bot</button>
+                <button onclick="closeModal()" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: white;">Cancel</button>
+                <button onclick="saveBot()" style="padding: 6px 12px; border-radius: 6px; border: none; background: var(--accent); color: white; font-weight: bold;">Create</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Preset Bots Database
+        // Bot Database
         let bots = {
             "aira": {
                 name: "Aira",
-                title: "Archivist of the Lost Starlight",
+                title: "Archivist of Starlight",
+                creator: "@Studio",
+                desc: "Step into the candlelight of the starlight archive.",
                 greeting: "Greetings, traveler of flesh and bone. Step into the candlelight.",
-                color: "linear-gradient(135deg, #7c3aed, #9333ea)"
+                image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80"
             },
             "kael": {
-                name: "Kael",
-                title: "Rogue Cyberpunk Hacker",
-                greeting: "System online. Keep it brief, kid—the net is crawling with corps tonight.",
-                color: "linear-gradient(135deg, #06b6d4, #3b82f6)"
+                name: "Westwood Academy: Kael",
+                title: "Cyberpunk Hacker",
+                creator: "@Dante",
+                desc: "Arrives at a rundown boarding school known for unruly students.",
+                greeting: "System online. Keep it brief—the net is crawling with corps tonight.",
+                image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=400&q=80"
             },
             "luna": {
-                name: "Luna",
-                title: "Celestial Oracle",
-                greeting: "The stars align in your favor. What secrets do you seek from the cosmos?",
-                color: "linear-gradient(135deg, #ec4899, #8b5cf6)"
+                name: "Luna Oracle",
+                title: "Celestial Mystic",
+                creator: "@StarGazer",
+                desc: "The stars align. Discover secrets kept hidden in the cosmos.",
+                greeting: "The stars align in your favor. What secrets do you seek?",
+                image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80"
             }
         };
 
-        let currentBotKey = "aira";
+        let activeBotKey = "aira";
         let messages = [];
 
-        function initBot(botKey) {
-            currentBotKey = botKey;
-            const bot = bots[botKey];
-            document.getElementById('charNameDisplay').innerText = bot.name;
-            document.getElementById('charDescDisplay').innerText = bot.title;
-            document.getElementById('headerAvatar').style.background = bot.color;
-            messages = [{ sender: bot.name, text: bot.greeting }];
-            renderChat();
+        function renderGrids() {
+            const trending = document.getElementById('trendingGrid');
+            const community = document.getElementById('communityGrid');
+            
+            let html = '';
+            for (let key in bots) {
+                const b = bots[key];
+                html += `
+                    <div class="bot-card" style="background-image: url('${b.image}');" onclick="startChat('${key}')">
+                        <div class="card-content">
+                            <div class="card-name">${b.name}</div>
+                            <div class="card-creator">By ${b.creator}</div>
+                            <div class="card-desc">${b.desc}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            trending.innerHTML = html;
+            community.innerHTML = html;
         }
 
-        function switchBot(botKey) {
-            initBot(botKey);
+        function startChat(key) {
+            activeBotKey = key;
+            const b = bots[key];
+            document.getElementById('chatName').innerText = b.name;
+            document.getElementById('chatTitle').innerText = b.title;
+            document.getElementById('chatAvatar').style.backgroundImage = `url('${b.image}')`;
+            document.getElementById('chatAvatar').style.backgroundSize = 'cover';
+            
+            messages = [{ sender: b.name, text: b.greeting }];
+            renderMessages();
+            document.getElementById('chatView').style.display = 'flex';
         }
 
-        function resetChat() {
-            initBot(currentBotKey);
-        }
-
-        function changeTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-        }
-
-        function openPersonaModal() {
-            document.getElementById('personaModal').style.display = 'flex';
-        }
-
-        function closePersonaModal() {
-            document.getElementById('personaModal').style.display = 'none';
-        }
-
-        function savePersona() {
-            const name = document.getElementById('newPersonaName').value.trim();
-            const title = document.getElementById('newPersonaTitle').value.trim();
-            const greeting = document.getElementById('newPersonaGreeting').value.trim();
-
-            if(!name) return alert("Please enter a bot name!");
-
-            const botKey = "custom_" + Date.now();
-            bots[botKey] = {
-                name: name,
-                title: title || 'Custom Persona',
-                greeting: greeting || `Hello, I am ${name}.`,
-                color: "linear-gradient(135deg, #10b981, #3b82f6)"
-            };
-
-            // Add to Dropdown Menu
-            const selector = document.getElementById('botSelector');
-            const option = document.createElement('option');
-            option.value = botKey;
-            option.innerText = `${name} - ${title || 'Custom Persona'}`;
-            selector.appendChild(option);
-            selector.value = botKey;
-
-            // Switch to the newly created bot
-            initBot(botKey);
-            closePersonaModal();
-
-            // Clear inputs
-            document.getElementById('newPersonaName').value = '';
-            document.getElementById('newPersonaTitle').value = '';
-            document.getElementById('newPersonaGreeting').value = '';
+        function closeChat() {
+            document.getElementById('chatView').style.display = 'none';
         }
 
         function sendMessage() {
@@ -345,48 +503,57 @@
 
             messages.push({ sender: "You", text: text });
             input.value = "";
-            renderChat();
+            renderMessages();
 
-            const bot = bots[currentBotKey];
+            const b = bots[activeBotKey];
             setTimeout(() => {
-                messages.push({ sender: bot.name, text: `I hear you talking about "${text}". Tell me more.` });
-                renderChat();
+                messages.push({ sender: b.name, text: `I hear you talking about "${text}". Tell me more.` });
+                renderMessages();
             }, 1000);
         }
 
-        function renderChat() {
-            const container = document.getElementById('chatContainer');
-            const bot = bots[currentBotKey];
+        function renderMessages() {
+            const container = document.getElementById('chatMessages');
             container.innerHTML = messages.map(m => `
-                <div>
-                    <div class="message-box" style="${m.sender === 'You' ? 'margin-left: auto; background: var(--accent); color: white;' : ''}">
-                        <strong>${m.sender}:</strong> ${m.text}
-                    </div>
+                <div class="msg-box" style="${m.sender === 'You' ? 'margin-left: auto; background: var(--accent); color: white;' : ''}">
+                    <strong>${m.sender}:</strong> ${m.text}
                 </div>
             `).join('');
             container.scrollTop = container.scrollHeight;
         }
 
-        function exportChat(format) {
-            let dataStr, filename;
-            if (format === 'json') {
-                dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(messages, null, 2));
-                filename = `${bots[currentBotKey].name}-chat.json`;
-            } else {
-                let mdContent = messages.map(m => `**${m.sender}**: ${m.text}\n`).join('\n');
-                dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(mdContent);
-                filename = `${bots[currentBotKey].name}-chat.md`;
-            }
-            let downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", filename);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+        function openModal() {
+            document.getElementById('createModal').style.display = 'flex';
         }
 
-        // Initialize on Load
-        initBot("aira");
+        function closeModal() {
+            document.getElementById('createModal').style.display = 'none';
+        }
+
+        function saveBot() {
+            const name = document.getElementById('newName').value.trim();
+            const title = document.getElementById('newTitle').value.trim();
+            const greeting = document.getElementById('newGreeting').value.trim();
+            const img = document.getElementById('newImage').value.trim();
+
+            if(!name) return alert("Please enter a character name!");
+
+            const key = "custom_" + Date.now();
+            bots[key] = {
+                name: name,
+                title: title || "Custom Bot",
+                creator: "@You",
+                desc: greeting || "A new custom persona.",
+                greeting: greeting || `Hello! I am ${name}.`,
+                image: img || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80"
+            };
+
+            renderGrids();
+            closeModal();
+            startChat(key);
+        }
+
+        renderGrids();
     </script>
 </body>
 </html>
