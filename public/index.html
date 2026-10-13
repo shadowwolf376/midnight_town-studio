@@ -8,18 +8,16 @@
         :root {
             --bg-main: #0f0c1b;
             --bg-header: rgba(15, 12, 27, 0.95);
-            --bg-message: rgba(30, 27, 75, 0.8);
-            --bg-input: rgba(0, 0, 0, 0.3);
+            --bg-card: rgba(25, 20, 45, 0.85);
             --text-main: #e2e8f0;
             --accent: #7c3aed;
-            --border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.12);
         }
 
         [data-theme="starlight"] {
             --bg-main: #0f172a;
             --bg-header: rgba(15, 23, 42, 0.95);
-            --bg-message: rgba(30, 41, 59, 0.8);
-            --bg-input: rgba(15, 23, 42, 0.5);
+            --bg-card: rgba(30, 41, 59, 0.85);
             --text-main: #f8fafc;
             --accent: #3b82f6;
             --border: rgba(255, 255, 255, 0.15);
@@ -28,8 +26,7 @@
         [data-theme="dark"] {
             --bg-main: #121212;
             --bg-header: rgba(18, 18, 18, 0.95);
-            --bg-message: rgba(30, 30, 30, 0.9);
-            --bg-input: rgba(0, 0, 0, 0.5);
+            --bg-card: rgba(30, 30, 30, 0.85);
             --text-main: #ffffff;
             --accent: #10b981;
             --border: rgba(255, 255, 255, 0.1);
@@ -45,84 +42,100 @@
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-            transition: background 0.3s ease, color 0.3s ease;
         }
 
         header {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 12px;
+            padding: 10px;
             background: var(--bg-header);
             border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        @media (min-width: 600px) {
-            header {
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-            }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .character-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .avatar {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent), #9333ea);
-            flex-shrink: 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: flex-end;
+        }
+
+        .nav-buttons button, .toolbar button, .toolbar select {
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            font-size: 12px;
+            cursor: pointer;
         }
 
         .toolbar {
             display: flex;
-            flex-wrap: wrap;
             gap: 6px;
             align-items: center;
         }
 
-        select, button {
+        .dropdown-bar {
+            width: 100%;
             padding: 6px 10px;
             border-radius: 6px;
             border: 1px solid var(--border);
-            background: var(--bg-input);
+            background: rgba(0, 0, 0, 0.3);
             color: var(--text-main);
             font-size: 13px;
-            cursor: pointer;
         }
 
-        button.primary {
-            background: var(--accent);
-            border: none;
-            font-weight: bold;
-        }
-
+        /* Main Chat Area with Dark Overlay Background */
         .chat-container {
             flex: 1;
-            padding: 16px;
+            padding: 12px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            background: linear-gradient(rgba(15, 12, 27, 0.75), rgba(15, 12, 27, 0.85)), url('https://picsum.photos/800/1200') center/cover no-repeat;
         }
 
-        .message {
+        .message-box {
             max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            background: var(--bg-message);
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            line-height: 1.5;
-            word-break: break-word;
+            line-height: 1.4;
+            font-size: 14px;
         }
 
+        .regenerate-btn {
+            font-size: 11px;
+            opacity: 0.6;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        /* Bottom Input Bar */
         .input-bar {
-            padding: 12px;
+            padding: 10px;
             background: var(--bg-header);
             display: flex;
             gap: 8px;
@@ -131,13 +144,24 @@
 
         input[type="text"] {
             flex: 1;
-            padding: 10px 14px;
+            padding: 10px;
             border-radius: 8px;
             border: 1px solid var(--border);
-            background: var(--bg-input);
+            background: rgba(0, 0, 0, 0.4);
             color: var(--text-main);
             outline: none;
             font-size: 14px;
+        }
+
+        .send-btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            background: #8b5cf6;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
         }
 
         /* Modal Styles */
@@ -145,7 +169,7 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             justify-content: center;
             align-items: center;
             z-index: 100;
@@ -163,25 +187,38 @@
         }
         .modal-content input, .modal-content textarea {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border-radius: 6px;
             border: 1px solid var(--border);
-            background: var(--bg-input);
+            background: rgba(0, 0, 0, 0.3);
             color: var(--text-main);
             box-sizing: border-box;
-            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="character-info">
-            <div class="avatar" id="headerAvatar"></div>
-            <div>
-                <div style="font-weight: bold;" id="charNameDisplay">Aira</div>
-                <div style="font-size: 12px; opacity: 0.7;" id="charDescDisplay">Archivist of the Lost Starlight</div>
+        <div class="header-top">
+            <div class="character-info">
+                <div class="avatar"></div>
+                <div>
+                    <div style="font-weight: bold; font-size: 15px;" id="charNameDisplay">Aira</div>
+                    <div style="font-size: 11px; opacity: 0.7;" id="charDescDisplay">Archivist of the Lost Starlight</div>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button>Persona</button>
+                <button>Lore</button>
+                <button>Settings</button>
+                <button>Sessions</button>
+                <button>Reset</button>
             </div>
         </div>
+
+        <select class="dropdown-bar">
+            <option>Aira - Archivist of the Lost Starlight</option>
+        </select>
+
         <div class="toolbar">
             <select id="themeSelector" onchange="changeTheme(this.value)">
                 <option value="midnight">Midnight</option>
@@ -189,20 +226,23 @@
                 <option value="dark">Pure Dark</option>
             </select>
             <button onclick="openPersonaModal()">+ Persona</button>
-            <button onclick="exportChat('json')">JSON</button>
-            <button onclick="exportChat('md')">MD</button>
+            <button onclick="exportChat('json')">Export JSON</button>
+            <button onclick="exportChat('md')">Export MD</button>
         </div>
     </header>
 
     <div class="chat-container" id="chatContainer">
-        <div class="message">
-            Greetings, traveler of flesh and bone. Step into the candlelight.
+        <div>
+            <div class="message-box">
+                Greetings, traveler of flesh and bone. Step into the candlelight.
+            </div>
+            <div class="regenerate-btn">Regenerate</div>
         </div>
     </div>
 
     <div class="input-bar">
         <input type="text" id="userInput" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
-        <button class="primary" onclick="sendMessage()">Send</button>
+        <button class="send-btn" onclick="sendMessage()">Send</button>
     </div>
 
     <!-- Custom Persona Creator Modal -->
@@ -212,9 +252,9 @@
             <input type="text" id="newPersonaName" placeholder="Character Name">
             <input type="text" id="newPersonaTitle" placeholder="Short Title / Role">
             <textarea id="newPersonaGreeting" placeholder="First greeting message..." rows="3"></textarea>
-            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
                 <button onclick="closePersonaModal()">Cancel</button>
-                <button class="primary" onclick="savePersona()">Create</button>
+                <button style="background: var(--accent); color: white;" onclick="savePersona()">Create</button>
             </div>
         </div>
     </div>
@@ -276,8 +316,10 @@
         function renderChat() {
             const container = document.getElementById('chatContainer');
             container.innerHTML = messages.map(m => `
-                <div class="message" style="${m.sender === 'You' ? 'margin-left: auto; background: var(--accent); color: white;' : ''}">
-                    <strong>${m.sender}:</strong> ${m.text}
+                <div>
+                    <div class="message-box" style="${m.sender === 'You' ? 'margin-left: auto; background: var(--accent); color: white;' : ''}">
+                        <strong>${m.sender}:</strong> ${m.text}
+                    </div>
                 </div>
             `).join('');
             container.scrollTop = container.scrollHeight;
