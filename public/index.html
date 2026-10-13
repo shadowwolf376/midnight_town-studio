@@ -32,9 +32,7 @@
             --border: rgba(255, 255, 255, 0.1);
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -106,12 +104,12 @@
             padding: 6px 10px;
             border-radius: 6px;
             border: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             color: var(--text-main);
-            font-size: 12px;
+            font-size: 13px;
+            outline: none;
         }
 
-        /* Clean Midnight Atmosphere Background */
         .chat-container {
             flex: 1;
             padding: 12px;
@@ -132,14 +130,6 @@
             font-size: 14px;
         }
 
-        .regenerate-btn {
-            font-size: 11px;
-            opacity: 0.6;
-            margin-top: 4px;
-            cursor: pointer;
-        }
-
-        /* Bottom Input Bar */
         .input-bar {
             padding: 10px;
             background: var(--bg-header);
@@ -171,7 +161,6 @@
             cursor: pointer;
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -207,23 +196,24 @@
     <header>
         <div class="header-top">
             <div class="character-info">
-                <div class="avatar"></div>
+                <div class="avatar" id="headerAvatar"></div>
                 <div>
                     <div style="font-weight: bold; font-size: 14px;" id="charNameDisplay">Aira</div>
                     <div style="font-size: 11px; opacity: 0.7;" id="charDescDisplay">Archivist of the Lost Starlight</div>
                 </div>
             </div>
             <div class="nav-buttons">
-                <button>Persona</button>
-                <button>Lore</button>
+                <button onclick="openPersonaModal()">+ Create Bot</button>
                 <button>Settings</button>
-                <button>Sessions</button>
-                <button>Reset</button>
+                <button onclick="resetChat()">Reset</button>
             </div>
         </div>
 
-        <select class="dropdown-bar">
-            <option>Aira - Archivist of the Lost Starlight</option>
+        <!-- Bot Selector Dropdown -->
+        <select class="dropdown-bar" id="botSelector" onchange="switchBot(this.value)">
+            <option value="aira">Aira - Archivist of the Lost Starlight</option>
+            <option value="kael">Kael - Rogue Cyberpunk Hacker</option>
+            <option value="luna">Luna - Celestial Oracle</option>
         </select>
 
         <div class="toolbar">
@@ -238,44 +228,70 @@
         </div>
     </header>
 
-    <div class="chat-container" id="chatContainer">
-        <div>
-            <div class="message-box">
-                Greetings, traveler of flesh and bone. Step into the candlelight.
-            </div>
-            <div class="regenerate-btn">Regenerate</div>
-        </div>
-    </div>
+    <div class="chat-container" id="chatContainer"></div>
 
     <div class="input-bar">
         <input type="text" id="userInput" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
         <button class="send-btn" onclick="sendMessage()">Send</button>
     </div>
 
-    <!-- Custom Persona Creator Modal -->
+    <!-- Custom Bot Creator Modal -->
     <div class="modal" id="personaModal">
         <div class="modal-content">
-            <h3>Create Custom Persona</h3>
-            <input type="text" id="newPersonaName" placeholder="Character Name">
-            <input type="text" id="newPersonaTitle" placeholder="Short Title / Role">
+            <h3>Create Custom Bot</h3>
+            <input type="text" id="newPersonaName" placeholder="Bot Name (e.g., Orion)">
+            <input type="text" id="newPersonaTitle" placeholder="Title/Role (e.g., Space Explorer)">
             <textarea id="newPersonaGreeting" placeholder="First greeting message..." rows="3"></textarea>
             <div style="display: flex; justify-content: flex-end; gap: 8px;">
                 <button onclick="closePersonaModal()">Cancel</button>
-                <button style="background: var(--accent); color: white;" onclick="savePersona()">Create</button>
+                <button style="background: var(--accent); color: white;" onclick="savePersona()">Save Bot</button>
             </div>
         </div>
     </div>
 
     <script>
-        let currentPersona = {
-            name: "Aira",
-            title: "Archivist of the Lost Starlight",
-            greeting: "Greetings, traveler of flesh and bone. Step into the candlelight."
+        // Preset Bots Database
+        let bots = {
+            "aira": {
+                name: "Aira",
+                title: "Archivist of the Lost Starlight",
+                greeting: "Greetings, traveler of flesh and bone. Step into the candlelight.",
+                color: "linear-gradient(135deg, #7c3aed, #9333ea)"
+            },
+            "kael": {
+                name: "Kael",
+                title: "Rogue Cyberpunk Hacker",
+                greeting: "System online. Keep it brief, kid—the net is crawling with corps tonight.",
+                color: "linear-gradient(135deg, #06b6d4, #3b82f6)"
+            },
+            "luna": {
+                name: "Luna",
+                title: "Celestial Oracle",
+                greeting: "The stars align in your favor. What secrets do you seek from the cosmos?",
+                color: "linear-gradient(135deg, #ec4899, #8b5cf6)"
+            }
         };
 
-        let messages = [
-            { sender: "Aira", text: "Greetings, traveler of flesh and bone. Step into the candlelight." }
-        ];
+        let currentBotKey = "aira";
+        let messages = [];
+
+        function initBot(botKey) {
+            currentBotKey = botKey;
+            const bot = bots[botKey];
+            document.getElementById('charNameDisplay').innerText = bot.name;
+            document.getElementById('charDescDisplay').innerText = bot.title;
+            document.getElementById('headerAvatar').style.background = bot.color;
+            messages = [{ sender: bot.name, text: bot.greeting }];
+            renderChat();
+        }
+
+        function switchBot(botKey) {
+            initBot(botKey);
+        }
+
+        function resetChat() {
+            initBot(currentBotKey);
+        }
 
         function changeTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
@@ -290,19 +306,36 @@
         }
 
         function savePersona() {
-            const name = document.getElementById('newPersonaName').value;
-            const title = document.getElementById('newPersonaTitle').value;
-            const greeting = document.getElementById('newPersonaGreeting').value;
+            const name = document.getElementById('newPersonaName').value.trim();
+            const title = document.getElementById('newPersonaTitle').value.trim();
+            const greeting = document.getElementById('newPersonaGreeting').value.trim();
 
-            if(!name) return alert("Please enter a character name!");
+            if(!name) return alert("Please enter a bot name!");
 
-            currentPersona = { name, title, greeting };
-            document.getElementById('charNameDisplay').innerText = name;
-            document.getElementById('charDescDisplay').innerText = title || 'Custom Character';
+            const botKey = "custom_" + Date.now();
+            bots[botKey] = {
+                name: name,
+                title: title || 'Custom Persona',
+                greeting: greeting || `Hello, I am ${name}.`,
+                color: "linear-gradient(135deg, #10b981, #3b82f6)"
+            };
 
-            messages = [{ sender: name, text: greeting || "Hello!" }];
-            renderChat();
+            // Add to Dropdown Menu
+            const selector = document.getElementById('botSelector');
+            const option = document.createElement('option');
+            option.value = botKey;
+            option.innerText = `${name} - ${title || 'Custom Persona'}`;
+            selector.appendChild(option);
+            selector.value = botKey;
+
+            // Switch to the newly created bot
+            initBot(botKey);
             closePersonaModal();
+
+            // Clear inputs
+            document.getElementById('newPersonaName').value = '';
+            document.getElementById('newPersonaTitle').value = '';
+            document.getElementById('newPersonaGreeting').value = '';
         }
 
         function sendMessage() {
@@ -314,14 +347,16 @@
             input.value = "";
             renderChat();
 
+            const bot = bots[currentBotKey];
             setTimeout(() => {
-                messages.push({ sender: currentPersona.name, text: `I hear you talking about "${text}". Tell me more.` });
+                messages.push({ sender: bot.name, text: `I hear you talking about "${text}". Tell me more.` });
                 renderChat();
             }, 1000);
         }
 
         function renderChat() {
             const container = document.getElementById('chatContainer');
+            const bot = bots[currentBotKey];
             container.innerHTML = messages.map(m => `
                 <div>
                     <div class="message-box" style="${m.sender === 'You' ? 'margin-left: auto; background: var(--accent); color: white;' : ''}">
@@ -336,11 +371,11 @@
             let dataStr, filename;
             if (format === 'json') {
                 dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(messages, null, 2));
-                filename = "chat-export.json";
+                filename = `${bots[currentBotKey].name}-chat.json`;
             } else {
                 let mdContent = messages.map(m => `**${m.sender}**: ${m.text}\n`).join('\n');
                 dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(mdContent);
-                filename = "chat-export.md";
+                filename = `${bots[currentBotKey].name}-chat.md`;
             }
             let downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
@@ -349,6 +384,9 @@
             downloadAnchor.click();
             downloadAnchor.remove();
         }
+
+        // Initialize on Load
+        initBot("aira");
     </script>
 </body>
 </html>
