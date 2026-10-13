@@ -2,11 +2,11 @@
 <html lang="en" data-theme="midnight">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Midnight Town Studio</title>
     <style>
         :root {
-            --bg-main: #0f0c1b;
+            --bg-main: #0c0a14;
             --bg-header: rgba(15, 12, 27, 0.95);
             --bg-card: rgba(25, 20, 45, 0.85);
             --text-main: #e2e8f0;
@@ -15,7 +15,7 @@
         }
 
         [data-theme="starlight"] {
-            --bg-main: #0f172a;
+            --bg-main: #0b1329;
             --bg-header: rgba(15, 23, 42, 0.95);
             --bg-card: rgba(30, 41, 59, 0.85);
             --text-main: #f8fafc;
@@ -24,12 +24,16 @@
         }
 
         [data-theme="dark"] {
-            --bg-main: #121212;
+            --bg-main: #080808;
             --bg-header: rgba(18, 18, 18, 0.95);
             --bg-card: rgba(30, 30, 30, 0.85);
             --text-main: #ffffff;
             --accent: #10b981;
             --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -41,6 +45,7 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            height: 100dvh;
             overflow: hidden;
         }
 
@@ -51,6 +56,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            flex-shrink: 0;
         }
 
         .header-top {
@@ -66,8 +72,8 @@
         }
 
         .avatar {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent), #9333ea);
         }
@@ -85,7 +91,7 @@
             border: 1px solid var(--border);
             background: rgba(255, 255, 255, 0.05);
             color: var(--text-main);
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
         }
 
@@ -102,10 +108,10 @@
             border: 1px solid var(--border);
             background: rgba(0, 0, 0, 0.3);
             color: var(--text-main);
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        /* Main Chat Area with Dark Overlay Background */
+        /* Clean Midnight Atmosphere Background */
         .chat-container {
             flex: 1;
             padding: 12px;
@@ -113,7 +119,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            background: linear-gradient(rgba(15, 12, 27, 0.75), rgba(15, 12, 27, 0.85)), url('https://picsum.photos/800/1200') center/cover no-repeat;
+            background: radial-gradient(circle at top, rgba(124, 58, 237, 0.15), transparent 70%), var(--bg-main);
         }
 
         .message-box {
@@ -129,7 +135,7 @@
         .regenerate-btn {
             font-size: 11px;
             opacity: 0.6;
-            margin-top: 2px;
+            margin-top: 4px;
             cursor: pointer;
         }
 
@@ -140,6 +146,7 @@
             display: flex;
             gap: 8px;
             border-top: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
         input[type="text"] {
@@ -202,7 +209,7 @@
             <div class="character-info">
                 <div class="avatar"></div>
                 <div>
-                    <div style="font-weight: bold; font-size: 15px;" id="charNameDisplay">Aira</div>
+                    <div style="font-weight: bold; font-size: 14px;" id="charNameDisplay">Aira</div>
                     <div style="font-size: 11px; opacity: 0.7;" id="charDescDisplay">Archivist of the Lost Starlight</div>
                 </div>
             </div>
