@@ -285,3 +285,19 @@ function importMidnightData(event) {
     };
     reader.readAsText(file);
 }
+
+// Override switchView or profile hook to render settings and bookmarks
+const oldSwitchView = window.switchView;
+function switchView(viewName) {
+    document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
+    const target = document.getElementById('view-' + viewName);
+    if (target) target.style.display = 'block';
+
+    if (viewName === 'profile') {
+        if (typeof renderProfileWithSettings === 'function') {
+            renderProfileWithSettings();
+        } else if (typeof renderProfileBookmarks === 'function') {
+            renderProfileBookmarks();
+        }
+    }
+}
