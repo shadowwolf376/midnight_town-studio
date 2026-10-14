@@ -389,3 +389,12 @@ window.openChat = function(name) {
     if (originalOpenChat) originalOpenChat(name);
     setTimeout(bindChatSend, 100);
 };
+
+// Force switchView hook for chats list
+const originalSwitchView = window.switchView;
+window.switchView = function(view) {
+    if (originalSwitchView) originalSwitchView(view);
+    if (view === 'chats' && typeof renderChatList === 'function') {
+        renderChatList();
+    }
+};
