@@ -61,3 +61,11 @@ function loadChatSession(scenarioName) {
         });
     }
 }
+
+// Automatically load saved chat session when opening a chat
+const oldOpenChat = openChat;
+openChat = function(scenarioName) {
+    document.getElementById('chat-title').innerText = '💬 ' + scenarioName;
+    switchView('chats');
+    loadChatSession(scenarioName);
+};
