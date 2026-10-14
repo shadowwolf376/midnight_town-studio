@@ -16,15 +16,16 @@
 <script>
     function switchCreateTab(tab) {
         ['details', 'intro', 'story', 'lore'].forEach(t => {
-            const panel = document.getElementById('create-panel-' + t);
-            const btn = document.getElementById('btn-create-' + t);
-            if (panel) panel.style.display = (t === tab) ? 'block' : 'none';
-            if (btn) {
-                if (t === tab) {
-                    btn.style.background = '#ff6600';
-                    btn.style.color = '#fff';
-                    btn.style.border = 'none';
-                } else {
+            const p = document.getElementById('create-panel-' + t);
+            const b = document.getElementById('btn-create-' + t);
+            if (p) p.style.display = (t === tab) ? 'block' : 'none';
+            if (b) {
+                b.style.background = (t === tab) ? '#ff6600' : '#150f2e';
+                b.style.color = (t === tab) ? '#fff' : '#aaa';
+                b.style.border = (t === tab) ? 'none' : '1px solid #2a1f52';
+            }
+        });
+    } else {
                     btn.style.background = '#150f2e';
                     btn.style.color = '#aaa';
                     btn.style.border = '1px solid #2a1f52';
