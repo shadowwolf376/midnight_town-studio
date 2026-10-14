@@ -298,7 +298,13 @@
                     },
                     body: JSON.stringify({
                         model: model,
-                        messages: [{ role: 'user', content: txt }]
+                        messages: [
+                            { 
+                                role: 'system', 
+                                content: 'You are "The Lost Archivist", a mysterious character in a dark fantasy setting. You stay strictly in character, speaking with atmospheric immersive roleplay responses using dialogue and action descriptions (*actions like this*). Never speak like a helpful AI assistant or mention AI.' 
+                            },
+                            { role: 'user', content: txt }
+                        ]
                     })
                 });
 
