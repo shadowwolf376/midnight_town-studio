@@ -75,7 +75,8 @@
 <body>
     <div class="brand-header">
         <div class="logo-text">🔥 MidnightLab</div>
-            <div id="settings" class="tab-content">
+            
+    <div id="settings" class="tab-content">
       <div class="field-group">
         <label class="field-label" for="content-rating">Content Rating</label>
         <select id="content-rating" class="field-input">
@@ -83,7 +84,6 @@
           <option value="private">Private</option>
         </select>
       </div>
-
       <div class="field-group">
         <label class="field-label" for="model-select">AI Model</label>
         <select id="model-select" class="field-input">
@@ -94,7 +94,8 @@
         </select>
       </div>
     </div>
-<button onclick="switchView('studio')" style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;">+ Create</button>
+
+    <button onclick="switchView('studio')" style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;">+ Create</button>
     </div>
     <div class="view active" id="homeView">
         <div class="hero-banner">
@@ -133,64 +134,7 @@
             <div class="studio-panel active" id="panelDetails">
                 <div class="studio-section">
                     <div style="font-size: 14px; font-weight: 700;">Scenario Main Details</div>
-                    <div class="field-group">
-                        <div class="field-label">Scenario Name</div>
-                        <input type="text" class="field-input" id="studioName" placeholder="e.g. A Forbidden Spell">
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Description</div>
-                        <textarea class="field-textarea" id="studioDesc" rows="3" placeholder="Brief description of the scenario..."></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="studio-panel" id="panelIntro">
-                <div class="studio-section">
-                    <div style="font-size: 14px; font-weight: 700;">Introduction Greeting</div>
-                    <div class="field-group">
-                        <div class="field-label">First Message</div>
-                        <textarea class="field-textarea" id="studioGreeting" rows="4" placeholder="First message sent when players start the scenario..."></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="studio-panel" id="panelStory">
-                <div class="studio-section">
-                    <div style="font-size: 14px; font-weight: 700;">Story / Personality Prompt</div>
-                    <div class="field-group">
-                        <div class="field-label">Character Instructions & Lore</div>
-                        <textarea class="field-textarea" id="studioStory" rows="4" placeholder="Describe how the character acts, speaks, and handles scenarios..."></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="studio-panel" id="panelLore">
-                <div class="studio-section">
-                    <div style="font-size: 14px; font-weight: 700;">World Lore & Background</div>
-                    <div class="field-group">
-                        <div class="field-label">World Info</div>
-                        <textarea class="field-textarea" rows="4" placeholder="Background details about the world or setting..."></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="studio-panel" id="panelSettings">
-                <div class="studio-section">
-                    <div style="font-size: 14px; font-weight: 700;">Scenario Settings</div>
-                    <div class="field-group">
-                        <div class="field-label">Content Rating</div>
-        <select id="content-rating" class="field-input">
-          <option value="public">Public</option>
-        </select>
-      </div>
-      <div class="field-group" style="margin-top: 15px;">
-        <label class="field-label" for="model-select">AI Model</label>
-        <select id="model-select" class="field-input">
-          <option value="cognitivecomputations/dolphin-mistral-24b-venice-edition:free">Cookie (Dolphin Free)</option>
-          <option value="meta-llama/llama-3.3-70b-instruct:free">Cupcake (Llama 3.3 Free)</option>
-          <option value="qwen/qwen3.8-27b:free">Cherry Blossom (Qwen Free)</option>
-          <option value="openrouter/free">Auto Free Router</option>
-        </select>
-                            <option value="everyone">Public</option>
-                            <option value="mature">Private</option>
-                        </select>
-                    </div>
+                    
                 </div>
             </div>
             <button class="save-studio-btn" onclick="publishStudioScenario()">🚀 Publish Scenario</button>
@@ -315,15 +259,7 @@
          
     </div>
 
-      <div class="field-group">
-        <label class="field-label" for="model-select">AI Model</label>
-        <select id="model-select" class="field-input">
-          <option value="cognitivecomputations/dolphin-mistral-24b-venice-edition:free">Cookie</option>
-          <option value="meta-llama/llama-3.3-70b-instruct:free">Cupcake</option>
-          <option value="qwen/qwen3.8-27b:free">Cherry Blossom</option>
-          <option value="openrouter/free">Auto Free Router</option>
-        </select>
-      </div>
+      
     </div>
 
 
