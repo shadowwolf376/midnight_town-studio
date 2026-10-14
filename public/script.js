@@ -152,3 +152,16 @@ function renderProfileBookmarks() {
     }
     profileCard.innerHTML = html;
 }
+
+function toggleTag(btn) {
+    const isActive = btn.style.borderColor === 'rgb(255, 102, 0)' || btn.style.borderColor === '#ff6600';
+    if (isActive) {
+        btn.style.background = '#150f2e';
+        btn.style.color = '#a39bb8';
+        btn.style.borderColor = '#2a1f52';
+    } else {
+        btn.style.background = '#251a52';
+        btn.style.color = '#ffaa00';
+        btn.style.borderColor = '#ff6600';
+    }
+}
