@@ -88,7 +88,7 @@
             <span style="color:#ff6600;font-size:11px;font-weight:bold">FEATURED SCENARIO</span>
             <h3 style="margin:4px 0 6px 0">The Lost Archivist</h3>
             <p style="color:#aaa;font-size:12px;margin:0 0 12px 0">Step into the candlelight of the lost starlight archive and unearth forgotten realms.</p>
-            <button style="width:100%;background:#ff6600;color:#fff;border:none;padding:10px;border-radius:8px;font-weight:bold;cursor:pointer">💬 Start Chat</button>
+            <button onclick="startChat('The Lost Archivist')" style="width:100%;background:#ff6600;color:#fff;border:none;padding:10px;border-radius:8px;font-weight:bold;cursor:pointer">💬 Start Chat</button>
         </div>
         
         <div style="display:flex;justify-content:space-between;align-items:center;margin:15px 0 8px 0;">
@@ -206,6 +206,29 @@
         <button onclick="saveSettings()" style="width:100%;background:#ff6600;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:bold;cursor:pointer;">💾 Save Settings</button>
     </div>
 
+    
+    <!-- CHAT ROOM VIEW -->
+    <div id="view-chat-room" class="app-view" style="display:none;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;background:#150f2e;padding:10px;border-radius:12px;border:1px solid #2a1f52;">
+            <button onclick="switchView('home')" style="background:none;border:none;color:#ff6600;font-size:18px;cursor:pointer">←</button>
+            <div style="flex:1">
+                <h3 id="active-chat-title" style="margin:0;font-size:15px;color:#fff;">Chat Room</h3>
+                <span style="font-size:11px;color:#aaa">Active Session</span>
+            </div>
+        </div>
+        <div id="chat-messages" class="card" style="height:calc(100vh - 240px);overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
+            <div style="background:#0b071e;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #2a1f52;color:#fff;">
+                Welcome! Type a message below to begin chatting with Dolphin 3.0.
+            </div>
+        </div>
+        <div style="position:fixed;bottom:65px;left:0;width:100%;padding:10px 15px;background:#0b071e;border-top:1px solid #2a1f52;box-sizing:border-box;">
+            <div style="display:flex;gap:8px;">
+                <input id="chat-input" placeholder="Type a message..." style="margin-top:0;">
+                <button onclick="sendMessage()" style="background:#ff6600;color:#fff;border:none;padding:0 16px;border-radius:8px;font-weight:bold;cursor:pointer">Send</button>
+            </div>
+        </div>
+    </div>
+
     <!-- BOTTOM NAVIGATION BAR -->
     <div class="nav-bar">
         <button class="nav-btn" onclick="switchView('home')">🏠 Home</button>
@@ -235,8 +258,67 @@
             closeSettings();
         }
 
+        
+        function startChat(title) {
+            document.getElementById('active-chat-title').innerText = title;
+            switchView('chat-room');
+        }
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const txt = input.value.trim();
+            if(!txt) return;
+
+            const container = document.getElementById('chat-messages');
+            container.innerHTML += '<div style="background:#2a1f52;padding:10px;border-radius:8px;max-width:85%;margin-left:auto;font-size:13px;border:1px solid #3a2b72;color:#fff;">' + txt + '</div>';
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            const apiKey = localStorage.getItem('ml_api_key');
+            const model = localStorage.getItem('ml_model') || 'cognitivecomputations/dolphin-3.0-r1-mistral-24b:free';
+
+            if(!apiKey) {
+                container.innerHTML += '<div style="background:#3b1a1a;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #5a2222;color:#ff9999;">⚠️ Please configure your OpenRouter API key in Profile settings first!</div>';
+                container.scrollTop = container.scrollHeight;
+                return;
+            }
+
+            const loadingId = 'loading-' + Date.now();
+            container.innerHTML += '<div id="' + loadingId + '" style="background:#0b071e;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #2a1f52;color:#aaa;">Thinking...</div>';
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + apiKey,
+                        'HTTP-Referer': window.location.origin,
+                        'X-Title': 'MidnightLab',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [{ role: 'user', content: txt }]
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                if(data.choices && data.choices.length > 0) {
+                    const reply = data.choices[0].message.content;
+                    container.innerHTML += '<div style="background:#0b071e;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #2a1f52;color:#fff;">' + reply + '</div>';
+                } else {
+                    container.innerHTML += '<div style="background:#3b1a1a;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #5a2222;color:#ff9999;">Error: Invalid response from OpenRouter.</div>';
+                }
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                container.innerHTML += '<div style="background:#3b1a1a;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #5a2222;color:#ff9999;">Connection error. Check your network or key.</div>';
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+
         function switchView(v) {
-            ['home', 'search', 'create', 'chats', 'profile'].forEach(id => {
+            ['home', 'search', 'create', 'chats', 'profile', 'chat-room'].forEach(id => {
                 const el = document.getElementById('view-' + id);
                 if (el) el.style.display = (id === v) ? 'block' : 'none';
             });
