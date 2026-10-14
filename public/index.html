@@ -199,9 +199,9 @@
         <div class="card" style="margin-bottom:15px;">
             <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">Selected Model</label>
             <select id="setting-model" style="width:100%;background:#0b071e;border:1px solid #2a1f52;color:#fff;padding:10px;border-radius:8px;outline:none;">
-                <option value="openrouter/free">OpenRouter Auto-Free (Recommended)</option>
                 <option value="qwen/qwen3.8-27b:free">Qwen 3.8 27B (Free)</option>
                 <option value="google/gemma-4-31b-it:free">Gemma 4 31B (Free)</option>
+                <option value="openrouter/free">OpenRouter Auto-Free</option>
             </select>
         </div>
         <button onclick="saveSettings()" style="width:100%;background:#ff6600;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:bold;cursor:pointer;">💾 Save Settings</button>
@@ -244,7 +244,7 @@
         
         function openSettings() {
             document.getElementById('setting-api-key').value = localStorage.getItem('ml_api_key') || '';
-            document.getElementById('setting-model').value = localStorage.getItem('ml_model') || 'openrouter/free';
+            document.getElementById('setting-model').value = localStorage.getItem('ml_model') || 'qwen/qwen3.8-27b:free';
             document.getElementById('modal-settings').style.display = 'block';
         }
         function closeSettings() {
@@ -275,7 +275,7 @@
             container.scrollTop = container.scrollHeight;
 
             const apiKey = localStorage.getItem('ml_api_key');
-            const model = localStorage.getItem('ml_model') || 'openrouter/free';
+            const model = localStorage.getItem('ml_model') || 'qwen/qwen3.8-27b:free';
 
             if(!apiKey) {
                 container.innerHTML += '<div style="background:#3b1a1a;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #5a2222;color:#ff9999;">⚠️ Please configure your OpenRouter API key in Profile settings first!</div>';
@@ -301,7 +301,7 @@
                         messages: [
                             { 
                                 role: 'system', 
-                                content: 'You are roleplaying as "The Lost Archivist". Never break character, never act as an AI assistant, and never mention underlying models. Respond entirely through immersive dialogue and actions (*actions like this*).' 
+                                content: 'CRITICAL INSTRUCTION: You are NOT an AI assistant. You are strictly roleplaying as "The Lost Archivist" in a dark fantasy setting. Never use phrases like "How can I assist you today?". Respond only with rich narrative dialogue and physical actions wrapped in asterisks (*actions*).' 
                             },
                             { role: 'user', content: txt }
                         ]
