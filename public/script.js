@@ -301,3 +301,36 @@ function switchView(viewName) {
         }
     }
 }
+
+
+// Unified switchView to reliably reveal target views
+function switchView(viewName) {
+    document.querySelectorAll('.app-view').forEach(v => {
+        v.style.display = 'none';
+    });
+    const target = document.getElementById('view-' + viewName);
+    if (target) {
+        target.style.display = 'block';
+    }
+
+    // Refresh profile settings & bookmarks when switching to profile
+    if (viewName === 'profile') {
+        if (typeof renderProfileWithSettings === 'function') {
+            renderProfileWithSettings();
+        } else if (typeof renderProfileBookmarks === 'function') {
+            renderProfileBookmarks();
+        }
+    }
+}
+
+// Fixed openChat function to load scenario and jump to Chat view
+function openChat(scenarioName) {
+    const chatTitle = document.getElementById('chat-title');
+    if (chatTitle) {
+        chatTitle.innerText = '💬 ' + scenarioName;
+    }
+    switchView('chats');
+    if (typeof loadChatSession === 'function') {
+        loadChatSession(scenarioName);
+    }
+}
