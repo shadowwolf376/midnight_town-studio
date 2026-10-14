@@ -334,3 +334,25 @@ function openChat(scenarioName) {
         loadChatSession(scenarioName);
     }
 }
+
+// Global event listener for cards and buttons
+document.addEventListener('click', function(e) {
+    const target = e.target;
+    
+    // Check if Start Chat button or scenario card was clicked
+    const startBtn = target.closest('button');
+    const card = target.closest('.scenario-card') || target.closest('[style*="background: #150f2e"]');
+
+    if (startBtn && startBtn.innerText.includes('Start Chat')) {
+        e.preventDefault();
+        openChat('The Lost Archivist');
+        return;
+    }
+
+    if (card && !target.innerText.includes('🤍') && !target.innerText.includes('❤️')) {
+        const titleEl = card.querySelector('h3');
+        if (titleEl) {
+            openChat(titleEl.innerText.trim());
+        }
+    }
+});
