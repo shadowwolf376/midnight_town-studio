@@ -19,11 +19,27 @@ function switchTab(tabName) {
 }
 
 // Toggle bookmark status for a scenario
-function toggleBookmark(event, title) {
-    event.stopPropagation(); // Prevent opening the chat when clicking the heart
-    const btn = event.currentTarget;
-    btn.textContent = btn.textContent === '❤️' ? '🤍' : '❤️';
-    alert(`Updated bookmarks for: ${title}`);
+function toggleBookmark(event, scenarioName) {
+    if (event) event.stopPropagation(); // Prevents opening the chat room
+    
+    let bookmarks = JSON.parse(localStorage.getItem('midnight_bookmarks') || '[]');
+    const index = bookmarks.indexOf(scenarioName);
+    const target = event.target || event.srcElement;
+
+    if (index >= 0) {
+        bookmarks.splice(index, 1);
+        if (target) target.innerText = '🤍';
+    } else {
+        bookmarks.push(scenarioName);
+        if (target) target.innerText = '❤️';
+    }
+
+    localStorage.setItem('midnight_bookmarks', JSON.stringify(bookmarks));
+
+    // Refresh profile tab if currently open
+    if (typeof renderProfileBookmarks === 'function') {
+        renderProfileBookmarks();
+    }
 }
 
 // Chat Sessions Management
