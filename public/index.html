@@ -181,8 +181,29 @@
         </div>
         <div class="card">
             <h3 style="margin:0 0 8px 0;font-size:14px;color:#fff">⚙️ Settings</h3>
-            <button style="background:#251a52;color:#fff;border:1px solid #2a1f52;padding:10px;border-radius:8px;font-size:12px;width:100%;font-weight:bold;cursor:pointer">🔑 Configure API Key & Model</button>
+            <button onclick="openSettings()" style="background:#251a52;color:#fff;border:1px solid #2a1f52;padding:10px;border-radius:8px;font-size:12px;width:100%;font-weight:bold;cursor:pointer">🔑 Configure API Key & Model</button>
         </div>
+    </div>
+
+    
+    <!-- SETTINGS MODAL -->
+    <div id="modal-settings" class="app-view" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0b071e;z-index:2000;padding:20px;box-sizing:border-box;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h2 style="margin:0;font-size:18px;color:#fff;">⚙️ AI Settings</h2>
+            <button onclick="closeSettings()" style="background:none;border:none;color:#ff6600;font-size:20px;cursor:pointer;">✕</button>
+        </div>
+        <div class="card" style="margin-bottom:12px;">
+            <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">OpenRouter API Key</label>
+            <input id="setting-api-key" type="password" placeholder="sk-or-v1-..." style="margin-top:0;">
+        </div>
+        <div class="card" style="margin-bottom:15px;">
+            <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px;">Selected Model</label>
+            <select id="setting-model" style="width:100%;background:#0b071e;border:1px solid #2a1f52;color:#fff;padding:10px;border-radius:8px;outline:none;">
+                <option value="cognitivecomputations/dolphin-3.0-r1-mistral-24b:free">Dolphin 3.0 (Mistral 24B Free)</option>
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B (Free)</option>
+            </select>
+        </div>
+        <button onclick="saveSettings()" style="width:100%;background:#ff6600;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:bold;cursor:pointer;">💾 Save Settings</button>
     </div>
 
     <!-- BOTTOM NAVIGATION BAR -->
@@ -196,6 +217,24 @@
 
     <!-- APPLICATION LOGIC -->
     <script>
+        
+        function openSettings() {
+            document.getElementById('setting-api-key').value = localStorage.getItem('ml_api_key') || '';
+            document.getElementById('setting-model').value = localStorage.getItem('ml_model') || 'cognitivecomputations/dolphin-3.0-r1-mistral-24b:free';
+            document.getElementById('modal-settings').style.display = 'block';
+        }
+        function closeSettings() {
+            document.getElementById('modal-settings').style.display = 'none';
+        }
+        function saveSettings() {
+            const k = document.getElementById('setting-api-key').value.trim();
+            const m = document.getElementById('setting-model').value;
+            localStorage.setItem('ml_api_key', k);
+            localStorage.setItem('ml_model', m);
+            alert('Settings saved!');
+            closeSettings();
+        }
+
         function switchView(v) {
             ['home', 'search', 'create', 'chats', 'profile'].forEach(id => {
                 const el = document.getElementById('view-' + id);
