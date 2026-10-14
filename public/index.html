@@ -1,23 +1,202 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MidnightLab</title><style>body{background:#0b071e;color:#fff;font-family:sans-serif;margin:0;padding-bottom:80px}.app-view{display:none;padding:15px}.app-view.active{display:block}button{cursor:pointer}</style><style>.app-view{display:none}#view-home{display:block}</style></head><body><div id="view-home" class="app-view active"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px"><h2 style="color:#ff6600;margin:0">🔥 MidnightLab</h2><button onclick="switchView('create')" style="background:#ff6600;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;font-size:13px">+ Create</button></div><div style="background:#150f2e;border:1px solid #2a1f52;border-radius:12px;padding:15px;margin-bottom:15px"><span style="color:#ff6600;font-size:11px;font-weight:bold;text-transform:uppercase">Featured Scenario</span><h3 style="margin:6px 0;font-size:18px">The Lost Archivist</h3><p style="color:#aaa;font-size:13px;margin-bottom:12px">Step into the candlelight of the lost starlight archive and unearth forgotten realms.</p><button onclick="openChat('The Lost Archivist')" style="background:#ff6600;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-weight:bold;width:100%">💬 Start Chat</button></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="font-size:16px;margin:0">🔥 Trending Scenarios</h3><label style="font-size:12px;color:#aaa;display:flex;align-items:center;gap:5px"><input type="checkbox"> Show Mature?</label></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div style="background:#150f2e;border:1px solid #2a1f52;border-radius:10px;padding:12px;cursor:pointer" onclick="openChat('Aira')"><div style="display:flex;justify-content:space-between;align-items:flex-start"><h4 style="margin:0 0 6px 0;font-size:14px">Aira</h4><span style="font-size:13px">🤍</span></div><p style="color:#aaa;font-size:11px;margin:0">By @Studio</p></div><div style="background:#150f2e;border:1px solid #2a1f52;border-radius:10px;padding:12px;cursor:pointer" onclick="openChat('Westwood Academy')"><div style="display:flex;justify-content:space-between;align-items:flex-start"><h4 style="margin:0 0 6px 0;font-size:14px">Westwood Academy</h4><span style="font-size:13px">🤍</span></div><p style="color:#aaa;font-size:11px;margin:0">By @Dante</p></div></div></div><div id="view-search" <h2 style="color:#fff;margin-top:0">🔍 Search Scenarios</h2><input type="text" placeholder="Search stories, characters..." style="width:100%;background:#150f2e;border:1px solid #2a1f52;color:#fff;padding:10px;border-radius:8px;outline:none;box-sizing:border-box"></div><div id="view-create" <h2 style="color:#ff6600;margin-top:0;margin-bottom:15px">🔥 MidnightLab</h2><div style="display:flex;gap:8px;margin-bottom:15px;overflow-x:auto;padding-bottom:5px"><button id="btn-create-details" onclick="switchCreateTab('details')" style="background:#ff6600;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;font-size:12px">🖼️ Details</button><button id="btn-create-intro" onclick="switchCreateTab('intro')" style="background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:8px 14px;border-radius:8px;font-weight:bold;font-size:12px">📖 Intro</button><button id="btn-create-story" onclick="switchCreateTab('story')" style="background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:8px 14px;border-radius:8px;font-weight:bold;font-size:12px">📜 Story</button><button id="btn-create-lore" onclick="switchCreateTab('lore')" style="background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:8px 14px;border-radius:8px;font-weight:bold;font-size:12px">⚔️ Lore</button></div><div id="create-panel-details" class="create-panel" style="background:#150f2e;border:1px solid #2a1f52;padding:15px;border-radius:12px"><h3 style="margin-top:0;font-size:16px">Main Details</h3><label style="font-size:12px;color:#aaa;display:block;margin-bottom:4px">Scenario Name</label><input placeholder="Scenario Title..." <label style="font-size:12px;color:#aaa;display:block;margin-bottom:4px">Scenario Description</label><textarea placeholder="Description..." style="width:100%;height:60px;background:#0b071e;border:1px solid #2a1f52;color:#fff;padding:10px;border-radius:8px;margin-bottom:12px;outline:none;resize:none;box-sizing:border-box"></textarea> <label style="font-size:12px;color:#aaa;display:block;margin-bottom:4px">Cover Image URL</label>
-            <input placeholder="https://example.com/image.jpg" style="width:100%;background:#0b071e;border:1px solid #2a1f52;color:#fff;padding:10px;border-radius:8px;margin-bottom:12px;outline:none;box-sizing:border-box">
-            <label style="font-size:12px;color:#aaa;display:block;margin-bottom:6px">Category Tags</label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px">
-                <button style="background:#ff6600;color:#fff;border:none;padding:6px 12px;border-radius:15px;font-size:11px">✨ Fantasy</button>
-                <button style="background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:6px 12px;border-radius:15px;font-size:11px">🚀 Sci-Fi</button>
-                <button style="background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:6px 12px;border-radius:15px;font-size:11px">🔮 Mystery</button>
-                <button style="background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:6px 12px;border-radius:15px;font-size:11px">💖 Romance</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MidnightLab</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            margin: 0; 
+            padding: 15px 15px 90px 15px; 
+            background: #0b071e; 
+            color: #fff; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        }
+        .app-view { display: none; }
+        #view-home { display: block; }
+        .card { 
+            background: #150f2e; 
+            border: 1px solid #2a1f52; 
+            padding: 15px; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+        }
+        input, textarea { 
+            width: 100%; 
+            background: #0b071e; 
+            border: 1px solid #2a1f52; 
+            color: #fff; 
+            padding: 10px; 
+            border-radius: 8px; 
+            outline: none; 
+            margin-top: 6px; 
+            font-family: inherit;
+        }
+        textarea { resize: vertical; min-height: 90px; }
+        .sub-btn { 
+            background: #150f2e; 
+            color: #aaa; 
+            border: 1px solid #2a1f52; 
+            padding: 8px 12px; 
+            border-radius: 8px; 
+            font-size: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+        .sub-btn.active { 
+            background: #ff6600; 
+            color: #fff; 
+            border: none; 
+        }
+        .nav-bar { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: #0b071e; 
+            border-top: 1px solid #2a1f52; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 10px 0; 
+            z-index: 1000; 
+        }
+        .nav-btn { 
+            background: none; 
+            border: none; 
+            color: #aaa; 
+            font-size: 11px; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 2px; 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
+        <h1 style="margin:0;font-size:20px;color:#ff6600;display:flex;align-items:center;gap:6px">🔥 MidnightLab</h1>
+        <button onclick="switchView('create')" style="background:#ff6600;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer">+ Create</button>
+    </div>
+
+    <!-- HOME VIEW -->
+    <div id="view-home" class="app-view">
+        <div class="card">
+            <span style="color:#ff6600;font-size:11px;font-weight:bold">FEATURED SCENARIO</span>
+            <h3 style="margin:4px 0 6px 0">The Lost Archivist</h3>
+            <p style="color:#aaa;font-size:12px;margin:0 0 12px 0">Step into the candlelight of the lost starlight archive and unearth forgotten realms.</p>
+            <button style="width:100%;background:#ff6600;color:#fff;border:none;padding:10px;border-radius:8px;font-weight:bold;cursor:pointer">💬 Start Chat</button>
+        </div>
+        <h3 style="margin:15px 0 8px 0;font-size:16px">🔥 Trending Scenarios</h3>
+        <div style="display:flex;gap:10px">
+            <div class="card" style="flex:1;margin-bottom:0">
+                <strong style="font-size:13px">Aira ❤️</strong><br><span style="color:#aaa;font-size:11px">By @Studio</span>
             </div>
-            <button style="background:#ff6600;color:#fff;border:none;padding:12px;width:100%;border-radius:8px;font-weight:bold">🚀 Publish Scenario</button></div></div><div id="view-chats" <h2 style="color:#fff;margin-top:0">💬 Your Chats</h2></div><div id="view-profile" class="app-view" style="display:none">
-        <h2 style="color:#fff;margin-top:0">👤 Creator Profile</h2>
-        <div style="background:#150f2e;border:1px solid #2a1f52;padding:15px;border-radius:10px;margin-bottom:12px">
+            <div class="card" style="flex:1;margin-bottom:0">
+                <strong style="font-size:13px">Westwood Academy ❤️</strong><br><span style="color:#aaa;font-size:11px">By @Dante</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH VIEW -->
+    <div id="view-search" class="app-view">
+        <h2 style="color:#fff;margin-top:0;font-size:18px">🔍 Search Scenarios</h2>
+        <input placeholder="Search stories, characters...">
+    </div>
+
+    <!-- CREATE VIEW -->
+    <div id="view-create" class="app-view">
+        <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto">
+            <button id="btn-create-details" class="sub-btn active" onclick="switchCreateTab('details')">🖼️ Details</button>
+            <button id="btn-create-intro" class="sub-btn" onclick="switchCreateTab('intro')">📖 Intro</button>
+            <button id="btn-create-story" class="sub-btn" onclick="switchCreateTab('story')">📜 Story</button>
+            <button id="btn-create-lore" class="sub-btn" onclick="switchCreateTab('lore')">⚔️ Lore</button>
+        </div>
+
+        <div id="create-panel-details" class="card">
+            <h3 style="margin-top:0;font-size:15px">Main Details</h3>
+            <label style="font-size:12px;color:#aaa">Scenario Name</label>
+            <input placeholder="Scenario Title. ex. A Forbidden Spell">
+            <label style="font-size:12px;color:#aaa;margin-top:8px;display:block">Scenario Description</label>
+            <textarea placeholder="This will be shown in the scenario card..."></textarea>
+            <label style="font-size:12px;color:#aaa;margin-top:8px;display:block">Cover Image URL</label>
+            <input placeholder="https://example.com/image.jpg">
+            <button style="width:100%;background:#ff6600;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:bold;margin-top:15px;cursor:pointer">🚀 Publish Scenario</button>
+        </div>
+
+        <div id="create-panel-intro" class="card" style="display:none">
+            <h3 style="margin-top:0;font-size:15px">First Message / Greeting</h3>
+            <textarea placeholder="Write opening greeting..."></textarea>
+        </div>
+
+        <div id="create-panel-story" class="card" style="display:none">
+            <h3 style="margin-top:0;font-size:15px">Story & Personality</h3>
+            <textarea placeholder="Describe story background and personality..."></textarea>
+        </div>
+
+        <div id="create-panel-lore" class="card" style="display:none">
+            <h3 style="margin-top:0;font-size:15px">World Lore</h3>
+            <textarea placeholder="Add world rules and background lore..."></textarea>
+        </div>
+    </div>
+
+    <!-- CHATS VIEW -->
+    <div id="view-chats" class="app-view">
+        <h2 style="color:#fff;margin-top:0;font-size:18px">💬 Active Chats</h2>
+        <div class="card">
+            <p style="color:#aaa;font-size:12px;margin:0">No active chats yet. Start a scenario from Home!</p>
+        </div>
+    </div>
+
+    <!-- PROFILE VIEW -->
+    <div id="view-profile" class="app-view">
+        <h2 style="color:#fff;margin-top:0;font-size:18px">👤 Creator Profile</h2>
+        <div class="card">
             <h3 style="margin:0 0 6px 0;color:#ff6600">@You</h3>
             <p style="color:#aaa;font-size:12px;margin:0">Manage your published scenarios and account settings.</p>
         </div>
-        <div style="background:#150f2e;border:1px solid #2a1f52;padding:15px;border-radius:10px;margin-bottom:12px">
+        <div class="card">
             <h3 style="margin:0 0 8px 0;font-size:14px;color:#fff">⚙️ Settings</h3>
-            <button style="background:#251a52;color:#fff;border:1px solid #2a1f52;padding:10px;border-radius:8px;font-size:12px;width:100%;font-weight:bold">🔑 Configure API Key & Model</button>
+            <button style="background:#251a52;color:#fff;border:1px solid #2a1f52;padding:10px;border-radius:8px;font-size:12px;width:100%;font-weight:bold;cursor:pointer">🔑 Configure API Key & Model</button>
         </div>
-        <button onclick="switchView('lorebook')" style="width:100%;background:#251a52;color:#fff;border:1px solid #2a1f52;padding:12px;border-radius:8px;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:8px">📖 Open World Lorebook</button>
     </div>
 
-    </body></html>
+    <!-- BOTTOM NAVIGATION BAR -->
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="switchView('home')">🏠 Home</button>
+        <button class="nav-btn" onclick="switchView('search')">🔍 Search</button>
+        <button class="nav-btn" onclick="switchView('create')">➕ Create</button>
+        <button class="nav-btn" onclick="switchView('chats')">💬 Chats</button>
+        <button class="nav-btn" onclick="switchView('profile')">👤 Profile</button>
+    </div>
+
+    <!-- APPLICATION LOGIC -->
+    <script>
+        function switchView(v) {
+            ['home', 'search', 'create', 'chats', 'profile'].forEach(id => {
+                const el = document.getElementById('view-' + id);
+                if (el) el.style.display = (id === v) ? 'block' : 'none';
+            });
+            window.scrollTo(0, 0);
+        }
+
+        function switchCreateTab(tab) {
+            ['details', 'intro', 'story', 'lore'].forEach(t => {
+                const p = document.getElementById('create-panel-' + t);
+                const b = document.getElementById('btn-create-' + t);
+                if (p) p.style.display = (t === tab) ? 'block' : 'none';
+                if (b) {
+                    if (t === tab) {
+                        b.classList.add('active');
+                    } else {
+                        b.classList.remove('active');
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
