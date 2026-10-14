@@ -84,10 +84,70 @@
 
     <!-- HOME VIEW -->
     <div id="view-home" class="app-view">
-        
-                <div style="font-size:11px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">The room falls into a tense space as you...</div>
+        <div class="card">
+            <span style="color:#ff6600;font-size:11px;font-weight:bold">FEATURED SCENARIO</span>
+            <h3 style="margin:4px 0 6px 0">The Lost Archivist</h3>
+            <p style="color:#aaa;font-size:12px;margin:0 0 12px 0">Step into the candlelight of the lost starlight archive and unearth forgotten realms.</p>
+            <button style="width:100%;background:#ff6600;color:#fff;border:none;padding:10px;border-radius:8px;font-weight:bold;cursor:pointer">💬 Start Chat</button>
+        </div>
+        <h3 style="margin:15px 0 8px 0;font-size:16px">🔥 Trending Scenarios</h3>
+        <div style="display:flex;gap:10px">
+            <div class="card" style="flex:1;margin-bottom:0">
+                <strong style="font-size:13px">Aira ❤️</strong><br><span style="color:#aaa;font-size:11px">By @Studio</span>
             </div>
-            <div style="font-size:10px;color:#777;text-align:right">2d ago</div>
+            <div class="card" style="flex:1;margin-bottom:0">
+                <strong style="font-size:13px">Westwood Academy ❤️</strong><br><span style="color:#aaa;font-size:11px">By @Dante</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH VIEW -->
+    <div id="view-search" class="app-view">
+        <h2 style="color:#fff;margin-top:0;font-size:18px">🔍 Search Scenarios</h2>
+        <input placeholder="Search stories, characters...">
+    </div>
+
+    <!-- CREATE VIEW -->
+    <div id="view-create" class="app-view">
+        <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto">
+            <button id="btn-create-details" class="sub-btn active" onclick="switchCreateTab('details')">🖼️ Details</button>
+            <button id="btn-create-intro" class="sub-btn" onclick="switchCreateTab('intro')">📖 Intro</button>
+            <button id="btn-create-story" class="sub-btn" onclick="switchCreateTab('story')">📜 Story</button>
+            <button id="btn-create-lore" class="sub-btn" onclick="switchCreateTab('lore')">⚔️ Lore</button>
+        </div>
+
+        <div id="create-panel-details" class="card">
+            <h3 style="margin-top:0;font-size:15px">Main Details</h3>
+            <label style="font-size:12px;color:#aaa">Scenario Name</label>
+            <input placeholder="Scenario Title. ex. A Forbidden Spell">
+            <label style="font-size:12px;color:#aaa;margin-top:8px;display:block">Scenario Description</label>
+            <textarea placeholder="This will be shown in the scenario card..."></textarea>
+            <label style="font-size:12px;color:#aaa;margin-top:8px;display:block">Cover Image URL</label>
+            <input placeholder="https://example.com/image.jpg">
+            <button style="width:100%;background:#ff6600;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:bold;margin-top:15px;cursor:pointer">🚀 Publish Scenario</button>
+        </div>
+
+        <div id="create-panel-intro" class="card" style="display:none">
+            <h3 style="margin-top:0;font-size:15px">First Message / Greeting</h3>
+            <textarea placeholder="Write opening greeting..."></textarea>
+        </div>
+
+        <div id="create-panel-story" class="card" style="display:none">
+            <h3 style="margin-top:0;font-size:15px">Story & Personality</h3>
+            <textarea placeholder="Describe story background and personality..."></textarea>
+        </div>
+
+        <div id="create-panel-lore" class="card" style="display:none">
+            <h3 style="margin-top:0;font-size:15px">World Lore</h3>
+            <textarea placeholder="Add world rules and background lore..."></textarea>
+        </div>
+    </div>
+
+    <!-- CHATS VIEW -->
+    <div id="view-chats" class="app-view">
+        <h2 style="color:#fff;margin-top:0;font-size:18px">💬 Active Chats</h2>
+        <div class="card">
+            <p style="color:#aaa;font-size:12px;margin:0">No active chats yet. Start a scenario from Home!</p>
         </div>
     </div>
 
