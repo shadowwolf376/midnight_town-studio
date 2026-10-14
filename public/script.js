@@ -69,3 +69,65 @@ openChat = function(scenarioName) {
     switchView('chats');
     loadChatSession(scenarioName);
 };
+
+// Render Chat History List inside Chats View
+function renderChatList() {
+    const chatBox = document.getElementById('chat-box');
+    if (!chatBox) return;
+    
+    let chats = JSON.parse(localStorage.getItem('midnight_chats') || '[]');
+    if (chats.length === 0) {
+        chatBox.innerHTML = `
+            <div style="background: #251a52; color: #ffaa00; padding: 10px; border-radius: 8px; font-size: 13px;">
+                ✨ No active chats yet. Select a scenario from Home to start!
+            </div>
+        `;
+        return;
+    }
+
+    let html = '<h4 style="color: #ff6600; margin-bottom: 10px; font-size: 14px;">Your Saved Conversations</h4>';
+    chats.forEach(c => {
+        html += `
+            <div onclick="openChat('${c.scenario}')" style="background: #251a52; color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a1f52;">
+                <span>💬 ${c.scenario}</span>
+                <span style="font-size: 11px; color: #ffaa00;">Resume →</span>
+            </div>
+        `;
+    });
+    chatBox.innerHTML = html;
+}
+
+// Render Bookmarks inside Profile View
+function renderProfileBookmarks() {
+    const profileCard = document.querySelector('#view-profile .editor-card');
+    if (!profileCard) return;
+
+    let bookmarks = JSON.parse(localStorage.getItem('midnight_bookmarks') || '[]');
+    let html = `
+        <h3>@You</h3>
+        <p style="color: #a39bb8; font-size: 13px; margin-bottom: 15px;">Manage your published scenarios and account settings.</p>
+        <h4 style="color: #ff6600; font-size: 14px; margin-bottom: 8px;">❤️ Bookmarked Scenarios</h4>
+    `;
+
+    if (bookmarks.length === 0) {
+        html += `<p style="color: #8c82a8; font-size: 12px;">No bookmarks yet. Tap the heart icon on any scenario card!</p>`;
+    } else {
+        bookmarks.forEach(b => {
+            html += `<div style="background: #251a52; padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 13px; color: #fff;">📌 ${b}</div>`;
+        });
+    }
+    profileCard.innerHTML = html;
+}
+
+// Hook into view switching to update lists automatically
+const masterSwitchView = switchView;
+switchView = function(viewName) {
+    masterSwitchView(viewName);
+    if (viewName === 'chats') {
+        document.getElementById('chat-title').innerText = '💬 My Chats';
+        renderChatList();
+    }
+    if (viewName === 'profile') {
+        renderProfileBookmarks();
+    }
+};
