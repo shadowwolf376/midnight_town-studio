@@ -8,102 +8,34 @@
 </head>
 <body>
     <div class="app-container">
-        <header class="app-header">
-            <h2>🔥 MidnightLab</h2>
-        </header>
-
-        <div class="tab-bar">
-            <button onclick="switchTab('details')">Details</button>
-            <button onclick="switchTab('intro')">Intro</button>
-            <button onclick="switchTab('story')">Story</button>
-            <button onclick="switchTab('lore')">Lore</button>
-            <button onclick="switchTab('settings')">Settings</button>
-        </div>
-
-        <div class="content-body">
-            <div id="tab-details" class="tab-content">
-                <div class="section-card">
-                    <h3>Main Details</h3>
-                    <label>Scenario Name</label>
-                    <input type="text" placeholder="Scenario Title. ex. A Forbidden Spell" maxlength="35">
-                    <label>Scenario Description</label>
-                    <textarea placeholder="This will be shown in the scenario card..." maxlength="250"></textarea>
-                </div>
-            </div>
-
-            <div id="tab-intro" class="tab-content" style="display: none;">
-                <div class="section-card">
-                    <h3>Introduction</h3>
-                    <textarea placeholder="Add an optional intro screen..."></textarea>
-                </div>
-            </div>
-
-            <div id="tab-story" class="tab-content" style="display: none;">
-                <div class="section-card">
-                    <h3>Backstory / World Details</h3>
-                    <textarea placeholder="Define your world context..."></textarea>
-                </div>
-            </div>
-
-            <div id="tab-lore" class="tab-content" style="display: none;">
-                <div class="section-card">
-                    <h3>Lorebook Entries</h3>
-                    <textarea placeholder="Add lore entries and keywords..."></textarea>
-                </div>
-            </div>
-
-            <div id="tab-settings" class="tab-content" style="display: none;">
-                <div class="section-card">
-                    <h3>Settings</h3>
-                    <p>Configure advanced options here.</p>
-                </div>
-            </div>
-        </div>
-
-        <button class="publish-btn">🚀 Publish Scenario</button>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MidnightLab</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="app-container">
 
         <!-- VIEW 1: HOME SCREEN -->
         <div id="view-home" class="app-view">
             <header class="app-header">
                 <h2>🔥 MidnightLab</h2>
+                <button class="create-top-btn" onclick="switchView('create')">+ Create</button>
             </header>
             
-            <div class="section-card">
+            <div class="featured-card">
                 <span class="badge">FEATURED SCENARIO</span>
                 <h3>The Lost Archivist</h3>
                 <p>Step into the candlelight of the lost starlight archive and unearth forgotten realms.</p>
-                <button class="publish-btn" style="padding: 10px;">💬 Start Chat</button>
+                <button class="chat-btn">💬 Start Chat</button>
             </div>
 
-            <div class="trending-header">
+            <div class="section-title">
                 <h3>🔥 Trending Scenarios</h3>
             </div>
             
             <div class="scenario-grid">
-                <div class="section-card">
+                <div class="scenario-card">
                     <h3>Aira</h3>
+                    <p class="author">By @Studio</p>
                     <p>Step into the candlelight of the starlight archive.</p>
                 </div>
-                <div class="section-card">
+                <div class="scenario-card">
                     <h3>Westwood Academy</h3>
+                    <p class="author">By @Dante</p>
                     <p>Arrives at Westwood Academy, a rundown...</p>
                 </div>
             </div>
@@ -115,52 +47,51 @@
                 <h2>🔥 MidnightLab</h2>
             </header>
 
-            <!-- Scenario Editor Tabs -->
             <div class="tab-bar">
-                <button onclick="switchTab('details')">Details</button>
-                <button onclick="switchTab('intro')">Intro</button>
-                <button onclick="switchTab('story')">Story</button>
-                <button onclick="switchTab('lore')">Lore</button>
-                <button onclick="switchTab('settings')">Settings</button>
+                <button id="tab-btn-details" class="tab-btn active" onclick="switchTab('details')">🖼️ Details</button>
+                <button id="tab-btn-intro" class="tab-btn" onclick="switchTab('intro')">📖 Intro</button>
+                <button id="tab-btn-story" class="tab-btn" onclick="switchTab('story')">📜 Story</button>
+                <button id="tab-btn-lore" class="tab-btn" onclick="switchTab('lore')">🗡️ Lore</button>
+                <button id="tab-btn-settings" class="tab-btn" onclick="switchTab('settings')">⚙️ Settings</button>
             </div>
 
-            <!-- Tab Contents -->
             <div class="content-body">
                 <div id="tab-details" class="tab-content">
-                    <div class="section-card">
+                    <div class="editor-card">
                         <h3>Main Details</h3>
                         <label>Scenario Name</label>
                         <input type="text" placeholder="Scenario Title. ex. A Forbidden Spell" maxlength="35">
+                        
                         <label>Scenario Description</label>
                         <textarea placeholder="This will be shown in the scenario card..." maxlength="250"></textarea>
                     </div>
                 </div>
 
                 <div id="tab-intro" class="tab-content" style="display: none;">
-                    <div class="section-card">
+                    <div class="editor-card">
                         <h3>Introduction</h3>
-                        <textarea placeholder="Add an optional intro screen..."></textarea>
+                        <textarea placeholder="Add an optional intro screen shown to players..."></textarea>
                     </div>
                 </div>
 
                 <div id="tab-story" class="tab-content" style="display: none;">
-                    <div class="section-card">
+                    <div class="editor-card">
                         <h3>Backstory / World Details</h3>
-                        <textarea placeholder="Define your world context..."></textarea>
+                        <textarea placeholder="Define your world context and backstory..."></textarea>
                     </div>
                 </div>
 
                 <div id="tab-lore" class="tab-content" style="display: none;">
-                    <div class="section-card">
+                    <div class="editor-card">
                         <h3>Lorebook Entries</h3>
                         <textarea placeholder="Add lore entries and keywords..."></textarea>
                     </div>
                 </div>
 
                 <div id="tab-settings" class="tab-content" style="display: none;">
-                    <div class="section-card">
+                    <div class="editor-card">
                         <h3>Settings</h3>
-                        <p>Configure advanced options here.</p>
+                        <p>Configure model temperature and advanced parameters.</p>
                     </div>
                 </div>
             </div>
@@ -168,13 +99,28 @@
             <button class="publish-btn">🚀 Publish Scenario</button>
         </div>
 
-        <!-- BOTTOM NAVIGATION BAR -->
+        <!-- FIXED BOTTOM NAVIGATION BAR -->
         <nav class="bottom-nav">
-            <button onclick="switchView('home')">🏠 Home</button>
-            <button onclick="switchView('search')">🔍 Search</button>
-            <button onclick="switchView('create')">➕ Create</button>
-            <button onclick="switchView('chats')">💬 Chats</button>
-            <button onclick="switchView('profile')">👤 Profile</button>
+            <button id="nav-home" class="nav-item active" onclick="switchView('home')">
+                <span class="icon">🟧</span>
+                <span class="label">Home</span>
+            </button>
+            <button id="nav-search" class="nav-item" onclick="switchView('search')">
+                <span class="icon">🔍</span>
+                <span class="label">Search</span>
+            </button>
+            <button id="nav-create" class="nav-item" onclick="switchView('create')">
+                <span class="icon">➕</span>
+                <span class="label">Create</span>
+            </button>
+            <button id="nav-chats" class="nav-item" onclick="switchView('chats')">
+                <span class="icon">💬</span>
+                <span class="label">Chats</span>
+            </button>
+            <button id="nav-profile" class="nav-item" onclick="switchView('profile')">
+                <span class="icon">👤</span>
+                <span class="label">Profile</span>
+            </button>
         </nav>
 
     </div>
@@ -182,4 +128,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
