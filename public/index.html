@@ -144,10 +144,25 @@
     </div>
 
     <!-- CHATS VIEW -->
+    <!-- CHATS VIEW -->
     <div id="view-chats" class="app-view">
-        <h2 style="color:#fff;margin-top:0;font-size:18px">💬 Active Chats</h2>
-        <div class="card">
-            <p style="color:#aaa;font-size:12px;margin:0">No active chats yet. Start a scenario from Home!</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <h2 style="color:#fff;margin:0;font-size:20px">Your chats</h2>
+            <button style="background:#150f2e;color:#fff;border:1px solid #2a1f52;padding:6px 12px;border-radius:16px;font-size:11px;cursor:pointer">✓ Select</button>
+        </div>
+        <p style="color:#aaa;font-size:11px;margin:0 0 12px 0">0 chats</p>
+        
+        <input placeholder="Search chats..." style="margin-bottom:12px">
+
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+            <button style="flex:1;background:#ff6600;color:#fff;border:none;padding:8px;border-radius:16px;font-size:12px;font-weight:bold;cursor:pointer">💬 All</button>
+            <button style="flex:1;background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:8px;border-radius:16px;font-size:12px;cursor:pointer">📌 Pinned</button>
+            <button style="flex:1;background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:8px;border-radius:16px;font-size:12px;cursor:pointer">📁 Archived</button>
+        </div>
+
+        <div class="card" style="text-align:center;padding:30px 15px;color:#aaa;">
+            <p style="margin:0;font-size:13px">No active chats yet.</p>
+            <p style="margin:6px 0 0 0;font-size:11px;color:#666">Start a scenario from Home to begin chatting!</p>
         </div>
     </div>
 
