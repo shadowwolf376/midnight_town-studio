@@ -356,3 +356,36 @@ document.addEventListener('click', function(e) {
         }
     }
 });
+
+// Chat Input Handlers
+document.addEventListener('DOMContentLoaded', () => {
+    bindChatSend();
+});
+
+function bindChatSend() {
+    const sendBtn = document.querySelector('button[style*="background: #ff6600"]');
+    const input = document.querySelector('input[placeholder*="Type your message"]');
+    
+    if (sendBtn && input) {
+        sendBtn.onclick = () => {
+            if (input.value) {
+                sendChatMessage(input.value);
+                input.value = '';
+            }
+        };
+        
+        input.onkeypress = (e) => {
+            if (e.key === 'Enter' && input.value) {
+                sendChatMessage(input.value);
+                input.value = '';
+            }
+        };
+    }
+}
+
+// Re-bind when openChat runs
+const originalOpenChat = window.openChat;
+window.openChat = function(name) {
+    if (originalOpenChat) originalOpenChat(name);
+    setTimeout(bindChatSend, 100);
+};
