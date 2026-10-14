@@ -67,6 +67,14 @@
                         
                         <label>Scenario Description</label>
                         <textarea placeholder="This will be shown in the scenario card..." maxlength="250"></textarea>
+                        <label style="margin-top: 15px;">Category Tags</label>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
+                            <button type="button" class="tag-chip" onclick="toggleTag(this)" style="background: #251a52; color: #ffaa00; border: 1px solid #ff6600; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer;">✨ Fantasy</button>
+                            <button type="button" class="tag-chip" onclick="toggleTag(this)" style="background: #150f2e; color: #a39bb8; border: 1px solid #2a1f52; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer;">🚀 Sci-Fi</button>
+                            <button type="button" class="tag-chip" onclick="toggleTag(this)" style="background: #150f2e; color: #a39bb8; border: 1px solid #2a1f52; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer;">🔮 Mystery</button>
+                            <button type="button" class="tag-chip" onclick="toggleTag(this)" style="background: #150f2e; color: #a39bb8; border: 1px solid #2a1f52; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer;">💖 Romance</button>
+                        </div>
+
                     </div>
                 </div>
 
@@ -178,3 +186,5 @@
                 <p style="color: #a39bb8; font-size: 13px;">Manage your published scenarios and account settings.</p>
             </div>
         </div>
+
+<!-- Add this inside tab-details via script or update -->
