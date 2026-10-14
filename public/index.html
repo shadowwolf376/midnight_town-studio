@@ -68,3 +68,118 @@
 </html>
 
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MidnightLab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- VIEW 1: HOME SCREEN -->
+        <div id="view-home" class="app-view">
+            <header class="app-header">
+                <h2>🔥 MidnightLab</h2>
+            </header>
+            
+            <div class="section-card">
+                <span class="badge">FEATURED SCENARIO</span>
+                <h3>The Lost Archivist</h3>
+                <p>Step into the candlelight of the lost starlight archive and unearth forgotten realms.</p>
+                <button class="publish-btn" style="padding: 10px;">💬 Start Chat</button>
+            </div>
+
+            <div class="trending-header">
+                <h3>🔥 Trending Scenarios</h3>
+            </div>
+            
+            <div class="scenario-grid">
+                <div class="section-card">
+                    <h3>Aira</h3>
+                    <p>Step into the candlelight of the starlight archive.</p>
+                </div>
+                <div class="section-card">
+                    <h3>Westwood Academy</h3>
+                    <p>Arrives at Westwood Academy, a rundown...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: CREATE / EDITOR SCREEN -->
+        <div id="view-create" class="app-view" style="display: none;">
+            <header class="app-header">
+                <h2>🔥 MidnightLab</h2>
+            </header>
+
+            <!-- Scenario Editor Tabs -->
+            <div class="tab-bar">
+                <button onclick="switchTab('details')">Details</button>
+                <button onclick="switchTab('intro')">Intro</button>
+                <button onclick="switchTab('story')">Story</button>
+                <button onclick="switchTab('lore')">Lore</button>
+                <button onclick="switchTab('settings')">Settings</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="content-body">
+                <div id="tab-details" class="tab-content">
+                    <div class="section-card">
+                        <h3>Main Details</h3>
+                        <label>Scenario Name</label>
+                        <input type="text" placeholder="Scenario Title. ex. A Forbidden Spell" maxlength="35">
+                        <label>Scenario Description</label>
+                        <textarea placeholder="This will be shown in the scenario card..." maxlength="250"></textarea>
+                    </div>
+                </div>
+
+                <div id="tab-intro" class="tab-content" style="display: none;">
+                    <div class="section-card">
+                        <h3>Introduction</h3>
+                        <textarea placeholder="Add an optional intro screen..."></textarea>
+                    </div>
+                </div>
+
+                <div id="tab-story" class="tab-content" style="display: none;">
+                    <div class="section-card">
+                        <h3>Backstory / World Details</h3>
+                        <textarea placeholder="Define your world context..."></textarea>
+                    </div>
+                </div>
+
+                <div id="tab-lore" class="tab-content" style="display: none;">
+                    <div class="section-card">
+                        <h3>Lorebook Entries</h3>
+                        <textarea placeholder="Add lore entries and keywords..."></textarea>
+                    </div>
+                </div>
+
+                <div id="tab-settings" class="tab-content" style="display: none;">
+                    <div class="section-card">
+                        <h3>Settings</h3>
+                        <p>Configure advanced options here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="publish-btn">🚀 Publish Scenario</button>
+        </div>
+
+        <!-- BOTTOM NAVIGATION BAR -->
+        <nav class="bottom-nav">
+            <button onclick="switchView('home')">🏠 Home</button>
+            <button onclick="switchView('search')">🔍 Search</button>
+            <button onclick="switchView('create')">➕ Create</button>
+            <button onclick="switchView('chats')">💬 Chats</button>
+            <button onclick="switchView('profile')">👤 Profile</button>
+        </nav>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

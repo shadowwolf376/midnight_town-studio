@@ -46,3 +46,33 @@ function switchTab(tabName) {
     }
 }
 
+
+
+// Switch between bottom navbar views (Home, Create, etc.)
+function switchView(viewName) {
+    const views = document.querySelectorAll('.app-view');
+    views.forEach(v => v.style.display = 'none');
+
+    const target = document.getElementById('view-' + viewName);
+    if (target) {
+        target.style.display = 'block';
+    } else {
+        // Fallback for views not built yet
+        alert(viewName + " view coming soon!");
+        document.getElementById('view-home').style.display = 'block';
+    }
+}
+
+// Switch between scenario editor tabs (Details, Intro, Story, etc.)
+function switchTab(tabName) {
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(el => {
+        el.style.display = 'none';
+    });
+
+    const target = document.getElementById('tab-' + tabName);
+    if (target) {
+        target.style.display = 'block';
+    }
+}
+
