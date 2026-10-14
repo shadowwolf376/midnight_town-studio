@@ -17,3 +17,19 @@ function switchTab(tabName) {
   }
 }
 
+
+
+function switchTab(tabName) {
+  // Hide all contents
+  const contents = document.querySelectorAll('.tab-content');
+  contents.forEach(el => {
+    el.style.display = 'none';
+  });
+
+  // Show selected content
+  const target = document.getElementById('tab-type-' + tabName) || document.getElementById('tab-' + tabName);
+  if (target) {
+    target.style.display = 'block';
+  }
+}
+
