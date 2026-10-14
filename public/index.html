@@ -315,48 +315,82 @@
 </div>
 
 
-<!-- Top Tab Buttons -->
-<div class="tab-bar">
-  <button onclick="switchTab('details')">Details</button>
-  <button onclick="switchTab('intro')">Intro</button>
-  <button onclick="switchTab('story')">Story</button>
-  <button onclick="switchTab('lore')">Lore</button>
-  <button onclick="switchTab('settings')">Settings</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MidnightLab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h2>🔥 MidnightLab</h2>
+        </header>
 
-<!-- Tab Content MUST go right here -->
-<div id="tab-details" class="tab-content">
-  <h2>Main Details</h2>
-  <input type="text" placeholder="Scenario Name">
-  <textarea placeholder="Scenario Description"></textarea>
-</div>
+        <!-- Top Tabs -->
+        <div class="tab-bar">
+            <button onclick="switchTab('details')">Details</button>
+            <button onclick="switchTab('intro')">Intro</button>
+            <button onclick="switchTab('story')">Story</button>
+            <button onclick="switchTab('lore')">Lore</button>
+            <button onclick="switchTab('settings')">Settings</button>
+        </div>
 
-<!-- Publish button goes under the tab content -->
-<button class="publish-btn">🚀 Publish Scenario</button>
+        <!-- Single Content Body -->
+        <div class="content-body">
+            <div id="tab-details" class="tab-content">
+                <div class="section-card">
+                    <h3>Main Details</h3>
+                    <label>Scenario Name</label>
+                    <input type="text" placeholder="Scenario Title. ex. A Forbidden Spell" maxlength="35">
+                    <label>Scenario Description</label>
+                    <textarea placeholder="This will be shown in the scenario card..." maxlength="250"></textarea>
+                </div>
+            </div>
+
+            <div id="tab-intro" class="tab-content" style="display: none;">
+                <div class="section-card">
+                    <h3>Introduction</h3>
+                    <textarea placeholder="Add an optional intro screen..."></textarea>
+                </div>
+            </div>
+
+            <div id="tab-story" class="tab-content" style="display: none;">
+                <div class="section-card">
+                    <h3>Backstory / World Details</h3>
+                    <textarea placeholder="Define your world context..."></textarea>
+                </div>
+            </div>
+
+            <div id="tab-lore" class="tab-content" style="display: none;">
+                <div class="section-card">
+                    <h3>Lorebook Entries</h3>
+                    <textarea placeholder="Add lore entries and keywords..."></textarea>
+                </div>
+            </div>
+
+            <div id="tab-settings" class="tab-content" style="display: none;">
+                <div class="section-card">
+                    <h3>Settings</h3>
+                    <p>Configure advanced options here.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Publish Button -->
+        <button class="publish-btn">🚀 Publish Scenario</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
 
 
 
-<!-- Main Wrapper for Tabs -->
-<div class="editor-body">
 
-  <div id="tab-details" class="tab-content" style="display: block;">
-    <h3>Main Details</h3>
-    <label>Scenario Name</label>
-    <input type="text" placeholder="Scenario Title. ex. A Forbidden Spell" maxlength="35">
-    
-    <label>Scenario Description</label>
-    <textarea placeholder="This will be shown in the scenario card..." maxlength="250"></textarea>
-  </div>
 
-  <div id="tab-intro" class="tab-content" style="display: none;">
-    <h3>Introduction</h3>
-    <textarea placeholder="Add an optional intro screen..."></textarea>
-  </div>
 
-  <div id="tab-story" class="tab-content" style="display: none;">
-    <h3>Backstory / World Details</h3>
-    <textarea placeholder="Define your world context..."></textarea>
-  </div>
-
-</div>
 
