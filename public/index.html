@@ -20,4 +20,11 @@
         <button onclick="switchView('lorebook')" style="width:100%;background:#251a52;color:#fff;border:1px solid #2a1f52;padding:12px;border-radius:8px;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:8px">📖 Open World Lorebook</button>
     </div>
 
-    </body></html>
+    <script>
+function switchView(v) {
+    ['home', 'search', 'create', 'chats', 'profile', 'lorebook'].forEach(id => {
+        const el = document.getElementById('view-' + id);
+        if (el) el.style.display = (id === v) ? 'block' : 'none';
+    });
+}
+</script></body></html>
