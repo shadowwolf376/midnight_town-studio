@@ -398,3 +398,20 @@ window.switchView = function(view) {
         renderChatList();
     }
 };
+
+
+window.switchView = function(viewName) {
+    // Hide all views
+    document.querySelectorAll('[id^="view-"]').forEach(el => {
+        el.style.display = 'none';
+    });
+    // Show target view
+    const target = document.getElementById('view-' + viewName);
+    if (target) {
+        target.style.display = 'block';
+    }
+    // Render chats list dynamically if switching to chats
+    if (viewName === 'chats' && typeof renderChatList === 'function') {
+        renderChatList();
+    }
+};
