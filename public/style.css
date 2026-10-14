@@ -1,4 +1,91 @@
-git add .
-git commit -m "Fix CSS layout and tab placement"
-git push origin main
+body {
+    background-color: #0f0f13;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.app-container {
+    padding: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+}
+
+.app-header h2 {
+    color: #ff6600;
+    margin-bottom: 15px;
+}
+
+.tab-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.tab-bar button {
+    background: #1e1e24;
+    color: #ffaa00;
+    border: 1px solid #ff6600;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.section-card {
+    background: #17171d;
+    border: 1px solid #2a2a35;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.section-card h3 {
+    margin-top: 0;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    color: #b0b0b0;
+    margin-bottom: 4px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    background: #22222b;
+    color: #ffffff;
+    border: 1px solid #3a3a48;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.publish-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #ff7700, #ff4400);
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
 
