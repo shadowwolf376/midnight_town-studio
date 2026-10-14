@@ -17,3 +17,11 @@ function switchTab(tabName) {
     if (target) target.style.display = 'block';
     if (activeBtn) activeBtn.classList.add('active');
 }
+
+// Toggle bookmark status for a scenario
+function toggleBookmark(event, title) {
+    event.stopPropagation(); // Prevent opening the chat when clicking the heart
+    const btn = event.currentTarget;
+    btn.textContent = btn.textContent === '❤️' ? '🤍' : '❤️';
+    alert(`Updated bookmarks for: ${title}`);
+}
