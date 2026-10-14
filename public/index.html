@@ -141,3 +141,40 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+        <!-- VIEW: SEARCH -->
+        <div id="view-search" class="app-view" style="display: none;">
+            <header class="app-header">
+                <h2>🔍 Search Scenarios</h2>
+            </header>
+            <div class="editor-card">
+                <input type="text" placeholder="Search titles, authors, tags..." style="width: 100%; background: #0f0a21; color: #fff; border: 1px solid #2a1f52; padding: 12px; border-radius: 8px;">
+            </div>
+        </div>
+
+        <!-- VIEW: CHATS -->
+        <div id="view-chats" class="app-view" style="display: none;">
+            <header class="app-header">
+                <h2 id="chat-title">💬 Chat</h2>
+            </header>
+            <div id="chat-box" style="background: #150f2e; border: 1px solid #2a1f52; border-radius: 12px; padding: 15px; min-height: 280px; max-height: 350px; overflow-y: auto; margin-bottom: 12px;">
+                <div style="background: #251a52; color: #ffaa00; padding: 10px; border-radius: 8px; font-size: 13px;">
+                    ✨ Select a scenario from Home to start chatting!
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="chat-input" placeholder="Type your message..." style="flex: 1; background: #0f0a21; color: #fff; border: 1px solid #2a1f52; padding: 10px; border-radius: 8px;">
+                <button onclick="sendMessage()" style="background: #ff6600; color: #fff; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer;">Send</button>
+            </div>
+        </div>
+
+        <!-- VIEW: PROFILE -->
+        <div id="view-profile" class="app-view" style="display: none;">
+            <header class="app-header">
+                <h2>👤 Creator Profile</h2>
+            </header>
+            <div class="editor-card">
+                <h3>@You</h3>
+                <p style="color: #a39bb8; font-size: 13px;">Manage your published scenarios and account settings.</p>
+            </div>
+        </div>
