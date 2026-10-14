@@ -131,3 +131,24 @@ switchView = function(viewName) {
         renderProfileBookmarks();
     }
 };
+
+function renderProfileBookmarks() {
+    const profileCard = document.getElementById('profile-card');
+    if (!profileCard) return;
+
+    let bookmarks = JSON.parse(localStorage.getItem('midnight_bookmarks') || '[]');
+    let html = `
+        <h3>@You</h3>
+        <p style="color: #a39bb8; font-size: 13px; margin-bottom: 15px;">Manage your published scenarios and account settings.</p>
+        <h4 style="color: #ff6600; font-size: 14px; margin-bottom: 8px;">❤️ Bookmarked Scenarios</h4>
+    `;
+
+    if (bookmarks.length === 0) {
+        html += `<p style="color: #8c82a8; font-size: 12px;">No bookmarks yet. Tap the heart icon on any scenario card!</p>`;
+    } else {
+        bookmarks.forEach(b => {
+            html += `<div style="background: #251a52; padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 13px; color: #fff;">📌 ${b}</div>`;
+        });
+    }
+    profileCard.innerHTML = html;
+}
