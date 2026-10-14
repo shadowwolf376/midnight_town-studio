@@ -213,7 +213,7 @@ function sendChatMessage(text) {
     setTimeout(() => {
         const aiMsg = document.createElement('div');
         aiMsg.style.cssText = 'background: #251a52; color: #ffffff; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; text-align: left; border: 1px solid #2a1f52;';
-        aiMsg.innerText = "Nakita ko ang mensahe mo. Magpatuloy tayo sa kuwento...";
+        aiMsg.innerText = "I received your message. Let us continue the story...";
         chatBox.appendChild(aiMsg);
         chatBox.scrollTop = chatBox.scrollHeight;
     }, 800);
