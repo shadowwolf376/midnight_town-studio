@@ -1,396 +1,90 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="midnight">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MidnightLab</title>
-    <style>
-        :root {
-            --bg-main: #0a0812;
-            --bg-card: #141022;
-            --bg-nav: #0f0c1b;
-            --bg-input: #1b162d;
-            --text-main: #f1f5f9;
-            --text-sub: #94a3b8;
-            --accent: #f97316;
-            --border: rgba(255, 255, 255, 0.08);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            height: 100vh; height: 100dvh;
-            display: flex; flex-direction: column; overflow: hidden;
-        }
-        .brand-header { padding: 12px 16px; background: var(--bg-nav); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-        .logo-text { font-weight: 800; font-size: 18px; color: var(--accent); display: flex; align-items: center; gap: 6px; }
-        .view { display: none; flex: 1; overflow-y: auto; padding-bottom: 70px; }
-        .view.active { display: block; }
-        .hero-banner { position: relative; margin: 12px; border-radius: 16px; overflow: hidden; background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(10,8,18,0.95) 100%), linear-gradient(135deg, #2e1065, #0f172a); padding: 24px 16px 16px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--border); }
-        .hero-title { font-size: 20px; font-weight: 800; }
-        .hero-desc { font-size: 12px; color: var(--text-sub); }
-        .btn-primary { background: #ffffff; color: #000; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; }
-        .section-header-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 6px; }
-        .section-title { font-size: 15px; font-weight: 700; }
-        .toggle-container { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-sub); }
-        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-input); transition: .3s; border-radius: 20px; border: 1px solid var(--border); }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: var(--text-sub); transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--accent); }
-        input:checked + .slider:before { transform: translateX(16px); background-color: white; }
-        .card-grid { display: flex; gap: 12px; overflow-x: auto; padding: 6px 16px 12px; scrollbar-width: none; }
-        .card-grid::-webkit-scrollbar { display: none; }
-        .bot-card { min-width: 140px; width: 140px; height: 180px; border-radius: 12px; background: linear-gradient(135deg, #3b0764, #1e1b4b); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; border: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
-        .card-content { position: relative; z-index: 1; }
-        .card-name { font-weight: 700; font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-creator { font-size: 10px; color: var(--text-sub); margin-bottom: 4px; }
-        .card-desc { font-size: 10px; color: #cbd5e1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .studio-tabs { display: flex; background: var(--bg-nav); padding: 8px 12px; gap: 8px; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
-        .studio-tab { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--text-sub); background: transparent; border: none; cursor: pointer; white-space: nowrap; }
-        .studio-tab.active { background: rgba(249, 115, 22, 0.15); color: var(--accent); border: 1px solid rgba(249, 115, 22, 0.3); }
-        .studio-content { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-        .studio-panel { display: none; flex-direction: column; gap: 14px; }
-        .studio-panel.active { display: flex; }
-        .studio-section { background: var(--bg-card); border-radius: 12px; padding: 16px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
-        .field-group { display: flex; flex-direction: column; gap: 6px; }
-        .field-label { font-size: 12px; font-weight: 600; color: var(--text-main); }
-        .field-input, .field-textarea { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text-main); font-size: 13px; outline: none; }
-        .save-studio-btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: var(--bg-nav); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 50; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-sub); font-size: 10px; cursor: pointer; }
-        .nav-item.active { color: var(--accent); font-weight: bold; }
-        .nav-icon { font-size: 18px; }
-        .chat-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 80; flex-direction: column; }
-        .chat-header { padding: 10px 14px; background: var(--bg-nav); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
-        .back-btn { background: none; border: none; color: var(--text-main); font-size: 20px; cursor: pointer; }
-        .chat-body { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--bg-main); }
-        .msg-box { max-width: 85%; padding: 10px 14px; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); font-size: 14px; line-height: 1.4; }
-        .chat-input-bar { padding: 10px; background: var(--bg-nav); border-top: 1px solid var(--border); display: flex; gap: 8px; }
-        .chat-input-bar input { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text-main); outline: none; }
-        .chat-input-bar button { padding: 10px 16px; border-radius: 8px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <div class="brand-header">
-        <div class="logo-text">🔥 MidnightLab</div>
-            
+body {
+    background-color: #0f0f13;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+}
 
-        
+.app-container {
+    padding: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+}
 
-        
+.app-header h2 {
+    color: #ff6600;
+    margin-bottom: 15px;
+}
 
-        
-    </div>
+.tab-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
 
-        
+.tab-bar button {
+    background: #1e1e24;
+    color: #ffaa00;
+    border: 1px solid #ff6600;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+}
 
-        
-    </div>
+.section-card {
+    background: #17171d;
+    border: 1px solid #2a2a35;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
 
-        
-          <div class="card">
-            <div class="field-group">
-              <label class="field-label" for="content-rating">
-            </div>
-          </div>
-        </div>
+.section-card h3 {
+    margin-top: 0;
+    color: #ffffff;
+    font-size: 16px;
+}
 
-    
-</div>
+label {
+    display: block;
+    font-size: 13px;
+    color: #b0b0b0;
+    margin-bottom: 4px;
+}
 
-    <button onclick="switchView('studio')" style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;">+ Create</button>
-    </div>
-    <div class="view active" id="homeView">
-        <div class="hero-banner">
-            <div style="font-size: 10px; font-weight: bold; color: var(--accent); text-transform: uppercase;">Featured Scenario</div>
-            <div class="hero-title">The Lost Archivist</div>
-            <div class="hero-desc">Step into the candlelight of the lost starlight archive and unearth forgotten realms.</div>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="btn-primary" onclick="startChat('aira')">💬 Start Chat</button>
-            </div>
-        </div>
-        <div class="section-header-bar">
-            <div class="section-title">🔥 Trending Scenarios</div>
-            <div class="toggle-container">
-                <span>Show Mature?</span>
-                <label class="switch">
-                    <input type="checkbox" id="matureToggle" onchange="renderGrids()">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        <div class="card-grid" id="trendingGrid"></div>
-        <div class="section-header-bar">
-            <div class="section-title">⭐ Community's Choice</div>
-        </div>
-        <div class="card-grid" id="communityGrid"></div>
-    </div>
-    <div class="view" id="studioView">
-        <div class="studio-tabs">
-            <button class="studio-tab active" onclick="switchStudioTab('details')" id="tabDetails">🖼️ Details</button>
-            <button class="studio-tab" onclick="switchStudioTab('intro')" id="tabIntro">📖 Intro</button>
-            <button class="studio-tab" onclick="switchStudioTab('story')" id="tabStory">📜 Story</button>
-            <button class="studio-tab" onclick="switchStudioTab('lore')" id="tabLore">🗝️ Lore</button>
-            <button class="studio-tab" onclick="switchStudioTab('settings')" id="tabSettings">⚙️ Settings</button>
-        </div>
-        <div class="studio-content">
-            <div class="studio-panel active" id="panelDetails">
-                <div class="studio-section">
-                    <div style="font-size: 14px; font-weight: 700;">Scenario Main Details</div>
-                    
-                </div>
-            </div>
-                
+input[type="text"], textarea {
+    width: 100%;
+    background: #22222b;
+    color: #ffffff;
+    border: 1px solid #3a3a48;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+}
 
-    <button class="save-studio-btn" onclick="publishStudioScenario()">🚀     
-        
-    Publish Scenario</button>
-        </div>
-    </div>
-    <div class="view" id="searchView">
-        <div style="padding: 16px;">
-            <h2>🔍 Search Scenarios</h2>
-            <input type="text" class="field-input" placeholder="Search characters or tags..." style="margin-top: 10px;">
-        </div>
-    </div>
-    <div class="view" id="chatsView">
-        <div style="padding: 16px;">
-            <h2>💬 Active Chats</h2>
-            <p style="color: var(--text-sub); margin-top: 10px;">Select a character from Home to start chatting!</p>
-        </div>
-    </div>
-    <div class="view" id="profileView">
-        <div style="padding: 16px;">
-            <h2>👤 User Profile</h2>
-            <p style="color: var(--text-sub); margin-top: 10px;">Logged in as Creator @You</p>
-        </div>
-    </div>
-    <div class="bottom-nav">
-        <div class="nav-item active" id="navHome" onclick="switchView('home')"><span class="nav-icon">🟧</span><span>Home</span></div>
-        <div class="nav-item" id="navSearch" onclick="switchView('search')"><span class="nav-icon">🔍</span><span>Search</span></div>
-        <div class="nav-item" id="navCreate" onclick="switchView('studio')"><span class="nav-icon" style="color: var(--accent);">➕</span><span style="color: var(--accent);">Create</span></div>
-        <div class="nav-item" id="navChats" onclick="switchView('chats')"><span class="nav-icon">💬</span><span>Chats</span></div>
-        <div class="nav-item" id="navProfile" onclick="switchView('profile')"><span class="nav-icon">👤</span><span>Profile</span></div>
-    </div>
-    <div class="chat-view" id="chatView">
-        <div class="chat-header">
-            <button class="back-btn" onclick="closeChat()">←</button>
-            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent);" id="chatAvatar"></div>
-            <div>
-                <div style="font-weight: bold; font-size: 14px;" id="chatName">Aira</div>
-                <div style="font-size: 10px; opacity: 0.7;" id="chatTitle">Archivist of Starlight</div>
-            </div>
-        </div>
-        <div class="chat-body" id="chatMessages"></div>
-        <div class="chat-input-bar">
-            <input type="text" id="userInput" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
-            <button onclick="sendMessage()">Send</button>
-        </div>
-    </div>
-    <script>
-        let bots = {
-            "aira": { name: "Aira", title: "Archivist of Starlight", creator: "@Studio", desc: "Step into the candlelight of the starlight archive.", greeting: "Greetings, traveler of flesh and bone. Step into the candlelight.", isMature: false },
-            "kael": { name: "Westwood Academy: II", title: "Rogue Student", creator: "@Dante", desc: "Arrives at Westwood Academy, a rundown boarding school.", greeting: "System online. Keep it brief—the net is crawling with corps tonight.", isMature: false }
-        };
-        let activeBotKey = "aira";
-        let messages = [];
-        function switchView(viewName) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(viewName === 'home') { document.getElementById('homeView').classList.add('active'); document.getElementById('navHome').classList.add('active'); }
-            else if(viewName === 'studio') { document.getElementById('studioView').classList.add('active'); document.getElementById('navCreate').classList.add('active'); }
-            else if(viewName === 'search') { document.getElementById('searchView').classList.add('active'); document.getElementById('navSearch').classList.add('active'); }
-            else if(viewName === 'chats') { document.getElementById('chatsView').classList.add('active'); document.getElementById('navChats').classList.add('active'); }
-            else if(viewName === 'profile') { document.getElementById('profileView').classList.add('active'); document.getElementById('navProfile').classList.add('active'); }
-        }
-        function switchStudioTab(tabName) {
-            document.querySelectorAll('.studio-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.studio-panel').forEach(p => p.classList.remove('active'));
-            if(tabName === 'details') { document.getElementById('tabDetails').classList.add('active'); document.getElementById('panelDetails').classList.add('active'); }
-            else if(tabName === 'intro') { document.getElementById('tabIntro').classList.add('active'); document.getElementById('panelIntro').classList.add('active'); }
-            else if(tabName === 'story') { document.getElementById('tabStory').classList.add('active'); document.getElementById('panelStory').classList.add('active'); }
-            else if(tabName === 'lore') { document.getElementById('tabLore').classList.add('active'); document.getElementById('panelLore').classList.add('active'); }
-            else if(tabName === 'settings') { document.getElementById('tabSettings').classList.add('active'); document.getElementById('panelSettings').classList.add('active'); }
-        }
-        function renderGrids() {
-            const showMature = document.getElementById('matureToggle').checked;
-            const trending = document.getElementById('trendingGrid');
-            const community = document.getElementById('communityGrid');
-            let html = '';
-            for (let key in bots) {
-                const b = bots[key];
-                if (b.isMature && !showMature) continue;
-                html += `<div class="bot-card" onclick="startChat('${key}')"><div class="card-content"><div class="card-name">${b.name}</div><div class="card-creator">By ${b.creator}</div><div class="card-desc">${b.desc}</div></div></div>`;
-            }
-            trending.innerHTML = html || `<p style="color:var(--text-sub); font-size:12px;">No scenarios found.</p>`;
-            community.innerHTML = html || `<p style="color:var(--text-sub); font-size:12px;">No scenarios found.</p>`;
-        }
-        function publishStudioScenario() {
-            const name = document.getElementById('studioName').value.trim();
-            const desc = document.getElementById('studioDesc').value.trim();
-            const greeting = document.getElementById('studioGreeting').value.trim();
-            const rating = document.getElementById('studioRating').value;
-            if(!name) return alert("Please enter a Scenario Name!");
-            const key = "custom_" + Date.now();
-            bots[key] = { name: name, title: "Custom Scenario", creator: "@You", desc: desc || "Custom scenario created in Studio.", greeting: greeting || `Welcome to ${name}!`, isMature: (rating === 'mature') };
-            renderGrids(); switchView('home'); startChat(key);
-        }
-        function startChat(key) {
-            activeBotKey = key; const b = bots[key];
-            document.getElementById('chatName').innerText = b.name;
-            document.getElementById('chatTitle').innerText = b.title;
-            messages = [{ sender: b.name, text: b.greeting }];
-            renderMessages(); document.getElementById('chatView').style.display = 'flex';
-        }
-        function closeChat() { document.getElementById('chatView').style.display = 'none'; }
-        function sendMessage() {
-            const input = document.getElementById('userInput'); const text = input.value.trim();
-            if(!text) return;
-            messages.push({ sender: "You", text: text }); input.value = ""; renderMessages();
-            const b = bots[activeBotKey];
-            setTimeout(() => { messages.push({ sender: b.name, text: `I hear you talking about "${text}". Tell me more.` }); renderMessages(); }, 1000);
-        }
-        function renderMessages() {
-            const container = document.getElementById('chatMessages');
-            container.innerHTML = messages.map(m => `<div class="msg-box" style="${m.sender === 'You' ? 'margin-left: auto; background: var(--accent); color: white;' : ''}"><strong>${m.sender}:</strong> ${m.text}</div>`).join('');
-            container.scrollTop = container.scrollHeight;
-        }
-        renderGrids();
-    </script>
-</body>
-</html>
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
 
-
-
-
-         
-    </div>
-    </div>
-
-      
-    </div>
-
-
-
-<!-- Tab Content Area -->
-<div id="tab-details" class="tab-content">
-  <div class="section">
-    <h3>Main Details</h3>
-    <label>Scenario Name</label>
-    <input type="text" placeholder="Scenario Title. ex. A Forbidden Spell" maxlength="35">
-    
-    <label>Scenario Description</label>
-    <textarea placeholder="This will be shown in the scenario card..." maxlength="250"></textarea>
-  </div>
-</div>
-
-<div id="tab-intro" class="tab-content" style="display: none;">
-  <div class="section">
-    <h3>Introduction</h3>
-    <textarea placeholder="Add an optional intro screen shown to players..."></textarea>
-  </div>
-</div>
-
-<div id="tab-story" class="tab-content" style="display: none;">
-  <div class="section">
-    <h3>Backstory / World Details</h3>
-    <textarea placeholder="Define your world context and backstory..."></textarea>
-  </div>
-</div>
-
-<div id="tab-lore" class="tab-content" style="display: none;">
-  <div class="section">
-    <h3>Lorebook Entries</h3>
-    <textarea placeholder="Add lore entries and keywords..."></textarea>
-  </div>
-</div>
-
-<div id="tab-settings" class="tab-content" style="display: none;">
-  <div class="section">
-    <h3>Scenario Settings</h3>
-    <p>Configure model temperature and advanced settings.</p>
-  </div>
-</div>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MidnightLab</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
-            <h2>🔥 MidnightLab</h2>
-        </header>
-
-        <!-- Top Tabs -->
-        <div class="tab-bar">
-            <button onclick="switchTab('details')">Details</button>
-            <button onclick="switchTab('intro')">Intro</button>
-            <button onclick="switchTab('story')">Story</button>
-            <button onclick="switchTab('lore')">Lore</button>
-            <button onclick="switchTab('settings')">Settings</button>
-        </div>
-
-        <!-- Single Content Body -->
-        <div class="content-body">
-            <div id="tab-details" class="tab-content">
-                <div class="section-card">
-                    <h3>Main Details</h3>
-                    <label>Scenario Name</label>
-                    <input type="text" placeholder="Scenario Title. ex. A Forbidden Spell" maxlength="35">
-                    <label>Scenario Description</label>
-                    <textarea placeholder="This will be shown in the scenario card..." maxlength="250"></textarea>
-                </div>
-            </div>
-
-            <div id="tab-intro" class="tab-content" style="display: none;">
-                <div class="section-card">
-                    <h3>Introduction</h3>
-                    <textarea placeholder="Add an optional intro screen..."></textarea>
-                </div>
-            </div>
-
-            <div id="tab-story" class="tab-content" style="display: none;">
-                <div class="section-card">
-                    <h3>Backstory / World Details</h3>
-                    <textarea placeholder="Define your world context..."></textarea>
-                </div>
-            </div>
-
-            <div id="tab-lore" class="tab-content" style="display: none;">
-                <div class="section-card">
-                    <h3>Lorebook Entries</h3>
-                    <textarea placeholder="Add lore entries and keywords..."></textarea>
-                </div>
-            </div>
-
-            <div id="tab-settings" class="tab-content" style="display: none;">
-                <div class="section-card">
-                    <h3>Settings</h3>
-                    <p>Configure advanced options here.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Publish Button -->
-        <button class="publish-btn">🚀 Publish Scenario</button>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
-
-
-
-
-
-
+.publish-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #ff7700, #ff4400);
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+}
 
