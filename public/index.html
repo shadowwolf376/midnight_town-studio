@@ -7,13 +7,20 @@
                 <button style="background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:6px 12px;border-radius:15px;font-size:11px">🔮 Mystery</button>
                 <button style="background:#150f2e;color:#aaa;border:1px solid #2a1f52;padding:6px 12px;border-radius:15px;font-size:11px">💖 Romance</button>
             </div>
-            <button style="background:#ff6600;color:#fff;border:none;padding:12px;width:100%;border-radius:8px;font-weight:bold">🚀 Publish Scenario</button></div></div><div id="view-chats" class="app-view"><h2 style="color:#fff;margin-top:0">💬 Your Chats</h2></div><div id="view-profile" class="app-view"><h2 style="color:#fff;margin-top:0">👤 Creator Profile</h2><div style="background:#150f2e;border:1px solid #2a1f52;padding:15px;border-radius:10px;margin-bottom:12px"><h3 style="margin:0 0 6px 0;color:#ff6600">@You</h3><p style="color:#aaa;font-size:12px;margin:0">Manage your published scenarios and account settings.</p></div><div style="background:#150f2e;border:1px solid #2a1f52;padding:15px;border-radius:10px;margin-bottom:12px"><h3 style="margin:0 0 8px 0;font-size:14px;color:#fff">⚙️ Settings</h3><button style="background:#251a52;color:#fff;border:1px solid #2a1f52;padding:10px;border-radius:8px;font-size:12px;width:100%;font-weight:bold">🔑 Configure API Key & Model</button></div> class="app-view"><h2 style="color:#fff;margin-top:0">👤 Creator Profile</h2>
+            <button style="background:#ff6600;color:#fff;border:none;padding:12px;width:100%;border-radius:8px;font-weight:bold">🚀 Publish Scenario</button></div></div><div id="view-chats" class="app-view"><h2 style="color:#fff;margin-top:0">💬 Your Chats</h2></div><div id="view-profile" class="app-view" style="display:none">
+        <h2 style="color:#fff;margin-top:0">👤 Creator Profile</h2>
         <div style="background:#150f2e;border:1px solid #2a1f52;padding:15px;border-radius:10px;margin-bottom:12px">
             <h3 style="margin:0 0 6px 0;color:#ff6600">@You</h3>
             <p style="color:#aaa;font-size:12px;margin:0">Manage your published scenarios and account settings.</p>
         </div>
-        <button onclick="switchView('lorebook')" style="width:100%;background:#251a52;color:#fff;border:1px solid #2a1f52;padding:12px;border-radius:8px;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:8px">📖 Open World Lorebook</button></div><div style="position:fixed;bottom:0;left:0;right:0;background:#0f0a24;border-top:1px solid #2a1f52;display:flex;justify-content:space-around;padding:10px 0;z-index:1000"><button onclick="switchView('home')" style="background:none;border:none;color:#aaa;font-size:11px">🏠<br>Home</button><button onclick="switchView('search')" style="background:none;border:none;color:#aaa;font-size:11px">🔍<br>Search</button><button onclick="switchView('create')" style="background:none;border:none;color:#aaa;font-size:11px">➕<br>Create</button><button onclick="switchView('chats')" style="background:none;border:none;color:#aaa;font-size:11px">💬<br>Chats</button><button onclick="switchView('profile')" style="background:none;border:none;color:#aaa;font-size:11px">👤<br>Profile</button></div><script src="script.js"></script><script src="chats.js"></script><script src="lorebook.js"></script>
-<script>
+        <div style="background:#150f2e;border:1px solid #2a1f52;padding:15px;border-radius:10px;margin-bottom:12px">
+            <h3 style="margin:0 0 8px 0;font-size:14px;color:#fff">⚙️ Settings</h3>
+            <button style="background:#251a52;color:#fff;border:1px solid #2a1f52;padding:10px;border-radius:8px;font-size:12px;width:100%;font-weight:bold">🔑 Configure API Key & Model</button>
+        </div>
+        <button onclick="switchView('lorebook')" style="width:100%;background:#251a52;color:#fff;border:1px solid #2a1f52;padding:12px;border-radius:8px;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:8px">📖 Open World Lorebook</button>
+    </div>
+
+    <script>
     function switchCreateTab(tab) {
         ['details', 'intro', 'story', 'lore'].forEach(t => {
             const p = document.getElementById('create-panel-' + t);
