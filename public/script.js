@@ -165,3 +165,13 @@ function toggleTag(btn) {
         btn.style.borderColor = '#ff6600';
     }
 }
+
+// Ensure openChat opens the chat view smoothly
+function openChat(scenarioName) {
+    const chatTitle = document.getElementById('chat-title');
+    if (chatTitle) {
+        chatTitle.innerText = '💬 ' + scenarioName;
+    }
+    switchView('chats');
+    loadChatSession(scenarioName);
+}
