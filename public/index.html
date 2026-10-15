@@ -265,6 +265,17 @@
             console.log('Searching for:', query);
         }
     </script>
+
+<script>
+function saveApiConfig() {
+    const key = document.getElementById('safe-api-key')?.value;
+    const model = document.getElementById('safe-model-select')?.value;
+    if (key) localStorage.setItem('ml_api_key', key);
+    if (model) localStorage.setItem('ml_api_model', model);
+    alert('API settings saved successfully!');
+}
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
