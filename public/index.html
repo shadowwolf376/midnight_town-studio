@@ -267,3 +267,11 @@
     </script>
 </body>
 </html>
+<script>function openSettings() {
+    const modal = document.getElementById('settings-modal') || document.getElementById('settings-view');
+    if(modal) {
+        modal.style.display = 'block';
+    } else {
+        if(typeof switchView === 'function') switchView('settings');
+    }
+}</script>
