@@ -260,7 +260,19 @@
         }
 
         
-        function startChat(title) {
+        function startChat(charName) {
+    const saved = JSON.parse(localStorage.getItem('ml_custom_chars') || '[]');
+    const char = saved.find(c => c.name === charName) || { name: charName, greeting: "Greetings, traveler." };
+    localStorage.setItem('ml_active_char', JSON.stringify(char));
+    
+    setTimeout(() => {
+        const nameEl = document.getElementById('active-char-name');
+        if(nameEl) nameEl.innerText = char.name;
+        const greetEl = document.getElementById('chat-messages-container');
+        if(greetEl) {
+            greetEl.innerHTML = '<div style="background:#130b2e;border:1px solid #2a1f52;color:#fff;padding:12px 16px;border-radius:12px;max-width:85%;margin-bottom:12px;line-height:1.4;"><b>' + char.name + '</b><br><br>' + (char.greeting || char.persona) + '</div>';
+        }
+    }, 100);
             document.getElementById('active-chat-title').innerText = title;
             switchView('chat-room');
         }
