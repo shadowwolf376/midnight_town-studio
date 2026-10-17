@@ -456,3 +456,32 @@ if (apiBtn && apiModal) {
     apiModal.style.display = 'flex';
   });
 }
+
+// Bulletproof Event Delegation for API Settings and Modal
+document.addEventListener('click', (e) => {
+  // Check if clicked element is the Configure API Key button
+  const btn = e.target.closest('button');
+  if (btn && btn.textContent.includes('Configure API Key')) {
+    const apiModal = document.getElementById('api-modal');
+    if (apiModal) {
+      apiModal.style.display = 'flex';
+    }
+  }
+
+  // Handle closing the modal
+  if (e.target.id === 'close-api-modal-btn' || e.target.id === 'api-modal') {
+    const apiModal = document.getElementById('api-modal');
+    if (apiModal) apiModal.style.display = 'none';
+  }
+
+  // Handle saving the API key
+  if (e.target.id === 'save-api-key-btn') {
+    const keyInput = document.getElementById('api-key-input');
+    if (keyInput && keyInput.value.trim()) {
+      localStorage.setItem('user_api_key', keyInput.value.trim());
+      alert('API Key saved locally!');
+    }
+    const apiModal = document.getElementById('api-modal');
+    if (apiModal) apiModal.style.display = 'none';
+  }
+});
