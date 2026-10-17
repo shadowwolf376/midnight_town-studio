@@ -447,3 +447,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// Bulletproof handler for API Settings button
+const apiBtn = document.getElementById('config-api-btn');
+const apiModal = document.getElementById('api-modal');
+if (apiBtn && apiModal) {
+  apiBtn.addEventListener('click', () => {
+    apiModal.style.display = 'flex';
+  });
+}
