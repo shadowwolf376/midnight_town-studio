@@ -286,3 +286,16 @@ function saveApiConfig() {
         if(typeof switchView === 'function') switchView('settings');
     }
 }</script>
+<!-- API Settings Modal -->
+<div id="api-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000;">
+  <div style="background: #1a172c; padding: 20px; border-radius: 12px; max-width: 400px; width: 90%; border: 1px solid #332d56; color: white;">
+    <h3>Configure API Settings</h3>
+    <label style="display:block; margin-top: 10px;">API Key:</label>
+    <input type="password" id="api-key-input" placeholder="Paste OpenRouter Key" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #443c70; background: #0f0d1b; color: white; margin-top: 5px;">
+    
+    <div style="margin-top: 15px; text-align: right;">
+      <button id="close-api-modal-btn" style="padding: 8px 16px; background: #332d56; color: white; border: none; border-radius: 6px; margin-right: 8px; cursor: pointer;">Cancel</button>
+      <button id="save-api-key-btn" style="padding: 8px 16px; background: #ff6b00; color: white; border: none; border-radius: 6px; cursor: pointer;">Save</button>
+    </div>
+  </div>
+</div>

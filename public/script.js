@@ -415,3 +415,35 @@ window.switchView = function(viewName) {
         renderChatList();
     }
 };
+
+// Safe click handler for API Settings button
+document.addEventListener('DOMContentLoaded', () => {
+  const configBtn = document.querySelector('button:has-text("Configure API Key"), #config-api-btn') || 
+                    Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Configure API Key'));
+  const apiModal = document.getElementById('api-modal');
+  const closeBtn = document.getElementById('close-api-modal-btn');
+  const saveBtn = document.getElementById('save-api-key-btn');
+
+  if (configBtn && apiModal) {
+    configBtn.addEventListener('click', () => {
+      apiModal.style.display = 'flex';
+    });
+  }
+
+  if (closeBtn && apiModal) {
+    closeBtn.addEventListener('click', () => {
+      apiModal.style.display = 'none';
+    });
+  }
+
+  if (saveBtn && apiModal) {
+    saveBtn.addEventListener('click', () => {
+      const keyInput = document.getElementById('api-key-input');
+      if (keyInput && keyInput.value.trim()) {
+        localStorage.setItem('user_api_key', keyInput.value.trim());
+        alert('API Key saved locally!');
+      }
+      apiModal.style.display = 'none';
+    });
+  }
+});
