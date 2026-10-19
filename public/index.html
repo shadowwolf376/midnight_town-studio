@@ -425,6 +425,101 @@ document.addEventListener('click', async function(e) {
 });
 </script>
 
+
+<script id="ml-isolated-script">
+// 1. Save API Key & Model Name without touching modal layout
+document.addEventListener('click', function(e) {
+    const t = e.target;
+    const text = (t.innerText || t.textContent || '').trim();
+
+    if (text === 'Save') {
+        const passwordInput = document.querySelector('input[type="password"]');
+        if (passwordInput && passwordInput.value) {
+            localStorage.setItem('ml_api_key', passwordInput.value);
+        }
+
+        // Capture model name input (like deepseek/deepseek-chat:free)
+        const inputs = document.querySelectorAll('input[type="text"]');
+        inputs.forEach(input => {
+            if (input.value && input.value.trim() !== '') {
+                localStorage.setItem('ml_api_model', input.value.trim());
+            }
+        });
+
+        alert('Settings saved!');
+    }
+});
+
+// 2. OpenRouter API Engine
+window.runAIModel = async function(userMsg) {
+    const apiKey = localStorage.getItem('ml_api_key');
+    let model = localStorage.getItem('ml_api_model') || 'deepseek/deepseek-chat:free';
+
+    if (!apiKey) {
+        alert('Please save your OpenRouter API Key in Settings first!');
+        return null;
+    }
+
+    const systemPersona = "You are The Lost Archivist, a mysterious and atmospheric guide in the dark, neon-lit town of MidnightTown. Respond in an immersive roleplay style with asterisks for actions (*like this*).";
+
+    try {
+        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + apiKey,
+                'HTTP-Referer': window.location.origin,
+                'X-Title': 'MidnightLab',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: model,
+                messages: [
+                    { role: 'system', content: systemPersona },
+                    { role: 'user', content: userMsg }
+                ]
+            })
+        });
+
+        const data = await res.json();
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+            return data.choices[0].message.content;
+        } else {
+            return 'API Error: ' + (data.error?.message || 'Check API key or model name.');
+        }
+    } catch (err) {
+        return 'Network Error connecting to OpenRouter.';
+    }
+};
+
+// 3. Connect Send Button to Chat Container
+document.addEventListener('click', async function(e) {
+    const t = e.target;
+    const text = (t.innerText || t.textContent || '').trim();
+
+    if (text === 'Send') {
+        // Find chat input field
+        const input = document.querySelector('textarea, input[placeholder*="message"], input[type="text"]:not([value*="/"])');
+        if (input && input.value.trim() !== '') {
+            const userText = input.value.trim();
+            input.value = '';
+
+            // Find chat messages box
+            const chatBox = document.querySelector('.chat-messages, #chat-container, .messages') || input.closest('div').parentElement;
+
+            if (chatBox) {
+                chatBox.innerHTML += '<div style="margin: 12px 0; text-align: right; color: #fff;"><strong>You:</strong> ' + userText + '</div>';
+            }
+
+            const aiReply = await window.runAIModel(userText);
+            if (aiReply && chatBox) {
+                chatBox.innerHTML += '<div style="margin: 12px 0; color: #ddd; background: rgba(255,255,255,0.04); padding: 10px; border-radius: 8px;"><strong>The Lost Archivist:</strong> ' + aiReply + '</div>';
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+    }
+});
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
