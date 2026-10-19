@@ -340,8 +340,11 @@
 
 
 
-<script id="ml-precision-script">
-// Save API settings directly from modal inputs
+
+
+
+<script id="ml-direct-engine">
+// 1. Save Settings from Modal
 document.addEventListener('click', function(e) {
     const t = e.target;
     const text = (t.innerText || t.textContent || '').trim();
@@ -361,13 +364,13 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Global API Fetch Function
+// 2. OpenRouter Fetch Engine
 window.runAIModel = async function(userMsg) {
     const apiKey = localStorage.getItem('ml_api_key');
     let model = localStorage.getItem('ml_api_model') || 'deepseek/deepseek-chat:free';
 
     if (!apiKey) {
-        alert('Please save your OpenRouter API Key in Settings first!');
+        alert('Please open API Configuration in Settings and save your API key first!');
         return null;
     }
 
@@ -402,32 +405,27 @@ window.runAIModel = async function(userMsg) {
     }
 };
 
-// Chat Send Button Binding
-document.addEventListener('click', async function(e) {
-    const t = e.target;
-    const btn = t.closest('button, #send-btn, .send-button') || t;
-    const text = (btn.innerText || btn.textContent || '').trim();
+// 3. Connect Directly to button onclick="sendMessage()"
+window.sendMessage = async function() {
+    const input = document.getElementById('chat-input');
+    const chatBox = document.getElementById('chat-messages');
 
-    if (text === 'Send' || btn.id === 'send-btn') {
-        const input = document.querySelector('textarea, input[placeholder*="message"], input[type="text"]:not(#modal-model-name)');
-        if (input && input.value.trim() !== '') {
-            const userText = input.value.trim();
-            input.value = '';
+    if (input && input.value.trim() !== '') {
+        const userText = input.value.trim();
+        input.value = '';
 
-            const chatBox = document.querySelector('.chat-messages, #chat-container, .messages') || input.closest('div').parentElement;
+        if (chatBox) {
+            chatBox.innerHTML += '<div style="background:#2a1f52;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #3a2b72;margin-left:auto;color:#fff;">' + userText + '</div>';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
 
-            if (chatBox) {
-                chatBox.innerHTML += '<div style="margin: 12px 0; text-align: right; color: #fff;"><strong>You:</strong> ' + userText + '</div>';
-            }
-
-            const aiReply = await window.runAIModel(userText);
-            if (aiReply && chatBox) {
-                chatBox.innerHTML += '<div style="margin: 12px 0; color: #ddd; background: rgba(255,255,255,0.04); padding: 10px; border-radius: 8px;"><strong>The Lost Archivist:</strong> ' + aiReply + '</div>';
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
+        const aiReply = await window.runAIModel(userText);
+        if (aiReply && chatBox) {
+            chatBox.innerHTML += '<div style="background:#0b071e;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #2a1f52;color:#ddd;"><strong>The Lost Archivist:</strong> ' + aiReply + '</div>';
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
     }
-});
+};
 </script>
 
 </body>
