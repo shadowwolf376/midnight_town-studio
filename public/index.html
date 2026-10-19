@@ -441,6 +441,31 @@ window.sendMessage = async function() {
 };
 </script>
 
+
+<script>
+  // Non-destructive chat persistence helper
+  window.addEventListener("DOMContentLoaded", () => {
+    try {
+      // Restore saved chats if available on load
+      const savedChats = localStorage.getItem("midnight_saved_chats");
+      if (savedChats) {
+        window.__savedChatsData = JSON.parse(savedChats);
+      }
+    } catch(e) {}
+
+    // Watch for new messages or chat actions to auto-save
+    setInterval(() => {
+      try {
+        const chatContainer = document.querySelector(".chat-messages, [id*='chat']");
+        if (chatContainer && chatContainer.innerHTML.trim() !== "") {
+          // Keep lightweight backup of active chat content
+          localStorage.setItem("midnight_last_chat_html", chatContainer.innerHTML);
+        }
+      } catch(e) {}
+    }, 1000);
+  });
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
