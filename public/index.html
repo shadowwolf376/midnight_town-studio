@@ -421,7 +421,7 @@ window.sendMessage = async function() {
 
         const aiReply = await window.runAIModel(userText);
         if (aiReply && chatBox) {
-            chatBox.innerHTML += '<div style="background:#0b071e;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #432c7a;color:#ddd;"><strong>The Lost Archivist:</strong> ' + aiReply + '</div>';
+            chatBox.innerHTML += '<div style="background:#0b071e;padding:10px;border-radius:8px;max-width:85%;font-size:13px;border:1px solid #432c7a;color:#ddd;">' + aiReply + '</div>';
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     }
