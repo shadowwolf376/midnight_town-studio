@@ -215,7 +215,6 @@ function renderChatList(filterQuery = "") {
   
   el.appendChild(wrapper);
 
-  // Maintain search input focus while typing
   if (filterQuery) {
     setTimeout(() => {
       const input = document.getElementById("chat-search-input");
@@ -227,7 +226,7 @@ function renderChatList(filterQuery = "") {
   }
 }
 
-// --- RENDER ACTIVE CHAT SESSION ---
+// --- RENDER ACTIVE CHAT SESSION WITH RESET BUTTON ---
 function openActiveChat(chatId) {
   const chats = getSavedChats();
   let chat = chats.find(c => c.id === chatId);
@@ -250,19 +249,24 @@ function openActiveChat(chatId) {
   const wrapper = document.createElement("div");
   wrapper.style.padding = "15px";
 
-  // Top Navigation Bar
+  // Top Navigation Bar with Back & Reset Buttons
   const topBar = document.createElement("div");
   topBar.style.display = "flex";
   topBar.style.alignItems = "center";
-  topBar.style.gap = "12px";
+  topBar.style.justifyContent = "space-between";
   topBar.style.marginBottom = "14px";
+
+  const topLeft = document.createElement("div");
+  topLeft.style.display = "flex";
+  topLeft.style.alignItems = "center";
+  topLeft.style.gap = "10px";
 
   const backBtn = document.createElement("button");
   backBtn.textContent = "← Back";
   backBtn.style.background = "#251a52";
   backBtn.style.color = "#fff";
   backBtn.style.border = "1px solid #2a1f52";
-  backBtn.style.padding = "8px 14px";
+  backBtn.style.padding = "8px 12px";
   backBtn.style.borderRadius = "8px";
   backBtn.style.cursor = "pointer";
   backBtn.style.fontWeight = "bold";
@@ -270,13 +274,44 @@ function openActiveChat(chatId) {
     e.preventDefault();
     renderChatList();
   };
-  topBar.appendChild(backBtn);
+  topLeft.appendChild(backBtn);
 
   const title = document.createElement("h3");
   title.style.color = "#fff";
   title.style.margin = "0";
+  title.style.fontSize = "16px";
   title.textContent = "💬 " + chat.name;
-  topBar.appendChild(title);
+  topLeft.appendChild(title);
+  
+  topBar.appendChild(topLeft);
+
+  // Clear / Reset History Button
+  const resetBtn = document.createElement("button");
+  resetBtn.textContent = "🔄 Reset";
+  resetBtn.style.background = "#3a1b3a";
+  resetBtn.style.color = "#ff8888";
+  resetBtn.style.border = "1px solid #5a2b5b";
+  resetBtn.style.padding = "8px 12px";
+  resetBtn.style.borderRadius = "8px";
+  resetBtn.style.cursor = "pointer";
+  resetBtn.style.fontSize = "13px";
+  resetBtn.style.fontWeight = "bold";
+  resetBtn.onclick = function(e) {
+    e.preventDefault();
+    if (confirm("Are you sure you want to reset this chat history?")) {
+      let allChats = getSavedChats();
+      let targetChat = allChats.find(c => c.id === chatId);
+      if (targetChat) {
+        targetChat.history = [{ sender: "ai", text: "Chat history has been reset. A fresh start!" }];
+        targetChat.msg = "History reset";
+        targetChat.time = new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"});
+        saveChats(allChats);
+        openActiveChat(chatId); // Refresh view
+      }
+    }
+  };
+  topBar.appendChild(resetBtn);
+
   wrapper.appendChild(topBar);
 
   // Chat Box Container
@@ -342,7 +377,6 @@ function openActiveChat(chatId) {
   wrapper.appendChild(inputRow);
   el.appendChild(wrapper);
 
-  // Auto Scroll to bottom on load
   setTimeout(() => { box.scrollTop = box.scrollHeight; }, 50);
 }
 
