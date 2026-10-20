@@ -32,34 +32,53 @@ function renderChatList() {
   el.style.display = "block";
   el.innerHTML = "";
   
+  const chats = getSavedChats();
+  
   const wrapper = document.createElement("div");
   wrapper.style.padding = "15px";
   
+  // Header with dynamic chat count
+  const headerRow = document.createElement("div");
+  headerRow.style.display = "flex";
+  headerRow.style.justifyContent = "space-between";
+  headerRow.style.alignItems = "center";
+  headerRow.style.marginBottom = "12px";
+
   const heading = document.createElement("h2");
   heading.style.color = "#fff";
-  heading.style.marginBottom = "12px";
+  heading.style.margin = "0";
   heading.textContent = "Your chats";
-  wrapper.appendChild(heading);
+  headerRow.appendChild(heading);
+
+  const countBadge = document.createElement("span");
+  countBadge.style.color = "#8c82a8";
+  countBadge.style.fontSize = "14px";
+  countBadge.textContent = chats.length + (chats.length === 1 ? " chat" : " chats");
+  headerRow.appendChild(countBadge);
+
+  wrapper.appendChild(headerRow);
   
-  const chats = getSavedChats();
+  // Render Chat Cards
   chats.forEach(c => {
     const card = document.createElement("div");
     card.style.background = "#150f2e";
-    card.style.padding = "12px";
-    card.style.borderRadius = "8px";
-    card.style.marginBottom = "8px";
+    card.style.padding = "14px";
+    card.style.borderRadius = "10px";
+    card.style.marginBottom = "10px";
     card.style.border = "1px solid #2a1f52";
     card.style.cursor = "pointer";
+    card.style.transition = "background 0.2s ease";
     
     const title = document.createElement("b");
     title.style.color = "#fff";
+    title.style.fontSize = "15px";
     title.style.display = "block";
     title.textContent = "💬 " + c.name;
     card.appendChild(title);
     
     const subtitle = document.createElement("p");
     subtitle.style.color = "#aaa";
-    subtitle.style.margin = "4px 0 0";
+    subtitle.style.margin = "6px 0 0";
     subtitle.style.fontSize = "12px";
     subtitle.textContent = "Last active: " + (c.time || "Recently") + " • " + c.msg;
     card.appendChild(subtitle);
@@ -104,17 +123,18 @@ function openActiveChat(chatId) {
   const topBar = document.createElement("div");
   topBar.style.display = "flex";
   topBar.style.alignItems = "center";
-  topBar.style.gap = "10px";
-  topBar.style.marginBottom = "12px";
+  topBar.style.gap = "12px";
+  topBar.style.marginBottom = "14px";
 
   const backBtn = document.createElement("button");
   backBtn.textContent = "← Back";
   backBtn.style.background = "#251a52";
   backBtn.style.color = "#fff";
   backBtn.style.border = "1px solid #2a1f52";
-  backBtn.style.padding = "6px 12px";
-  backBtn.style.borderRadius = "6px";
+  backBtn.style.padding = "8px 14px";
+  backBtn.style.borderRadius = "8px";
   backBtn.style.cursor = "pointer";
+  backBtn.style.fontWeight = "bold";
   backBtn.addEventListener("click", function(e) {
     e.preventDefault();
     renderChatList();
@@ -129,15 +149,16 @@ function openActiveChat(chatId) {
   wrapper.appendChild(topBar);
 
   // Chat Box Container
-  const box = document.createElement("div");
+  const box = document.getElementById("chat-box") || document.createElement("div");
   box.id = "chat-box";
-  box.style.height = "340px";
+  box.style.height = "360px";
   box.style.background = "#150f2e";
   box.style.border = "1px solid #2a1f52";
-  box.style.borderRadius = "8px";
-  box.style.padding = "10px";
+  box.style.borderRadius = "10px";
+  box.style.padding = "12px";
   box.style.overflowY = "auto";
-  box.style.marginBottom = "10px";
+  box.style.marginBottom = "12px";
+  box.innerHTML = "";
 
   // Render Saved History
   if (chat.history && chat.history.length > 0) {
@@ -160,8 +181,8 @@ function openActiveChat(chatId) {
   input.style.background = "#150f2e";
   input.style.border = "1px solid #2a1f52";
   input.style.color = "#fff";
-  input.style.padding = "8px";
-  input.style.borderRadius = "6px";
+  input.style.padding = "10px";
+  input.style.borderRadius = "8px";
   input.style.outline = "none";
   
   input.addEventListener("keypress", function(e) {
@@ -178,8 +199,8 @@ function openActiveChat(chatId) {
   sendBtn.style.background = "#ff6600";
   sendBtn.style.color = "#fff";
   sendBtn.style.border = "none";
-  sendBtn.style.padding = "8px 16px";
-  sendBtn.style.borderRadius = "6px";
+  sendBtn.style.padding = "10px 18px";
+  sendBtn.style.borderRadius = "8px";
   sendBtn.style.fontWeight = "bold";
   sendBtn.style.cursor = "pointer";
   sendBtn.addEventListener("click", function(e) {
@@ -198,11 +219,13 @@ function openActiveChat(chatId) {
 // --- UTILITY: APPEND MESSAGE UI ---
 function appendMessageUI(box, sender, text) {
   const msgEl = document.createElement("div");
-  msgEl.style.padding = "8px 12px";
-  msgEl.style.borderRadius = "6px";
+  msgEl.style.padding = "10px 14px";
+  msgEl.style.borderRadius = "8px";
   msgEl.style.marginBottom = "8px";
   msgEl.style.maxWidth = "85%";
   msgEl.style.wordBreak = "break-word";
+  msgEl.style.fontSize = "14px";
+  msgEl.style.lineHeight = "1.4";
 
   if (sender === "user") {
     msgEl.style.background = "#ff6600";
@@ -252,11 +275,12 @@ function sendMsg(chatId) {
   typingEl.id = typingId;
   typingEl.style.background = "#251a52";
   typingEl.style.color = "#ff6600";
-  typingEl.style.padding = "8px";
-  typingEl.style.borderRadius = "6px";
+  typingEl.style.padding = "8px 12px";
+  typingEl.style.borderRadius = "8px";
   typingEl.style.marginBottom = "8px";
   typingEl.style.border = "1px solid #2a1f52";
   typingEl.style.fontStyle = "italic";
+  typingEl.style.fontSize = "13px";
   typingEl.textContent = chat.name + " is typing...";
   box.appendChild(typingEl);
   box.scrollTop = box.scrollHeight;
