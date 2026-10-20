@@ -1,4 +1,4 @@
-// --- STATE CONTROLLER ---
+// --- STATE CONTROLLER WITH PINNING & TAGS ---
 function getSavedChats() {
   let chats = [];
   try {
@@ -12,8 +12,10 @@ function getSavedChats() {
       avatar: "🏛️",
       msg: "Ready to chat...",
       time: new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"}),
+      isPinned: true,
+      tag: "Favorites",
       history: [
-        { sender: "ai", text: "*The Archivist adjusts his lantern, casting warm light across the ancient leather-bound tomes.* \"Welcome, traveler. What secrets do you seek in MidnightTown tonight?\"" }
+        { sender: "ai", text: "*The Archivist adjusts his lantern, casting warm light across the ancient leather-bound tomes.* **Welcome, traveler.** What secrets do you seek in MidnightTown tonight?" }
       ]
     }];
     localStorage.setItem("m_chats", JSON.stringify(chats));
@@ -25,27 +27,20 @@ function saveChats(chats) {
   localStorage.setItem("m_chats", JSON.stringify(chats));
 }
 
-// --- PARSER FOR ROLEPLAY FORMATTING (*actions*, "dialogue") ---
+// Global active tag state
+let currentActiveTag = "All";
 
+// --- FORMATTER FOR ROLEPLAY TEXT ---
 function formatRoleplayText(text) {
   if (!text) return "";
-  
   let safe = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  
-  // 1. Convert **bold** to strong text
-  safe = safe.replace(/\*\*([^*]+)\*\*/g, "<strong style="color: #ffffff; font-weight: bold;">$1</strong>");
-  
-  // 2. Convert *action/description* to styled lavender italics
-  safe = safe.replace(/\*([^*]+)\*/g, "<span style="color: #c4b5fd; font-style: italic;">$1</span>");
-  
-  // 3. Convert "dialogue" to highlighted white spoken text
-  safe = safe.replace(/"([^"]+)"/g, "<span style="color: #ffffff;">"$1"</span>");
-  
-  // 4. Preserve line breaks
-  return safe.replace(/\n/g, "<br>");
+  safe = safe.replace(/\*\*([^*]+)\*\*/g, '<strong style="color: #ffffff; font-weight: bold;">$1</strong>');
+  safe = safe.replace(/\*([^*]+)\*/g, '<span style="color: #c4b5fd; font-style: italic;">$1</span>');
+  safe = safe.replace(/"([^"]+)"/g, '<span style="color: #ffffff;">"$1"</span>');
+  return safe.replace(/\n/g, '<br>');
 }
 
-// --- RENDER CHAT LIST ---
+// --- RENDER CHAT LIST WITH PINNING & FILTER TAGS ---
 function renderChatList() {
   const el = document.getElementById("view-chats");
   if (!el) return;
@@ -65,7 +60,7 @@ function renderChatList() {
   header.style.display = "flex";
   header.style.justifyContent = "space-between";
   header.style.alignItems = "center";
-  header.style.marginBottom = "20px";
+  header.style.marginBottom = "14px";
 
   const chatsTab = document.createElement("span");
   chatsTab.textContent = "Chats";
@@ -76,25 +71,85 @@ function renderChatList() {
 
   container.appendChild(header);
 
-  // Render Conversation List
-  const chats = getSavedChats();
+  // TAG FILTER PILLS BAR
+  const tagsRow = document.createElement("div");
+  tagsRow.style.display = "flex";
+  tagsRow.style.gap = "8px";
+  tagsRow.style.marginBottom = "16px";
+  tagsRow.style.overflowX = "auto";
+  tagsRow.style.paddingBottom = "4px";
+
+  const tagsList = ["All", "Favorites", "Roleplay", "Archived"];
+  tagsList.forEach(tagName => {
+    const pill = document.createElement("button");
+    pill.textContent = tagName;
+    pill.style.padding = "6px 14px";
+    pill.style.borderRadius = "20px";
+    pill.style.fontSize = "13px";
+    pill.style.fontWeight = "bold";
+    pill.style.cursor = "pointer";
+    pill.style.border = "none";
+    
+    if (currentActiveTag === tagName) {
+      pill.style.background = "linear-gradient(135deg, #8b5cf6, #d946ef)";
+      pill.style.color = "#ffffff";
+    } else {
+      pill.style.background = "#151026";
+      pill.style.color = "#948aa9";
+      pill.style.border = "1px solid #2b204e";
+    }
+
+    pill.onclick = function() {
+      currentActiveTag = tagName;
+      renderChatList();
+    };
+
+    tagsRow.appendChild(pill);
+  });
+
+  container.appendChild(tagsRow);
+
+  // CONVERSATION LIST SORTING (Pinned items first)
+  let chats = getSavedChats();
+
+  // Filter by selected tag tab
+  if (currentActiveTag === "Favorites") {
+    chats = chats.filter(c => c.isPinned || c.tag === "Favorites");
+  } else if (currentActiveTag !== "All") {
+    chats = chats.filter(c => c.tag === currentActiveTag);
+  }
+
+  // Sort: Pinned chats always on top
+  chats.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+
+  if (chats.length === 0) {
+    const emptyState = document.createElement("div");
+    emptyState.style.textAlign = "center";
+    emptyState.style.padding = "30px 10px";
+    emptyState.style.color = "#948aa9";
+    emptyState.style.fontSize = "14px";
+    emptyState.textContent = `No chats found under "${currentActiveTag}".`;
+    container.appendChild(emptyState);
+  }
+
   chats.forEach(c => {
     const card = document.createElement("div");
     card.style.display = "flex";
     card.style.alignItems = "center";
-    card.style.gap = "14px";
+    card.style.gap = "12px";
     card.style.padding = "12px";
-    card.style.background = "#151026";
+    card.style.background = c.isPinned ? "#1f1838" : "#151026";
     card.style.borderRadius = "12px";
     card.style.marginBottom = "10px";
-    card.style.border = "1px solid #2b204e";
+    card.style.border = c.isPinned ? "1px solid #8b5cf6" : "1px solid #2b204e";
     card.style.cursor = "pointer";
     
+    // Avatar
     const avatar = document.createElement("div");
     avatar.style.width = "48px";
     avatar.style.height = "48px";
     avatar.style.borderRadius = "50%";
-    avatar.style.background = "#1f1838";
+    avatar.style.background = "#2b204e";
     avatar.style.display = "flex";
     avatar.style.justifyContent = "center";
     avatar.style.alignItems = "center";
@@ -102,6 +157,7 @@ function renderChatList() {
     avatar.textContent = c.avatar || "👤";
     card.appendChild(avatar);
 
+    // Main Details
     const textCol = document.createElement("div");
     textCol.style.flex = "1";
     textCol.style.overflow = "hidden";
@@ -133,12 +189,31 @@ function renderChatList() {
     subtitle.style.overflow = "hidden";
     subtitle.style.textOverflow = "ellipsis";
     
-    // Strip formatting tags for list view snippet
     const rawLastMsg = c.history && c.history.length ? c.history[c.history.length - 1].text : "No messages yet";
-    subtitle.textContent = rawLastMsg.replace(/\*/g, "");
+    subtitle.textContent = rawLastMsg.replace(/[\*\"]/g, "");
     textCol.appendChild(subtitle);
 
     card.appendChild(textCol);
+
+    // PIN TOGGLE STAR ICON BUTTON
+    const pinBtn = document.createElement("div");
+    pinBtn.textContent = c.isPinned ? "⭐" : "☆";
+    pinBtn.style.fontSize = "20px";
+    pinBtn.style.cursor = "pointer";
+    pinBtn.style.padding = "4px";
+    pinBtn.title = c.isPinned ? "Unpin chat" : "Pin chat to top";
+    
+    pinBtn.onclick = function(e) {
+      e.stopPropagation();
+      let allChats = getSavedChats();
+      let target = allChats.find(item => item.id === c.id);
+      if (target) {
+        target.isPinned = !target.isPinned;
+        saveChats(allChats);
+        renderChatList();
+      }
+    };
+    card.appendChild(pinBtn);
 
     card.onclick = function() {
       openActiveChat(c.id);
@@ -150,7 +225,7 @@ function renderChatList() {
   el.appendChild(container);
 }
 
-// --- RENDER ACTIVE CHAT SESSION WITH FORMATTING & ACTIONS ---
+// --- RENDER ACTIVE CHAT SESSION ---
 function openActiveChat(chatId) {
   const chats = getSavedChats();
   let chat = chats.find(c => c.id === chatId) || chats[0];
@@ -231,7 +306,7 @@ function openActiveChat(chatId) {
 
   const input = document.createElement("input");
   input.id = "chat-in";
-  input.placeholder = "Type your response or action (*action*)...";
+  input.placeholder = "Type your response (*action*)...";
   input.style.flex = "1";
   input.style.background = "#151026";
   input.style.border = "1px solid #2b204e";
@@ -262,7 +337,7 @@ function openActiveChat(chatId) {
   setTimeout(() => { box.scrollTop = box.scrollHeight; }, 50);
 }
 
-// --- RENDER SINGLE MESSAGE BUBBLE & ACTION BUTTONS ---
+// --- RENDER SINGLE MESSAGE BUBBLE & ACTIONS ---
 function renderSingleMessageUI(box, chat, msg, idx) {
   const msgWrapper = document.createElement("div");
   msgWrapper.style.marginBottom = "16px";
@@ -290,7 +365,7 @@ function renderSingleMessageUI(box, chat, msg, idx) {
     msgEl.innerHTML = formatRoleplayText(msg.text);
     msgWrapper.appendChild(msgEl);
 
-    // AI MESSAGE ACTION ROW (Copy, Regenerate, Edit, Quote)
+    // AI MESSAGE ACTION ROW
     const actionRow = document.createElement("div");
     actionRow.style.display = "flex";
     actionRow.style.gap = "12px";
@@ -298,7 +373,6 @@ function renderSingleMessageUI(box, chat, msg, idx) {
     actionRow.style.paddingLeft = "4px";
     actionRow.style.fontSize = "12px";
 
-    // Copy Action
     const copyBtn = createActionButton("📋 Copy", function() {
       navigator.clipboard.writeText(msg.text);
       copyBtn.textContent = "✅ Copied";
@@ -306,7 +380,6 @@ function renderSingleMessageUI(box, chat, msg, idx) {
     });
     actionRow.appendChild(copyBtn);
 
-    // Regenerate Action
     const regenBtn = createActionButton("🔄 Regenerate", function() {
       chat.history.splice(idx, 1);
       saveChats(getSavedChats());
@@ -314,7 +387,6 @@ function renderSingleMessageUI(box, chat, msg, idx) {
     });
     actionRow.appendChild(regenBtn);
 
-    // Edit Action
     const editBtn = createActionButton("✏️ Edit", function() {
       const newText = prompt("Edit AI response:", msg.text);
       if (newText !== null && newText.trim() !== "") {
@@ -325,7 +397,6 @@ function renderSingleMessageUI(box, chat, msg, idx) {
     });
     actionRow.appendChild(editBtn);
 
-    // Quote Action
     const quoteBtn = createActionButton("💬 Quote", function() {
       const input = document.getElementById("chat-in");
       if (input) {
@@ -347,14 +418,13 @@ function createActionButton(label, onClick) {
   btn.style.color = "#948aa9";
   btn.style.cursor = "pointer";
   btn.style.userSelect = "none";
-  btn.style.transition = "color 0.2s";
   btn.onmouseover = () => btn.style.color = "#d946ef";
   btn.onmouseout = () => btn.style.color = "#948aa9";
   btn.onclick = onClick;
   return btn;
 }
 
-// --- SEND MESSAGE & SIMULATE AI ROLEPLAY RESPONSE ---
+// --- SEND MESSAGE & SIMULATE RESPONSES ---
 function sendMsg(chatId) {
   const inEl = document.getElementById("chat-in");
   if (!inEl || !inEl.value.trim()) return;
@@ -381,7 +451,6 @@ function triggerAiResponse(chatId) {
 
   const box = document.getElementById("chat-box");
 
-  // Typing Indicator
   const typingEl = document.createElement("div");
   typingEl.id = "typing-indicator";
   typingEl.style.color = "#8b5cf6";
@@ -397,9 +466,9 @@ function triggerAiResponse(chatId) {
     if (tInd) tInd.remove();
 
     const responses = [
-      "*Nods thoughtfully, examining your expressions.* \"Your words hold a deeper meaning than you realize. Tell me, what drives your search?\"",
-      "*Steps closer, the shadows lengthening around us.* \"An intriguing response. Few who enter MidnightTown speak with such conviction.\"",
-      "*A faint smile touches their lips as they lean back.* \"If that is your decision, then let us proceed carefully.\""
+      "*Nods thoughtfully, examining your expressions.* **\"Your words hold a deeper meaning than you realize.** Tell me, what drives your search?\"",
+      "*Steps closer, the shadows lengthening around us.* **\"An intriguing response.** Few who enter MidnightTown speak with such conviction.\"",
+      "*A faint smile touches their lips as they lean back.* **\"If that is your decision,** then let us proceed carefully.\""
     ];
 
     const aiReply = responses[Math.floor(Math.random() * responses.length)];
