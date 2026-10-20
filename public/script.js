@@ -1,3 +1,11 @@
+
+// --- ABSOLUTE CHAT VIEW PROTECTION GUARD ---
+document.addEventListener("click", function(e) {
+  if (e.target.closest("#view-chats")) {
+    // Stop any global script from hijacking chats view clicks
+    e.stopImmediatePropagation();
+  }
+}, true);
 function switchView(viewName) {
     document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));

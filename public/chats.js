@@ -87,16 +87,18 @@ function renderChatList() {
     
     card.setAttribute("data-action", "open-chat");
     card.style.cursor = "pointer";
+    
+    card.style.cursor = "pointer";
     card.onclick = function(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
       if (typeof openActiveChat === "function") {
         openActiveChat(c.id);
       }
       return false;
     };
+
 
     
     wrapper.appendChild(card);
