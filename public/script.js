@@ -474,3 +474,15 @@ document.addEventListener("click", function(e) {
     }
   }
 }, true);
+
+// --- ENSURE CHATS NAVIGATION RENDERS DYNAMIC VIEW ---
+document.addEventListener("DOMContentLoaded", () => {
+  const chatNavBtn = document.querySelector("a[href="#chats"], button[data-tab="chats"], .nav-item:nth-child(4)");
+  if (chatNavBtn) {
+    chatNavBtn.addEventListener("click", () => {
+      if (typeof renderChatList === "function") {
+        renderChatList();
+      }
+    });
+  }
+});
