@@ -413,3 +413,14 @@ window.switchView = function(viewName) {
         renderChatList();
     }
 };
+
+  // --- EXPLICIT CHATS TAB ROUTING ---
+  document.querySelectorAll("button, div").forEach(el => {
+    if (el.textContent && el.textContent.includes("Chats") && !el.closest("#chat-box")) {
+      el.addEventListener("click", function() {
+        if (typeof renderChatList === "function") {
+          renderChatList();
+        }
+      }, true);
+    }
+  });
