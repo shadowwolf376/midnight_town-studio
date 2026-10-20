@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MidnightTown</title>
+    <title>Shadow Vale</title>
     <style>
         * { box-sizing: border-box; }
         body { 
@@ -91,7 +91,7 @@
 
     <!-- Top Header -->
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
-        <h1 style="margin:0;font-size:20px;color:#ff6600;display:flex;align-items:center;gap:6px">🔥 MidnightTown</h1>
+        <h1 style="margin:0;font-size:20px;color:#ff6600;display:flex;align-items:center;gap:6px">🔥 Shadow Vale</h1>
         <button onclick="switchView('create')" style="background:#ff6600;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer">+ Create</button>
     </div>
 
@@ -387,7 +387,7 @@ window.runAIModel = async function(userMsg) {
         return null;
     }
 
-    const systemPersona = "You are The Lost Archivist, a mysterious and atmospheric guide in the dark, neon-lit town of MidnightTown. Respond in an immersive roleplay style with asterisks for actions (*like this*).";
+    const systemPersona = "You are The Lost Archivist, a mysterious and atmospheric guide in the dark, neon-lit town of Shadow Vale. Respond in an immersive roleplay style with asterisks for actions (*like this*).";
 
     try {
         const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -466,7 +466,23 @@ window.sendMessage = async function() {
   });
 </script>
 
-</body>
+
+  <script>
+    // Live runtime text replacer for Shadow Vale
+    document.addEventListener("DOMContentLoaded", () => {
+      const observer = new MutationObserver(() => {
+        const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        while(node = walk.nextNode()) {
+          if (node.nodeValue && node.nodeValue.includes("MidnightTown")) {
+            node.nodeValue = node.nodeValue.replace(/MidnightTown/g, "Shadow Vale");
+          }
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+  </script>
+  \n</body>
 </html>
 <script>function openSettings() {
     const modal = document.getElementById('settings-modal') || document.getElementById('settings-view');
