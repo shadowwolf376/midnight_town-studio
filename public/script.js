@@ -184,10 +184,13 @@ function toggleTag(btn) {
 
 // Ensure openChat opens the chat view smoothly
 function openChat(scenarioName) {
-    const chatTitle = document.getElementById('chat-title');
-    if (chatTitle) {
-        chatTitle.innerText = '💬 ' + scenarioName;
-    }
+  switchView('chats');
+  if (typeof openActiveChat === 'function') {
+    openActiveChat(scenarioName);
+  } else if (typeof loadChatSession === 'function') {
+    loadChatSession(scenarioName);
+  }
+}
     switchView('chats');
     loadChatSession(scenarioName);
 }
