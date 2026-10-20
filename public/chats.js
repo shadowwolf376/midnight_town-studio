@@ -18,19 +18,142 @@ function getSavedChats() {
 function renderChatList() {
   const el = document.getElementById("view-chats");
   if (!el) return;
+  el.innerHTML = "";
+  
+  const wrapper = document.createElement("div");
+  wrapper.style.padding = "15px";
+  
+  const heading = document.createElement("h2");
+  heading.style.color = "#fff";
+  heading.style.marginBottom = "12px";
+  heading.textContent = "Your chats";
+  wrapper.appendChild(heading);
+  
   const chats = getSavedChats();
-  let html = "<div style="padding: 15px;"><h2 style="color:#fff;margin-bottom:12px;">Your chats</h2>";
   chats.forEach(c => {
-    html += "<div onclick="event.stopPropagation(); openActiveChat('" + c.name + "');" style="background:#150f2e;padding:12px;border-radius:8px;margin-bottom:8px;border:1px solid #2a1f52;cursor:pointer;"><b style="color:#fff;">💬 " + c.name + "</b><p style="color:#aaa;margin:4px 0 0;font-size:12px;">" + c.msg + "</p></div>";
+    const card = document.createElement("div");
+    card.style.background = "#150f2e";
+    card.style.padding = "12px";
+    card.style.borderRadius = "8px";
+    card.style.marginBottom = "8px";
+    card.style.border = "1px solid #2a1f52";
+    card.style.cursor = "pointer";
+    
+    const title = document.createElement("b");
+    title.style.color = "#fff";
+    title.textContent = "💬 " + c.name;
+    card.appendChild(title);
+    
+    const subtitle = document.createElement("p");
+    subtitle.style.color = "#aaa";
+    subtitle.style.margin = "4px 0 0";
+    subtitle.style.fontSize = "12px";
+    subtitle.textContent = c.msg;
+    card.appendChild(subtitle);
+    
+    card.addEventListener("click", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      openActiveChat(c.name);
+    });
+    
+    wrapper.appendChild(card);
   });
-  html += "</div>";
-  el.innerHTML = html;
+  
+  el.appendChild(wrapper);
 }
 
 function openActiveChat(name) {
   const el = document.getElementById("view-chats");
   if (!el) return;
-  el.innerHTML = "<div style="padding: 15px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><button onclick="event.stopPropagation(); renderChatList();" style="background:#251a52;color:#fff;border:1px solid #2a1f52;padding:6px 12px;border-radius:6px;cursor:pointer;">← Back</button><h3 style="color:#fff;margin:0;">💬 " + name + "</h3></div><div id="chat-box" style="height:320px;background:#150f2e;border:1px solid #2a1f52;border-radius:8px;padding:10px;overflow-y:auto;margin-bottom:10px;"><div style="background:#251a52;color:#ff6600;padding:8px;border-radius:6px;font-size:12px;margin-bottom:8px;">✨ Active session loaded for <b>" + name + "</b></div></div><div style="display:flex;gap:8px;"><input id="chat-in" placeholder="Type a message..." style="flex:1;background:#150f2e;border:1px solid #2a1f52;color:#fff;padding:8px;border-radius:6px;outline:none;"><button onclick="event.stopPropagation(); sendMsg('" + name + "');" style="background:#ff6600;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:bold;cursor:pointer;">Send</button></div></div>";
+  el.innerHTML = "";
+
+  const wrapper = document.createElement("div");
+  wrapper.style.padding = "15px";
+
+  const topBar = document.createElement("div");
+  topBar.style.display = "flex";
+  topBar.style.alignItems = "center";
+  topBar.style.gap = "10px";
+  topBar.style.marginBottom = "12px";
+
+  const backBtn = document.createElement("button");
+  backBtn.textContent = "← Back";
+  backBtn.style.background = "#251a52";
+  backBtn.style.color = "#fff";
+  backBtn.style.border = "1px solid #2a1f52";
+  backBtn.style.padding = "6px 12px";
+  backBtn.style.borderRadius = "6px";
+  backBtn.style.cursor = "pointer";
+  backBtn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    renderChatList();
+  });
+  topBar.appendChild(backBtn);
+
+  const title = document.createElement("h3");
+  title.style.color = "#fff";
+  title.style.margin = "0";
+  title.textContent = "💬 " + name;
+  topBar.appendChild(title);
+  wrapper.appendChild(topBar);
+
+  const box = document.createElement("div");
+  box.id = "chat-box";
+  box.style.height = "320px";
+  box.style.background = "#150f2e";
+  box.style.border = "1px solid #2a1f52";
+  box.style.borderRadius = "8px";
+  box.style.padding = "10px";
+  box.style.overflowY = "auto";
+  box.style.marginBottom = "10px";
+
+  const notice = document.createElement("div");
+  notice.style.background = "#251a52";
+  notice.style.color = "#ff6600";
+  notice.style.padding = "8px";
+  notice.style.borderRadius = "6px";
+  notice.style.fontSize = "12px";
+  notice.style.marginBottom = "8px";
+  notice.innerHTML = "✨ Active session loaded for <b>" + name + "</b>";
+  box.appendChild(notice);
+  wrapper.appendChild(box);
+
+  const inputRow = document.createElement("div");
+  inputRow.style.display = "flex";
+  inputRow.style.gap = "8px";
+
+  const input = document.createElement("input");
+  input.id = "chat-in";
+  input.placeholder = "Type a message...";
+  input.style.flex = "1";
+  input.style.background = "#150f2e";
+  input.style.border = "1px solid #2a1f52";
+  input.style.color = "#fff";
+  input.style.padding = "8px";
+  input.style.borderRadius = "6px";
+  input.style.outline = "none";
+  inputRow.appendChild(input);
+
+  const sendBtn = document.createElement("button");
+  sendBtn.textContent = "Send";
+  sendBtn.style.background = "#ff6600";
+  sendBtn.style.color = "#fff";
+  sendBtn.style.border = "none";
+  sendBtn.style.padding = "8px 16px";
+  sendBtn.style.borderRadius = "6px";
+  sendBtn.style.fontWeight = "bold";
+  sendBtn.style.cursor = "pointer";
+  sendBtn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    sendMsg(name);
+  });
+  inputRow.appendChild(sendBtn);
+
+  wrapper.appendChild(inputRow);
+  el.appendChild(wrapper);
 }
 
 function sendMsg(name) {
@@ -39,23 +162,46 @@ function sendMsg(name) {
   const box = document.getElementById("chat-box");
   const val = inEl.value;
   
-  // Append user message
-  box.innerHTML += "<div style="background:#2e2354;color:#fff;padding:8px;border-radius:6px;margin-bottom:6px;text-align:right;">" + val + "</div>";
+  const userMsg = document.createElement("div");
+  userMsg.style.background = "#2e2354";
+  userMsg.style.color = "#fff";
+  userMsg.style.padding = "8px";
+  userMsg.style.borderRadius = "6px";
+  userMsg.style.marginBottom = "6px";
+  userMsg.style.textAlign = "right";
+  userMsg.textContent = val;
+  box.appendChild(userMsg);
+  
   inEl.value = "";
   box.scrollTop = box.scrollHeight;
 
-  // Append temporary thinking indicator
   const typingId = "typing-" + Date.now();
-  box.innerHTML += "<div id="" + typingId + "" style="background:#251a52;color:#aaa;padding:8px;border-radius:6px;margin-bottom:6px;border:1px solid #2a1f52;font-style:italic;">The Lost Archivist is thinking...</div>";
+  const typingEl = document.createElement("div");
+  typingEl.id = typingId;
+  typingEl.style.background = "#251a52";
+  typingEl.style.color = "#aaa";
+  typingEl.style.padding = "8px";
+  typingEl.style.borderRadius = "6px";
+  typingEl.style.marginBottom = "6px";
+  typingEl.style.border = "1px solid #2a1f52";
+  typingEl.style.fontStyle = "italic";
+  typingEl.textContent = "The Lost Archivist is thinking...";
+  box.appendChild(typingEl);
   box.scrollTop = box.scrollHeight;
 
   setTimeout(() => {
-    // Remove typing indicator element
-    const typingEl = document.getElementById(typingId);
-    if (typingEl) typingEl.remove();
+    const tEl = document.getElementById(typingId);
+    if (tEl) tEl.remove();
 
-    // Append AI response
-    box.innerHTML += "<div style="background:#251a52;color:#fff;padding:8px;border-radius:6px;margin-bottom:6px;border:1px solid #2a1f52;">I received your message. Let us continue the story...</div>";
+    const aiMsg = document.createElement("div");
+    aiMsg.style.background = "#251a52";
+    aiMsg.style.color = "#fff";
+    aiMsg.style.padding = "8px";
+    aiMsg.style.borderRadius = "6px";
+    aiMsg.style.marginBottom = "6px";
+    aiMsg.style.border = "1px solid #2a1f52";
+    aiMsg.textContent = "I received your message. Let us continue the story...";
+    box.appendChild(aiMsg);
     box.scrollTop = box.scrollHeight;
 
     let chats = getSavedChats();
