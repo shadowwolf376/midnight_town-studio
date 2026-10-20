@@ -644,34 +644,54 @@ window.sendMessage = async function() {
 </script>
 
 
+
+
+
 <script id="chat-card-interactivity-script">
   (function() {
-    document.addEventListener("mouseover", function(e) {
-      try {
-        const card = e.target.closest("div");
-        if (card && card.textContent && card.textContent.includes("The Lost Archivist") && card.textContent.includes("Last active")) {
-          card.style.cursor = "pointer";
-          card.style.borderColor = "#ff7a00";
-        }
-      } catch(err) {}
-    });
+    function makeCardClickable() {
+      const divs = document.querySelectorAll("div");
+      divs.forEach(div => {
+        if (div.textContent && div.textContent.includes("The Lost Archivist") && div.textContent.includes("Last active")) {
+          if (!div.dataset.boundClick) {
+            div.dataset.boundClick = "true";
+            div.style.cursor = "pointer";
+            div.style.transition = "border-color 0.2s";
+            
+            div.addEventListener("mouseover", function() {
+              div.style.borderColor = "#ff7a00";
+            });
+            div.addEventListener("mouseout", function() {
+              div.style.borderColor = "";
+            });
 
-    document.addEventListener("click", function(e) {
-      try {
-        const card = e.target.closest("div");
-        if (card && card.textContent && card.textContent.includes("The Lost Archivist") && card.textContent.includes("Last active")) {
-          const homeNav = Array.from(document.querySelectorAll("nav a, nav button, footer a, footer button"))
-                               .find(el => el.textContent.toLowerCase().includes("home"));
-          if (homeNav) {
-            homeNav.click();
-            setTimeout(function() {
-              const startBtn = document.querySelector("button");
-              if (startBtn) startBtn.click();
-            }, 150);
+            div.addEventListener("click", function(e) {
+              e.stopPropagation();
+              e.preventDefault();
+              
+              // Find and click the Home tab in the bottom navigation bar
+              const navButtons = Array.from(document.querySelectorAll("nav a, nav button, footer a, footer button, [class*=\x27nav\x27] button"));
+              const homeNav = navButtons.find(el => el.textContent.toLowerCase().includes("home"));
+              
+              if (homeNav) {
+                homeNav.click();
+                setTimeout(function() {
+                  const startBtn = document.querySelector("button");
+                  if (startBtn) startBtn.click();
+                }, 200);
+              } else {
+                window.location.hash = "#/";
+              }
+            });
           }
         }
-      } catch(err) {}
-    });
+      });
+    }
+
+    // Run periodically and observe DOM changes safely
+    setInterval(makeCardClickable, 500);
+    const observer = new MutationObserver(makeCardClickable);
+    observer.observe(document.body, { childList: true, subtree: true });
   })();
 </script>
 
