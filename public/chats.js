@@ -1,30 +1,41 @@
-// --- STATE CONTROLLER WITH PINNING & TAGS ---
+
+// --- HARD PERSISTENCE LOCALSTORAGE CONTROLLER ---
 function getSavedChats() {
-  let chats = [];
   try {
-    chats = JSON.parse(localStorage.getItem("m_chats")) || [];
-  } catch(e) {}
-  
-  if (!chats || chats.length === 0) {
-    chats = [{
-      id: "lost-archivist",
-      name: "The Lost Archivist",
-      avatar: "🏛️",
-      msg: "Ready to chat...",
-      time: new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"}),
-      isPinned: true,
-      tag: "Favorites",
-      history: [
-        { sender: "ai", text: "*The Archivist adjusts his lantern, casting warm light across the ancient leather-bound tomes.* **Welcome, traveler.** What secrets do you seek in MidnightTown tonight?" }
-      ]
-    }];
-    localStorage.setItem("m_chats", JSON.stringify(chats));
+    const raw = localStorage.getItem("m_chats");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch(e) {
+    console.error("Error reading localStorage", e);
   }
-  return chats;
+  
+  // Only fallback if m_chats genuinely does not exist
+  const defaultChats = [{
+    id: "lost-archivist",
+    name: "The Lost Archivist",
+    avatar: "🏛️",
+    msg: "Ready to chat...",
+    time: new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"}),
+    isPinned: true,
+    history: [
+      { sender: "ai", text: "*The Archivist adjusts his lantern, casting warm light across the ancient leather-bound tomes.* **Welcome, traveler.** What secrets do you seek in MidnightTown tonight?" }
+    ]
+  }];
+  
+  localStorage.setItem("m_chats", JSON.stringify(defaultChats));
+  return defaultChats;
 }
 
 function saveChats(chats) {
-  localStorage.setItem("m_chats", JSON.stringify(chats));
+  try {
+    localStorage.setItem("m_chats", JSON.stringify(chats));
+  } catch(e) {
+    console.error("Failed to save to localStorage", e);
+  }
 }
 
 // Global active tag state
