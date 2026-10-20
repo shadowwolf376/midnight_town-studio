@@ -449,3 +449,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+// --- NAVIGATION CLICK OVERRIDE ---
+document.addEventListener("click", function(e) {
+  const target = e.target.closest("button, a, div, span");
+  if (!target) return;
+  
+  const text = (target.textContent || "").trim();
+  if (text.includes("Chats") && !target.closest("#chat-box")) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Hide all other views
+    document.querySelectorAll(".view, [id^="view-"]").forEach(v => v.style.display = "none");
+    
+    // Show chats view and trigger render
+    const chatView = document.getElementById("view-chats");
+    if (chatView) {
+      chatView.style.display = "block";
+    }
+    if (typeof renderChatList === "function") {
+      renderChatList();
+    }
+  }
+}, true);
