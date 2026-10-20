@@ -8,29 +8,33 @@ function getSavedChats() {
   if (!chats || chats.length === 0) {
     chats = [{
       name: "The Lost Archivist",
-      msg: "Last active: 12:56 PM"
+      msg: "Last active: " + new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"})
     }];
     localStorage.setItem("m_chats", JSON.stringify(chats));
   }
   return chats;
 }
 
+function getChatContainer() {
+  return document.getElementById("view-chats") || document.querySelector("main") || document.body;
+}
+
 function renderChatList() {
-  const el = document.getElementById("view-chats");
+  const el = getChatContainer();
   if (!el) return;
   const chats = getSavedChats();
   let html = "<div style="padding: 15px;"><h2 style="color:#fff;margin-bottom:12px;">Your chats</h2>";
   chats.forEach(c => {
-    html += "<div onclick="openActiveChat('" + c.name + "')" style="background:#150f2e;padding:12px;border-radius:8px;margin-bottom:8px;border:1px solid #2a1f52;cursor:pointer;"><b style="color:#fff;">💬 " + c.name + "</b><p style="color:#aaa;margin:4px 0 0;font-size:12px;">" + c.msg + "</p></div>";
+    html += "<div onclick="event.stopPropagation(); openActiveChat('" + c.name + "');" style="background:#150f2e;padding:12px;border-radius:8px;margin-bottom:8px;border:1px solid #2a1f52;cursor:pointer;"><b style="color:#fff;">💬 " + c.name + "</b><p style="color:#aaa;margin:4px 0 0;font-size:12px;">" + c.msg + "</p></div>";
   });
   html += "</div>";
   el.innerHTML = html;
 }
 
 function openActiveChat(name) {
-  const el = document.getElementById("view-chats");
+  const el = getChatContainer();
   if (!el) return;
-  el.innerHTML = "<div style="padding: 15px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><button onclick="renderChatList()" style="background:#251a52;color:#fff;border:1px solid #2a1f52;padding:6px 12px;border-radius:6px;cursor:pointer;">← Back</button><h3 style="color:#fff;margin:0;">💬 " + name + "</h3></div><div id="chat-box" style="height:320px;background:#150f2e;border:1px solid #2a1f52;border-radius:8px;padding:10px;overflow-y:auto;margin-bottom:10px;"><div style="background:#251a52;color:#ff6600;padding:8px;border-radius:6px;font-size:12px;margin-bottom:8px;">✨ Active session loaded for <b>" + name + "</b></div></div><div style="display:flex;gap:8px;"><input id="chat-in" placeholder="Type a message..." style="flex:1;background:#150f2e;border:1px solid #2a1f52;color:#fff;padding:8px;border-radius:6px;outline:none;"><button onclick="sendMsg('" + name + "')" style="background:#ff6600;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:bold;cursor:pointer;">Send</button></div></div>";
+  el.innerHTML = "<div style="padding: 15px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><button onclick="event.stopPropagation(); renderChatList();" style="background:#251a52;color:#fff;border:1px solid #2a1f52;padding:6px 12px;border-radius:6px;cursor:pointer;">← Back</button><h3 style="color:#fff;margin:0;">💬 " + name + "</h3></div><div id="chat-box" style="height:320px;background:#150f2e;border:1px solid #2a1f52;border-radius:8px;padding:10px;overflow-y:auto;margin-bottom:10px;"><div style="background:#251a52;color:#ff6600;padding:8px;border-radius:6px;font-size:12px;margin-bottom:8px;">✨ Active session loaded for <b>" + name + "</b></div></div><div style="display:flex;gap:8px;"><input id="chat-in" placeholder="Type a message..." style="flex:1;background:#150f2e;border:1px solid #2a1f52;color:#fff;padding:8px;border-radius:6px;outline:none;"><button onclick="event.stopPropagation(); sendMsg('" + name + "');" style="background:#ff6600;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:bold;cursor:pointer;">Send</button></div></div>";
 }
 
 function sendMsg(name) {
@@ -53,14 +57,10 @@ window.openActiveChat = openActiveChat;
 window.renderChatList = renderChatList;
 window.sendMsg = sendMsg;
 
-const originalSwitch = window.switchView;
-window.switchView = function(view) {
-  if (originalSwitch) originalSwitch(view);
-  if (view === "chats") {
+// Event listener to attach handlers directly on load and tab switch
+document.addEventListener("click", function(e) {
+  const btn = e.target.closest("button, a");
+  if (btn && btn.textContent.includes("Chats")) {
     setTimeout(renderChatList, 50);
   }
-};
-
-window.addEventListener("DOMContentLoaded", () => {
-  setTimeout(renderChatList, 100);
 });
