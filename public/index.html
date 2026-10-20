@@ -565,6 +565,91 @@ window.sendMessage = async function() {
   })();
 </script>
 
+
+<script>
+  (function() {
+    try {
+      const STORAGE_KEY = "midnight_saved_sessions_v3";
+
+      function getSessions() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } 
+        catch(e) { return []; }
+      }
+
+      function saveSessions(sessions) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions)); } 
+        catch(e) {}
+      }
+
+      function captureActiveChat() {
+        try {
+          const chatBox = document.querySelector(".chat-messages, [id*='chat']");
+          if (!chatBox || !chatBox.innerHTML || chatBox.innerHTML.trim() === "") return;
+
+          const title = "The Lost Archivist";
+          const htmlContent = chatBox.innerHTML;
+          
+          let sessions = getSessions();
+          const existing = sessions.find(s => s.title === title);
+          
+          if (existing) {
+            existing.htmlContent = htmlContent;
+            existing.updatedAt = new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"});
+          } else {
+            sessions.push({
+              id: "session_" + Date.now(),
+              title: title,
+              htmlContent: htmlContent,
+              updatedAt: new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"})
+            });
+          }
+          saveSessions(sessions);
+        } catch(e) {}
+      }
+
+      function updateChatsView() {
+        try {
+          const container = document.querySelector(".your-chats-list, [id*='chats'], main");
+          if (!container) return;
+
+          if (window.location.hash.includes("chats") || (document.body && document.body.textContent.includes("Your chats"))) {
+            const sessions = getSessions();
+            if (sessions.length > 0) {
+              let listDiv = document.getElementById("persistent-chats-container");
+              if (!listDiv) {
+                listDiv = document.createElement("div");
+                listDiv.id = "persistent-chats-container";
+                listDiv.style.cssText = "margin-top: 15px; display: flex; flex-direction: column; gap: 10px;";
+                container.appendChild(listDiv);
+              }
+              
+              listDiv.innerHTML = sessions.map(s => 
+                `<div class="saved-chat-card" data-id="${s.id}" style="background:#130f26; border:1px solid #432c7a; padding:15px; border-radius:12px; cursor:pointer;">
+                  <h4 style="margin:0 0 5px 0; color:#f3e8ff; font-size:15px; pointer-events:none;">💬 ${s.title}</h4>
+                  <p style="margin:0; color:#aaa; font-size:12px; pointer-events:none;">Last active: ${s.updatedAt}</p>
+                </div>`
+              ).join("");
+            }
+          }
+        } catch(e) {}
+      }
+
+      document.addEventListener("click", function(e) {
+        try {
+          const card = e.target.closest(".saved-chat-card");
+          if (card) {
+            const startBtn = document.querySelector("button, a");
+            if (startBtn) startBtn.click();
+          }
+        } catch(err) {}
+      });
+
+      setInterval(captureActiveChat, 2000);
+      setInterval(updateChatsView, 1000);
+    } catch(globalErr) {}
+  })();
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
