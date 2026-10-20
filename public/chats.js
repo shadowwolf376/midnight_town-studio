@@ -1,4 +1,3 @@
-
 function getSavedChats() {
   let chats = [];
   try {
@@ -55,6 +54,7 @@ function renderChatList() {
       e.stopImmediatePropagation();
       e.stopPropagation();
       e.preventDefault();
+      console.log("Card clicked for: ", c.name);
       openActiveChat(c.name);
     });
     
@@ -67,6 +67,7 @@ function renderChatList() {
 function openActiveChat(name) {
   const el = document.getElementById("view-chats");
   if (!el) return;
+  el.style.display = "block";
   el.innerHTML = "";
 
   const wrapper = document.createElement("div");
@@ -178,7 +179,6 @@ function sendMsg(name) {
   inEl.value = "";
   box.scrollTop = box.scrollHeight;
 
-  // Typing / Thinking Indicator
   const typingId = "typing-" + Date.now();
   const typingEl = document.createElement("div");
   typingEl.id = typingId;
@@ -220,7 +220,3 @@ function sendMsg(name) {
 window.openActiveChat = openActiveChat;
 window.renderChatList = renderChatList;
 window.sendMsg = sendMsg;
-
-window.addEventListener("DOMContentLoaded", () => {
-  setTimeout(renderChatList, 100);
-});
