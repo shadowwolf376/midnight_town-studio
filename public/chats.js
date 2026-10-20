@@ -24,7 +24,41 @@ function saveChats(chats) {
   localStorage.setItem("m_chats", JSON.stringify(chats));
 }
 
-// --- RENDER CHAT LIST WITH LIVE SEARCH ---
+// --- EXPORT CHATS TO JSON FILE ---
+function exportChats() {
+  const chats = getSavedChats();
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(chats, null, 2));
+  const downloadAnchor = document.createElement("a");
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "midnight_town_chats_backup.json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+}
+
+// --- IMPORT CHATS FROM JSON FILE ---
+function importChats(event) {
+  const fileReader = new FileReader();
+  if (event.target.files && event.target.files[0]) {
+    fileReader.readAsText(event.target.files[0], "UTF-8");
+    fileReader.onload = (e) => {
+      try {
+        const importedChats = JSON.parse(e.target.result);
+        if (Array.isArray(importedChats)) {
+          saveChats(importedChats);
+          alert("Chats successfully imported!");
+          renderChatList();
+        } else {
+          alert("Invalid backup file format.");
+        }
+      } catch (err) {
+        alert("Failed to parse JSON backup file.");
+      }
+    };
+  }
+}
+
+// --- RENDER CHAT LIST WITH SEARCH & BACKUPS ---
 function renderChatList(filterQuery = "") {
   const el = document.getElementById("view-chats");
   if (!el) return;
@@ -63,6 +97,50 @@ function renderChatList(filterQuery = "") {
   headerRow.appendChild(countBadge);
 
   wrapper.appendChild(headerRow);
+
+  // Backup Action Buttons Bar (Export / Import)
+  const actionRow = document.createElement("div");
+  actionRow.style.display = "flex";
+  actionRow.style.gap = "8px";
+  actionRow.style.marginBottom = "12px";
+
+  const exportBtn = document.createElement("button");
+  exportBtn.textContent = "📥 Export JSON";
+  exportBtn.style.flex = "1";
+  exportBtn.style.background = "#251a52";
+  exportBtn.style.color = "#fff";
+  exportBtn.style.border = "1px solid #2a1f52";
+  exportBtn.style.padding = "8px";
+  exportBtn.style.borderRadius = "8px";
+  exportBtn.style.cursor = "pointer";
+  exportBtn.style.fontSize = "13px";
+  exportBtn.onclick = function(e) {
+    e.preventDefault();
+    exportChats();
+  };
+  actionRow.appendChild(exportBtn);
+
+  const importLabel = document.createElement("label");
+  importLabel.textContent = "📤 Import JSON";
+  importLabel.style.flex = "1";
+  importLabel.style.background = "#251a52";
+  importLabel.style.color = "#fff";
+  importLabel.style.border = "1px solid #2a1f52";
+  importLabel.style.padding = "8px";
+  importLabel.style.borderRadius = "8px";
+  importLabel.style.textAlign = "center";
+  importLabel.style.cursor = "pointer";
+  importLabel.style.fontSize = "13px";
+  
+  const importInput = document.createElement("input");
+  importInput.type = "file";
+  importInput.accept = ".json";
+  importInput.style.display = "none";
+  importInput.onchange = importChats;
+  importLabel.appendChild(importInput);
+  
+  actionRow.appendChild(importLabel);
+  wrapper.appendChild(actionRow);
 
   // Search Input Bar
   const searchInput = document.createElement("input");
