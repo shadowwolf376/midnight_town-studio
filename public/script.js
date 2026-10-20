@@ -504,3 +504,15 @@ document.addEventListener("click", function(e) {
     }
   }
 }, true);
+
+// --- AUTOMATIC LOCALSTORAGE CHAT RESTORATION ON REFRESH ---
+document.addEventListener("DOMContentLoaded", () => {
+  const chatView = document.getElementById("view-chats");
+  if (chatView && chatView.style.display !== "none") {
+    if (typeof openActiveChat === "function") {
+      openActiveChat("lost-archivist");
+    } else if (typeof renderChatList === "function") {
+      renderChatList();
+    }
+  }
+});
