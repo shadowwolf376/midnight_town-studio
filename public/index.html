@@ -643,6 +643,38 @@ window.sendMessage = async function() {
   })();
 </script>
 
+
+<script id="chat-card-interactivity-script">
+  (function() {
+    document.addEventListener("mouseover", function(e) {
+      try {
+        const card = e.target.closest("div");
+        if (card && card.textContent && card.textContent.includes("The Lost Archivist") && card.textContent.includes("Last active")) {
+          card.style.cursor = "pointer";
+          card.style.borderColor = "#ff7a00";
+        }
+      } catch(err) {}
+    });
+
+    document.addEventListener("click", function(e) {
+      try {
+        const card = e.target.closest("div");
+        if (card && card.textContent && card.textContent.includes("The Lost Archivist") && card.textContent.includes("Last active")) {
+          const homeNav = Array.from(document.querySelectorAll("nav a, nav button, footer a, footer button"))
+                               .find(el => el.textContent.toLowerCase().includes("home"));
+          if (homeNav) {
+            homeNav.click();
+            setTimeout(function() {
+              const startBtn = document.querySelector("button");
+              if (startBtn) startBtn.click();
+            }, 150);
+          }
+        }
+      } catch(err) {}
+    });
+  })();
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
