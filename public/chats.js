@@ -38,19 +38,33 @@ function sendMsg(name) {
   if (!inEl || !inEl.value.trim()) return;
   const box = document.getElementById("chat-box");
   const val = inEl.value;
+  
+  // Append user message
   box.innerHTML += "<div style="background:#2e2354;color:#fff;padding:8px;border-radius:6px;margin-bottom:6px;text-align:right;">" + val + "</div>";
   inEl.value = "";
   box.scrollTop = box.scrollHeight;
+
+  // Append temporary thinking indicator
+  const typingId = "typing-" + Date.now();
+  box.innerHTML += "<div id="" + typingId + "" style="background:#251a52;color:#aaa;padding:8px;border-radius:6px;margin-bottom:6px;border:1px solid #2a1f52;font-style:italic;">The Lost Archivist is thinking...</div>";
+  box.scrollTop = box.scrollHeight;
+
   setTimeout(() => {
+    // Remove typing indicator element
+    const typingEl = document.getElementById(typingId);
+    if (typingEl) typingEl.remove();
+
+    // Append AI response
     box.innerHTML += "<div style="background:#251a52;color:#fff;padding:8px;border-radius:6px;margin-bottom:6px;border:1px solid #2a1f52;">I received your message. Let us continue the story...</div>";
     box.scrollTop = box.scrollHeight;
+
     let chats = getSavedChats();
     let idx = chats.findIndex(c => c.name === name);
     if (idx >= 0) { 
       chats[idx].msg = "Last active: " + new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"}); 
       localStorage.setItem("m_chats", JSON.stringify(chats)); 
     }
-  }, 600);
+  }, 1200);
 }
 
 window.openActiveChat = openActiveChat;
@@ -59,11 +73,4 @@ window.sendMsg = sendMsg;
 
 window.addEventListener("DOMContentLoaded", () => {
   setTimeout(renderChatList, 100);
-});
-
-document.addEventListener("click", function(e) {
-  const btn = e.target.closest("button, a, div");
-  if (btn && (btn.textContent.includes("Chats") || btn.id === "nav-chats")) {
-    setTimeout(renderChatList, 50);
-  }
 });
