@@ -84,11 +84,20 @@ function renderChatList() {
     card.appendChild(subtitle);
     
     // Encapsulated event handler - Direct State Trigger
-    card.addEventListener("click", function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      openActiveChat(c.id);
-    });
+    
+    card.setAttribute("data-action", "open-chat");
+    card.style.cursor = "pointer";
+    card.onclick = function(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (typeof openActiveChat === "function") {
+        openActiveChat(c.id);
+      }
+      return false;
+    };
+
     
     wrapper.appendChild(card);
   });
