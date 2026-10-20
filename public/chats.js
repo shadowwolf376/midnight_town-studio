@@ -11,6 +11,8 @@ function getSavedChats() {
       name: "The Lost Archivist",
       msg: "Ready to chat",
       time: new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"}),
+      description: "A mysterious keeper of ancient knowledge who guides travelers through the forgotten archives.",
+      lore: "Guarding the starlight vault for centuries, the Archivist remembers stories lost to time.",
       history: [
         { sender: "ai", text: "Welcome to the chat! Type a message below to begin your journey." }
       ]
@@ -200,7 +202,6 @@ function renderChatList(filterQuery = "") {
     subtitle.textContent = "Last active: " + (c.time || "Recently") + " • " + c.msg;
     card.appendChild(subtitle);
     
-    // Direct click handler to open active chat session
     card.onclick = function(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -226,7 +227,7 @@ function renderChatList(filterQuery = "") {
   }
 }
 
-// --- RENDER ACTIVE CHAT SESSION WITH RESET BUTTON ---
+// --- RENDER ACTIVE CHAT SESSION WITH RESET & CHARACTER INFO DRAWER ---
 function openActiveChat(chatId) {
   const chats = getSavedChats();
   let chat = chats.find(c => c.id === chatId);
@@ -249,7 +250,7 @@ function openActiveChat(chatId) {
   const wrapper = document.createElement("div");
   wrapper.style.padding = "15px";
 
-  // Top Navigation Bar with Back & Reset Buttons
+  // Top Navigation Bar
   const topBar = document.createElement("div");
   topBar.style.display = "flex";
   topBar.style.alignItems = "center";
@@ -259,7 +260,7 @@ function openActiveChat(chatId) {
   const topLeft = document.createElement("div");
   topLeft.style.display = "flex";
   topLeft.style.alignItems = "center";
-  topLeft.style.gap = "10px";
+  topLeft.style.gap = "8px";
 
   const backBtn = document.createElement("button");
   backBtn.textContent = "← Back";
@@ -279,22 +280,45 @@ function openActiveChat(chatId) {
   const title = document.createElement("h3");
   title.style.color = "#fff";
   title.style.margin = "0";
-  title.style.fontSize = "16px";
+  title.style.fontSize = "15px";
   title.textContent = "💬 " + chat.name;
   topLeft.appendChild(title);
   
   topBar.appendChild(topLeft);
 
-  // Clear / Reset History Button
+  // Header Right Controls (Info & Reset)
+  const topRight = document.createElement("div");
+  topRight.style.display = "flex";
+  topRight.style.gap = "6px";
+
+  const infoBtn = document.createElement("button");
+  infoBtn.textContent = "ℹ️ Info";
+  infoBtn.style.background = "#251a52";
+  infoBtn.style.color = "#fff";
+  infoBtn.style.border = "1px solid #2a1f52";
+  infoBtn.style.padding = "8px 10px";
+  infoBtn.style.borderRadius = "8px";
+  infoBtn.style.cursor = "pointer";
+  infoBtn.style.fontSize = "12px";
+  infoBtn.style.fontWeight = "bold";
+  infoBtn.onclick = function(e) {
+    e.preventDefault();
+    const drawer = document.getElementById("char-info-drawer");
+    if (drawer) {
+      drawer.style.display = drawer.style.display === "none" ? "block" : "none";
+    }
+  };
+  topRight.appendChild(infoBtn);
+
   const resetBtn = document.createElement("button");
   resetBtn.textContent = "🔄 Reset";
   resetBtn.style.background = "#3a1b3a";
   resetBtn.style.color = "#ff8888";
   resetBtn.style.border = "1px solid #5a2b5b";
-  resetBtn.style.padding = "8px 12px";
+  resetBtn.style.padding = "8px 10px";
   resetBtn.style.borderRadius = "8px";
   resetBtn.style.cursor = "pointer";
-  resetBtn.style.fontSize = "13px";
+  resetBtn.style.fontSize = "12px";
   resetBtn.style.fontWeight = "bold";
   resetBtn.onclick = function(e) {
     e.preventDefault();
@@ -306,13 +330,50 @@ function openActiveChat(chatId) {
         targetChat.msg = "History reset";
         targetChat.time = new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"});
         saveChats(allChats);
-        openActiveChat(chatId); // Refresh view
+        openActiveChat(chatId);
       }
     }
   };
-  topBar.appendChild(resetBtn);
+  topRight.appendChild(resetBtn);
 
+  topBar.appendChild(topRight);
   wrapper.appendChild(topBar);
+
+  // CHARACTER INFO DRAWER (Hidden by default)
+  const drawer = document.createElement("div");
+  drawer.id = "char-info-drawer";
+  drawer.style.display = "none";
+  drawer.style.background = "#191238";
+  drawer.style.border = "1px solid #3b2a75";
+  drawer.style.borderRadius = "10px";
+  drawer.style.padding = "14px";
+  drawer.style.marginBottom = "12px";
+  
+  const drawerTitle = document.createElement("h4");
+  drawerTitle.style.color = "#ff6600";
+  drawerTitle.style.margin = "0 0 8px 0";
+  drawerTitle.textContent = "📜 Character Profile & Lore";
+  drawer.appendChild(drawerTitle);
+
+  const descText = document.createElement("p");
+  descText.style.color = "#d1c7ed";
+  descText.style.fontSize = "13px";
+  descText.style.margin = "0 0 8px 0";
+  descText.style.lineHeight = "1.4";
+  descText.textContent = chat.description || "No specific background description set for this character.";
+  drawer.appendChild(descText);
+
+  if (chat.lore) {
+    const loreText = document.createElement("p");
+    loreText.style.color = "#a292d1";
+    loreText.style.fontSize = "12px";
+    loreText.style.fontStyle = "italic";
+    loreText.style.margin = "0";
+    loreText.textContent = "Lore: " + chat.lore;
+    drawer.appendChild(loreText);
+  }
+
+  wrapper.appendChild(drawer);
 
   // Chat Box Container
   const box = document.createElement("div");
@@ -325,7 +386,6 @@ function openActiveChat(chatId) {
   box.style.overflowY = "auto";
   box.style.marginBottom = "12px";
 
-  // Render Saved History
   if (chat.history && chat.history.length > 0) {
     chat.history.forEach(msg => {
       appendMessageUI(box, msg.sender, msg.text);
