@@ -486,3 +486,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// --- OVERRIDE CHATS VIEW DIRECTLY ---
+document.addEventListener("click", function(e) {
+  const btn = e.target.closest("button, a, div, span");
+  if (!btn) return;
+  
+  const text = (btn.textContent || "").trim();
+  if (text.includes("Chats") && !btn.closest("#chat-box")) {
+    const chatView = document.getElementById("view-chats");
+    if (chatView) {
+      chatView.innerHTML = ""; // Clear static elements
+      chatView.style.display = "block";
+    }
+    if (typeof renderChatList === "function") {
+      renderChatList();
+    }
+  }
+}, true);
