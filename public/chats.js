@@ -26,20 +26,23 @@ function saveChats(chats) {
 }
 
 // --- PARSER FOR ROLEPLAY FORMATTING (*actions*, "dialogue") ---
+
 function formatRoleplayText(text) {
   if (!text) return "";
   
-  // Escape HTML characters for safety
   let safe = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   
-  // Convert *actions/descriptions* to styled italics
-  safe = safe.replace(/\*([^*]+)\*/g, '<span style="color: #c4b5fd; font-style: italic;">$1</span>');
+  // 1. Convert **bold** to strong text
+  safe = safe.replace(/\*\*([^*]+)\*\*/g, "<strong style="color: #ffffff; font-weight: bold;">$1</strong>");
   
-  // Convert "dialogue" to highlighted spoken text
-  safe = safe.replace(/"([^"]+)"/g, '<span style="color: #ffffff; font-weight: 500;">"$1"</span>');
+  // 2. Convert *action/description* to styled lavender italics
+  safe = safe.replace(/\*([^*]+)\*/g, "<span style="color: #c4b5fd; font-style: italic;">$1</span>");
   
-  // Convert line breaks to clean breaks
-  return safe.replace(/\n/g, '<br>');
+  // 3. Convert "dialogue" to highlighted white spoken text
+  safe = safe.replace(/"([^"]+)"/g, "<span style="color: #ffffff;">"$1"</span>");
+  
+  // 4. Preserve line breaks
+  return safe.replace(/\n/g, "<br>");
 }
 
 // --- RENDER CHAT LIST ---
