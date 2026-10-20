@@ -24,8 +24,8 @@ function saveChats(chats) {
   localStorage.setItem("m_chats", JSON.stringify(chats));
 }
 
-// --- RENDER CHAT LIST ---
-function renderChatList() {
+// --- RENDER CHAT LIST WITH LIVE SEARCH ---
+function renderChatList(filterQuery = "") {
   const el = document.getElementById("view-chats");
   if (!el) return;
   
@@ -33,6 +33,12 @@ function renderChatList() {
   el.innerHTML = "";
   
   const chats = getSavedChats();
+  const query = filterQuery.toLowerCase().trim();
+  
+  const filteredChats = chats.filter(c => 
+    c.name.toLowerCase().includes(query) || 
+    (c.msg && c.msg.toLowerCase().includes(query))
+  );
   
   const wrapper = document.createElement("div");
   wrapper.style.padding = "15px";
@@ -57,9 +63,43 @@ function renderChatList() {
   headerRow.appendChild(countBadge);
 
   wrapper.appendChild(headerRow);
+
+  // Search Input Bar
+  const searchInput = document.createElement("input");
+  searchInput.id = "chat-search-input";
+  searchInput.type = "text";
+  searchInput.placeholder = "Search chats...";
+  searchInput.value = filterQuery;
+  searchInput.style.width = "100%";
+  searchInput.style.background = "#150f2e";
+  searchInput.style.border = "1px solid #2a1f52";
+  searchInput.style.color = "#fff";
+  searchInput.style.padding = "10px";
+  searchInput.style.borderRadius = "8px";
+  searchInput.style.outline = "none";
+  searchInput.style.marginBottom = "14px";
   
-  // Render Chat Cards
-  chats.forEach(c => {
+  searchInput.addEventListener("input", function(e) {
+    renderChatList(e.target.value);
+  });
+  
+  wrapper.appendChild(searchInput);
+  
+  // Empty State if no match
+  if (filteredChats.length === 0) {
+    const emptyState = document.createElement("div");
+    emptyState.style.background = "#150f2e";
+    emptyState.style.padding = "20px";
+    emptyState.style.borderRadius = "10px";
+    emptyState.style.textAlign = "center";
+    emptyState.style.color = "#8c82a8";
+    emptyState.style.border = "1px solid #2a1f52";
+    emptyState.textContent = "No chats found matching \"" + filterQuery + "\"";
+    wrapper.appendChild(emptyState);
+  }
+
+  // Render Filtered Chat Cards
+  filteredChats.forEach(c => {
     const card = document.createElement("div");
     card.style.background = "#150f2e";
     card.style.padding = "14px";
@@ -83,28 +123,31 @@ function renderChatList() {
     subtitle.textContent = "Last active: " + (c.time || "Recently") + " • " + c.msg;
     card.appendChild(subtitle);
     
-    // Encapsulated event handler - Direct State Trigger
-    
-    card.setAttribute("data-action", "open-chat");
-    card.style.cursor = "pointer";
-    
-    card.style.cursor = "pointer";
+    // Bulletproof click handler for active session
     card.onclick = function(e) {
       e.preventDefault();
       e.stopPropagation();
-      e.stopImmediatePropagation();
       if (typeof openActiveChat === "function") {
         openActiveChat(c.id);
       }
       return false;
     };
-
-
     
     wrapper.appendChild(card);
   });
   
   el.appendChild(wrapper);
+
+  // Restore focus and cursor position to search input if typing
+  if (filterQuery) {
+    setTimeout(() => {
+      const input = document.getElementById("chat-search-input");
+      if (input) {
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
+    }, 10);
+  }
 }
 
 // --- RENDER ACTIVE CHAT SESSION ---
@@ -146,10 +189,10 @@ function openActiveChat(chatId) {
   backBtn.style.borderRadius = "8px";
   backBtn.style.cursor = "pointer";
   backBtn.style.fontWeight = "bold";
-  backBtn.addEventListener("click", function(e) {
+  backBtn.onclick = function(e) {
     e.preventDefault();
     renderChatList();
-  });
+  };
   topBar.appendChild(backBtn);
 
   const title = document.createElement("h3");
@@ -160,7 +203,7 @@ function openActiveChat(chatId) {
   wrapper.appendChild(topBar);
 
   // Chat Box Container
-  const box = document.getElementById("chat-box") || document.createElement("div");
+  const box = document.createElement("div");
   box.id = "chat-box";
   box.style.height = "360px";
   box.style.background = "#150f2e";
@@ -169,7 +212,6 @@ function openActiveChat(chatId) {
   box.style.padding = "12px";
   box.style.overflowY = "auto";
   box.style.marginBottom = "12px";
-  box.innerHTML = "";
 
   // Render Saved History
   if (chat.history && chat.history.length > 0) {
@@ -214,10 +256,10 @@ function openActiveChat(chatId) {
   sendBtn.style.borderRadius = "8px";
   sendBtn.style.fontWeight = "bold";
   sendBtn.style.cursor = "pointer";
-  sendBtn.addEventListener("click", function(e) {
+  sendBtn.onclick = function(e) {
     e.preventDefault();
     sendMsg(chat.id);
-  });
+  };
   inputRow.appendChild(sendBtn);
 
   wrapper.appendChild(inputRow);
@@ -313,15 +355,3 @@ function sendMsg(chatId) {
 window.openActiveChat = openActiveChat;
 window.renderChatList = renderChatList;
 window.sendMsg = sendMsg;
-
-// --- BULLETPROOF GLOBAL CARD INTERCEPTOR ---
-document.addEventListener("click", function(e) {
-  const card = e.target.closest("div");
-  if (card && card.textContent && card.textContent.includes("The Lost Archivist") && !card.closest("#chat-box") && window.AppState && window.AppState.currentView === "chats") {
-    e.preventDefault();
-    e.stopPropagation();
-    if (typeof openActiveChat === "function") {
-      openActiveChat("lost-archivist");
-    }
-  }
-}, true);
