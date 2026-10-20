@@ -1,22 +1,18 @@
-function getSavedChats() {
-  let chats = [];
-  try {
-    chats = JSON.parse(localStorage.getItem("m_chats")) || [];
-  } catch(e) {}
-  
-  if (!chats || chats.length === 0) {
-    chats = [{
-      name: "The Lost Archivist",
-      msg: "Ready to chat"
-    }];
-    localStorage.setItem("m_chats", JSON.stringify(chats));
-  }
-  return chats;
-}
+// --- STATE MANAGEMENT ---
+window.AppState = {
+  currentView: 'chats',
+  activeChat: null,
+  chats: [
+    { id: 'lost-archivist', name: 'The Lost Archivist', msg: 'Ready to chat', time: '16:07' }
+  ]
+};
 
+// --- RENDER FUNCTIONS ---
 function renderChatList() {
   const el = document.getElementById("view-chats");
   if (!el) return;
+  
+  window.AppState.activeChat = null;
   el.innerHTML = "";
   
   const wrapper = document.createElement("div");
@@ -28,8 +24,7 @@ function renderChatList() {
   heading.textContent = "Your chats";
   wrapper.appendChild(heading);
   
-  const chats = getSavedChats();
-  chats.forEach(c => {
+  window.AppState.chats.forEach(c => {
     const card = document.createElement("div");
     card.style.background = "#150f2e";
     card.style.padding = "12px";
@@ -40,6 +35,7 @@ function renderChatList() {
     
     const title = document.createElement("b");
     title.style.color = "#fff";
+    title.style.display = "block";
     title.textContent = "💬 " + c.name;
     card.appendChild(title);
     
@@ -50,12 +46,11 @@ function renderChatList() {
     subtitle.textContent = c.msg;
     card.appendChild(subtitle);
     
+    // Encapsulated event handler - Direct State Trigger
     card.addEventListener("click", function(e) {
-      e.stopImmediatePropagation();
-      e.stopPropagation();
       e.preventDefault();
-      console.log("Card clicked for: ", c.name);
-      openActiveChat(c.name);
+      e.stopPropagation();
+      openActiveChat(c.id);
     });
     
     wrapper.appendChild(card);
@@ -64,7 +59,10 @@ function renderChatList() {
   el.appendChild(wrapper);
 }
 
-function openActiveChat(name) {
+function openActiveChat(chatId) {
+  const chat = window.AppState.chats.find(c => c.id === chatId) || { name: chatId };
+  window.AppState.activeChat = chatId;
+
   const el = document.getElementById("view-chats");
   if (!el) return;
   el.style.display = "block";
@@ -73,6 +71,7 @@ function openActiveChat(name) {
   const wrapper = document.createElement("div");
   wrapper.style.padding = "15px";
 
+  // Top Navigation Bar
   const topBar = document.createElement("div");
   topBar.style.display = "flex";
   topBar.style.alignItems = "center";
@@ -88,8 +87,6 @@ function openActiveChat(name) {
   backBtn.style.borderRadius = "6px";
   backBtn.style.cursor = "pointer";
   backBtn.addEventListener("click", function(e) {
-    e.stopImmediatePropagation();
-    e.stopPropagation();
     e.preventDefault();
     renderChatList();
   });
@@ -98,10 +95,11 @@ function openActiveChat(name) {
   const title = document.createElement("h3");
   title.style.color = "#fff";
   title.style.margin = "0";
-  title.textContent = "💬 " + name;
+  title.textContent = "💬 " + chat.name;
   topBar.appendChild(title);
   wrapper.appendChild(topBar);
 
+  // Chat Box Container
   const box = document.createElement("div");
   box.id = "chat-box";
   box.style.height = "320px";
@@ -119,10 +117,11 @@ function openActiveChat(name) {
   notice.style.borderRadius = "6px";
   notice.style.fontSize = "12px";
   notice.style.marginBottom = "8px";
-  notice.innerHTML = "✨ Active session loaded for <b>" + name + "</b>";
+  notice.innerHTML = "✨ Active session loaded for <b>" + chat.name + "</b>";
   box.appendChild(notice);
   wrapper.appendChild(box);
 
+  // Input Row
   const inputRow = document.createElement("div");
   inputRow.style.display = "flex";
   inputRow.style.gap = "8px";
@@ -149,10 +148,8 @@ function openActiveChat(name) {
   sendBtn.style.fontWeight = "bold";
   sendBtn.style.cursor = "pointer";
   sendBtn.addEventListener("click", function(e) {
-    e.stopImmediatePropagation();
-    e.stopPropagation();
     e.preventDefault();
-    sendMsg(name);
+    sendMsg(chat.name);
   });
   inputRow.appendChild(sendBtn);
 
@@ -207,16 +204,10 @@ function sendMsg(name) {
     aiMsg.textContent = "I received your message. Let us continue the story...";
     box.appendChild(aiMsg);
     box.scrollTop = box.scrollHeight;
-
-    let chats = getSavedChats();
-    let idx = chats.findIndex(c => c.name === name);
-    if (idx >= 0) { 
-      chats[idx].msg = "Last active: " + new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"}); 
-      localStorage.setItem("m_chats", JSON.stringify(chats)); 
-    }
   }, 1400);
 }
 
+// Global Exports
 window.openActiveChat = openActiveChat;
 window.renderChatList = renderChatList;
 window.sendMsg = sendMsg;
