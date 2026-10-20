@@ -302,3 +302,15 @@ function sendMsg(chatId) {
 window.openActiveChat = openActiveChat;
 window.renderChatList = renderChatList;
 window.sendMsg = sendMsg;
+
+// --- BULLETPROOF GLOBAL CARD INTERCEPTOR ---
+document.addEventListener("click", function(e) {
+  const card = e.target.closest("div");
+  if (card && card.textContent && card.textContent.includes("The Lost Archivist") && !card.closest("#chat-box") && window.AppState && window.AppState.currentView === "chats") {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof openActiveChat === "function") {
+      openActiveChat("lost-archivist");
+    }
+  }
+}, true);
