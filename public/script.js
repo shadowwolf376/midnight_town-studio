@@ -434,3 +434,18 @@ document.addEventListener("click", function(e) {
     }
   }
 }, true);
+
+// --- DIRECT CHATS NAV BUTTON OVERRIDE ---
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("button, div, span").forEach(el => {
+    if (el.textContent && el.textContent.trim() === "Chats" && !el.closest("#chat-box")) {
+      el.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof renderChatList === "function") {
+          renderChatList();
+        }
+      };
+    }
+  });
+});
