@@ -424,3 +424,13 @@ window.switchView = function(viewName) {
       }, true);
     }
   });
+
+// --- FORCE CHATS TAB TO RENDER DYNAMIC LIST ---
+document.addEventListener("click", function(e) {
+  const btn = e.target.closest("button, div");
+  if (btn && btn.textContent && btn.textContent.trim() === "Chats" && !btn.closest("#chat-box")) {
+    if (typeof renderChatList === "function") {
+      renderChatList();
+    }
+  }
+}, true);
