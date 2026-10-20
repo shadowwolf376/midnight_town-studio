@@ -52,6 +52,7 @@ function renderChatList() {
     card.appendChild(subtitle);
     
     card.addEventListener("click", function(e) {
+      e.stopImmediatePropagation();
       e.stopPropagation();
       e.preventDefault();
       openActiveChat(c.name);
@@ -86,6 +87,7 @@ function openActiveChat(name) {
   backBtn.style.borderRadius = "6px";
   backBtn.style.cursor = "pointer";
   backBtn.addEventListener("click", function(e) {
+    e.stopImmediatePropagation();
     e.stopPropagation();
     e.preventDefault();
     renderChatList();
@@ -146,6 +148,7 @@ function openActiveChat(name) {
   sendBtn.style.fontWeight = "bold";
   sendBtn.style.cursor = "pointer";
   sendBtn.addEventListener("click", function(e) {
+    e.stopImmediatePropagation();
     e.stopPropagation();
     e.preventDefault();
     sendMsg(name);
@@ -175,17 +178,18 @@ function sendMsg(name) {
   inEl.value = "";
   box.scrollTop = box.scrollHeight;
 
+  // Typing / Thinking Indicator
   const typingId = "typing-" + Date.now();
   const typingEl = document.createElement("div");
   typingEl.id = typingId;
   typingEl.style.background = "#251a52";
-  typingEl.style.color = "#aaa";
+  typingEl.style.color = "#ff6600";
   typingEl.style.padding = "8px";
   typingEl.style.borderRadius = "6px";
   typingEl.style.marginBottom = "6px";
   typingEl.style.border = "1px solid #2a1f52";
   typingEl.style.fontStyle = "italic";
-  typingEl.textContent = "The Lost Archivist is thinking...";
+  typingEl.textContent = name + " is thinking...";
   box.appendChild(typingEl);
   box.scrollTop = box.scrollHeight;
 
@@ -210,7 +214,7 @@ function sendMsg(name) {
       chats[idx].msg = "Last active: " + new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"}); 
       localStorage.setItem("m_chats", JSON.stringify(chats)); 
     }
-  }, 1200);
+  }, 1400);
 }
 
 window.openActiveChat = openActiveChat;
