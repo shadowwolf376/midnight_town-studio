@@ -482,7 +482,90 @@ window.sendMessage = async function() {
       observer.observe(document.body, { childList: true, subtree: true });
     });
   </script>
-  \n</body>
+  \n
+<script>
+  // Robust non-destructive chat persistence for Shadow Vale
+  (function() {
+    const STORAGE_KEY = "midnight_saved_sessions_v1";
+
+    function getSessions() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function saveSessions(sessions) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+      } catch(e) {}
+    }
+
+    // Capture active conversation data
+    function captureActiveChat() {
+      try {
+        const titleEl = document.querySelector(".chat-header h3, h2, .active-session-title");
+        const chatBox = document.querySelector(".chat-messages, [id*='chat']");
+        if (!chatBox || chatBox.innerHTML.trim() === "") return;
+
+        const title = titleEl ? titleEl.textContent.trim() : "Shadow Vale Session";
+        const htmlContent = chatBox.innerHTML;
+        
+        let sessions = getSessions();
+        const existing = sessions.find(s => s.title === title);
+        
+        if (existing) {
+          existing.htmlContent = htmlContent;
+          existing.updatedAt = new Date().toLocaleTimeString();
+        } else {
+          sessions.push({
+            id: "session_" + Date.now(),
+            title: title,
+            htmlContent: htmlContent,
+            updatedAt: new Date().toLocaleTimeString()
+          });
+        }
+        saveSessions(sessions);
+      } catch(e) {}
+    }
+
+    // Render saved chats into the "Your Chats" view when open
+    function updateChatsView() {
+      try {
+        const container = document.querySelector(".your-chats-list, [id*='chats'], main");
+        if (!container) return;
+
+        // Check if we are on the Chats tab
+        if (window.location.hash.includes("chats") || document.body.textContent.includes("Your chats")) {
+          const sessions = getSessions();
+          if (sessions.length > 0) {
+            let listDiv = document.getElementById("persistent-chats-container");
+            if (!listDiv) {
+              listDiv = document.createElement("div");
+              listDiv.id = "persistent-chats-container";
+              listDiv.style.cssText = "margin-top: 15px; display: flex; flex-direction: column; gap: 10px;";
+              container.appendChild(listDiv);
+            }
+            
+            listDiv.innerHTML = sessions.map(s => `
+              <div class="saved-chat-card" data-id="${s.id}" style="background:#130f26; border:1px solid #432c7a; padding:15px; border-radius:12px; cursor:pointer;">
+                <h4 style="margin:0 0 5px 0; color:#f3e8ff; font-size:15px;">${s.title}</h4>
+                <p style="margin:0; color:#aaa; font-size:12px;">Last active: ${s.updatedAt}</p>
+              </div>
+            `).join("");
+          }
+        }
+      } catch(e) {}
+    }
+
+    // Auto-save every few seconds while chatting
+    setInterval(captureActiveChat, 2000);
+    setInterval(updateChatsView, 1000);
+  })();
+</script>
+
+</body>
 </html>
 <script>function openSettings() {
     const modal = document.getElementById('settings-modal') || document.getElementById('settings-view');
