@@ -120,6 +120,9 @@ window.openSavedChat = function(chatId) {
   }
 </style>
 
+<script>
+  try { localStorage.removeItem("midnight_saved_session_v3"); } catch(e) {}
+</script>
 </head>
 <body>
 
