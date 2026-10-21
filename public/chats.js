@@ -140,6 +140,11 @@ function openActiveChat(chatId) {
     }
 
     msgEl.innerHTML = formatRP(m.text);
+        if (m.sender !== "user" && typeof addMessageControls === "function") {
+            addMessageControls(msgEl, () => {
+                alert("Regenerate triggered!");
+            });
+        }
     box.appendChild(msgEl);
   });
 
