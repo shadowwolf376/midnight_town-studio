@@ -1003,6 +1003,35 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+
+<!-- Custom English Notification Toast -->
+<div id="custom-toast" style="display:none; position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#130f26; border:1px solid #7c5dfa; color:#fff; padding:12px 20px; border-radius:10px; font-size:14px; box-shadow:0 8px 20px rgba(0,0,0,0.6); z-index:10000; transition:opacity 0.3s ease;">
+  <span id="toast-message">API settings saved successfully!</span>
+</div>
+
+<script>
+// Replace browser alert globally with custom English toast
+window.showToast = function(msg) {
+  const toast = document.getElementById("custom-toast");
+  const toastMsg = document.getElementById("toast-message");
+  if (!toast || !toastMsg) return;
+
+  toastMsg.textContent = msg;
+  toast.style.display = "block";
+  toast.style.opacity = "1";
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => { toast.style.display = "none"; }, 300);
+  }, 2500);
+};
+
+// Override standard browser alert()
+window.alert = function(msg) {
+  window.showToast(msg);
+};
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
