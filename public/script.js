@@ -157,3 +157,15 @@ window.addMessageControls = addMessageControls;
     actionsDiv.appendChild(retryBtn);
     messageElement.appendChild(actionsDiv);
 }
+
+// Auto-sync chat rendering when returning to active sessions
+document.addEventListener("click", (e) => {
+    const target = e.target.closest("[data-view], button, a");
+    if (target && (target.innerText.includes("Archivist") || target.innerText.includes("Chats"))) {
+        setTimeout(() => {
+            if (typeof openActiveChat === "function") {
+                openActiveChat("lost-archivist");
+            }
+        }, 50);
+    }
+});
