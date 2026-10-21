@@ -120,3 +120,12 @@ function sendMsg(chatId) {
 }
 
 window.openActiveChat = openActiveChat;
+
+// Automatically open the active chat on page load
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        if (typeof openActiveChat === "function") {
+            openActiveChat("lost-archivist");
+        }
+    }, 100);
+});
