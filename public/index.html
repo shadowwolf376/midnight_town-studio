@@ -982,6 +982,27 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+
+<script>
+window.restoreChatHistoryOnLoad = function() {
+  const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+  if (sessions.length === 0) return;
+
+  // Use the most recently updated session or active session
+  const activeSession = sessions[0];
+  window.currentActiveChatId = activeSession.id;
+
+  const chatMessages = document.getElementById("chat-messages");
+  if (chatMessages && activeSession.chatHistoryHtml) {
+    chatMessages.innerHTML = activeSession.chatHistoryHtml;
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  window.restoreChatHistoryOnLoad();
+});
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
