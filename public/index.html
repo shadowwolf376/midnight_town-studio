@@ -613,8 +613,8 @@ window.sendMessage = async function() {
         try {
           const card = e.target.closest(".saved-chat-card");
           if (card) {
-            const startBtn = document.querySelector("button, a");
-            if (startBtn) startBtn.click();
+            const chatId = card.getAttribute("data-id");
+          if (chatId && typeof openActiveChat === "function") { openActiveChat(chatId); }
           }
         } catch(err) {}
       });
