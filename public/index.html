@@ -123,6 +123,64 @@ window.openSavedChat = function(chatId) {
 <script>
   try { localStorage.removeItem("midnight_saved_session_v3"); } catch(e) {}
 </script>
+
+<script>
+window.renderSavedChats = function() {
+  const container = document.querySelector("#saved-chats-list") || document.querySelector(".saved-chats-container");
+  if (!container) return;
+
+  const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+  
+  if (sessions.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding: 40px; color: #8a8d9b; background: #130f26; border-radius: 12px; border: 1px dashed #432c7a;">
+      <p style="margin-bottom:10px;">No active chat sessions found.</p>
+      <button onclick="createNewChatSession()" style="background:#7c5dfa; color:white; border:none; padding:8px 16px; border-radius:8px; cursor:pointer;">+ Create New Chat</button>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = sessions.map(s => `
+    <div class="saved-chat-card" style="background:#130f26; border:1px solid #432c7a; padding:15px; border-radius:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+      <div onclick="openSavedChat('${s.id}')" style="cursor:pointer; flex-grow:1;">
+        <h4 style="margin:0; color:#fff; font-size:16px;">💬 ${s.title || "Untitled Chat"}</h4>
+        <p style="margin:4px 0 0; color:#8a8d9b; font-size:12px;">Last active: ${s.updatedAt || "Just now"}</p>
+      </div>
+      <button onclick="deleteSavedChat('${s.id}')" style="background:#ff4d4d22; color:#ff4d4d; border:1px solid #ff4d4d; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:12px; margin-left:10px;">
+        🗑 Delete
+      </button>
+    </div>
+  `).join("");
+};
+
+window.deleteSavedChat = function(chatId) {
+  let sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+  sessions = sessions.filter(s => s.id !== chatId);
+  localStorage.setItem("midnight_saved_session_v3", JSON.stringify(sessions));
+  renderSavedChats();
+};
+
+window.createNewChatSession = function() {
+  const title = prompt("Enter a title for your new chat session:", "New Roleplay Session");
+  if (!title) return;
+  
+  const newChat = {
+    id: "chat-" + Date.now(),
+    title: title,
+    updatedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    htmlContent: `<div style="padding:15px; background:#130f26; border-radius:10px; color:#fff;">Started conversation for: <b>${title}</b></div>`
+  };
+
+  const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+  sessions.unshift(newChat);
+  localStorage.setItem("midnight_saved_session_v3", JSON.stringify(sessions));
+  renderSavedChats();
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderSavedChats();
+});
+</script>
+
 </head>
 <body>
 
