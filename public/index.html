@@ -915,6 +915,41 @@ document.addEventListener("click", function(e) {
 });
 </script>
 
+
+<script>
+window.updateInitialChatMessage = function(backstoryText) {
+  const chatMessages = document.getElementById("chat-messages");
+  if (!chatMessages) return;
+
+  // Find first message box or create one
+  let firstMsg = chatMessages.querySelector("div");
+  const backstoryContent = backstoryText || "Step into the candlelight of the lost starlight archive and unearth forgotten realms.";
+
+  if (firstMsg) {
+    firstMsg.innerHTML = `<span style="color: #7c5dfa; font-weight: bold; display: block; margin-bottom: 6px;">📖 Backstory</span>${backstoryContent}`;
+  } else {
+    chatMessages.innerHTML = `
+      <div style="background:#1b1535; border:1px solid #432c7a; border-radius:12px; padding:14px; color:#fff; font-size:14px;">
+        <span style="color: #7c5dfa; font-weight: bold; display: block; margin-bottom: 6px;">📖 Backstory</span>
+        ${backstoryContent}
+      </div>
+    `;
+  }
+};
+
+// Replace static text directly in DOM on load
+document.addEventListener("DOMContentLoaded", () => {
+  const welcomeTextRegex = /Welcome to the chat! Type a message below to begin your journey\./gi;
+  const chatMessages = document.getElementById("chat-messages");
+  if (chatMessages && welcomeTextRegex.test(chatMessages.innerHTML)) {
+    chatMessages.innerHTML = chatMessages.innerHTML.replace(
+      welcomeTextRegex,
+      "Step into the candlelight of the lost starlight archive and unearth forgotten realms."
+    );
+  }
+});
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
