@@ -75,14 +75,20 @@
     </style>
     <script src="utils.js">
 window.switchView = function(viewName) {
-    const views = document.querySelectorAll("[data-view], .view-section, main > div, section");
-    views.forEach(v => {
-        if (v.id === viewName || v.getAttribute("data-view") === viewName || v.classList.contains(viewName)) {
-            v.style.display = "block";
-        } else if (v.id && (v.id.includes("chat") || v.id.includes("create") || v.id.includes("home"))) {
-            v.style.display = "none";
-        }
-    });
+  // Hide all view sections
+  document.querySelectorAll(".view-section, main > div").forEach(el => {
+    if (el.id && el.id.includes("-view")) el.style.display = "none";
+  });
+  
+  // Show target view
+  const target = document.getElementById(viewName + "-view") || document.getElementById(viewName);
+  if (target) {
+    target.style.display = "block";
+  }
+  
+  if (viewName === "chats" && typeof renderSavedChats === "function") {
+    renderSavedChats();
+  }
 };
 
 window.openSavedChat = function(chatId) {
@@ -677,13 +683,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-<div id="chats-view-section" style="padding: 20px; max-width: 600px; margin: 0 auto;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; width: 100%;">
+<div id="saved-chats-list"></div>
+</div>
+
+
+<div id="chats-view" class="view-section" style="display: none; padding: 20px; max-width: 600px; margin: 0 auto;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <h2 style="color:#fff; margin:0; font-size:20px;">Your Active Chats</h2>
     <button onclick="createNewChatSession()" style="background:#7c5dfa; color:white; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; font-size:14px; font-weight:bold; white-space:nowrap;">+ Create New</button>
   </div>
   <div id="saved-chats-list"></div>
-</div><div id="saved-chats-list"></div>
 </div>
 
 </body>
