@@ -120,21 +120,38 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // --- Message Action Controls Helper ---
+
 function addMessageControls(messageElement, onRegenerate) {
     if (!messageElement || messageElement.querySelector('.message-actions')) return;
 
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'message-actions';
-    actionsDiv.style.cssText = 'display: flex; gap: 8px; margin-top: 6px; font-size: 12px; opacity: 0.7;';
+    actionsDiv.style.cssText = 'display: flex; gap: 12px; margin-top: 8px; font-size: 12px; opacity: 0.8;';
 
-    const retryBtn = document.createElement('button');
-    retryBtn.textContent = '🔄 Regenerate';
-    retryBtn.style.cssText = 'background: none; border: none; color: #b19cd9; cursor: pointer; padding: 0; font-family: inherit; font-size: 12px;';
-    
-    retryBtn.addEventListener('click', () => {
-        if (typeof onRegenerate === 'function') {
-            onRegenerate();
-        }
+    // Copy Button
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = '📋 Copy';
+    copyBtn.style.cssText = 'background: none; border: none; color: #b19cd9; cursor: pointer; padding: 0; font-family: inherit;';
+    copyBtn.onclick = () => {
+        navigator.clipboard.writeText(messageElement.innerText);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = '📋 Copy', 2000);
+    };
+
+    // Regenerate Button
+    const regenBtn = document.createElement('button');
+    regenBtn.textContent = '🔄 Regenerate';
+    regenBtn.style.cssText = 'background: none; border: none; color: #b19cd9; cursor: pointer; padding: 0; font-family: inherit;';
+    regenBtn.onclick = () => {
+        if (typeof onRegenerate === 'function') onRegenerate();
+    };
+
+    actionsDiv.appendChild(copyBtn);
+    actionsDiv.appendChild(regenBtn);
+    messageElement.appendChild(actionsDiv);
+}
+window.addMessageControls = addMessageControls;
+
     });
 
     actionsDiv.appendChild(retryBtn);
