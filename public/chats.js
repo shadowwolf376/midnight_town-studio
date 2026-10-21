@@ -201,3 +201,17 @@ window.addMessageControls = addMessageControls;
     messageElement.appendChild(actionsDiv);
 }
 window.addMessageControls = addMessageControls;
+
+// Remember last open chat across refreshes
+window.addEventListener("DOMContentLoaded", () => {
+    const activeId = localStorage.getItem("mt_active_chat") || "lost-archivist";
+    if (typeof openActiveChat === "function") {
+        openActiveChat(activeId);
+    }
+});
+
+const originalOpen = window.openActiveChat || openActiveChat;
+window.openActiveChat = function(chatId) {
+    localStorage.setItem("mt_active_chat", chatId);
+    if (originalOpen) originalOpen(chatId);
+};
