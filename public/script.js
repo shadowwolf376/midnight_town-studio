@@ -47,3 +47,16 @@ function renderEmptyState(containerId, message) {
         `;
     }
 }
+
+// --- Professional Empty State Helper ---
+function renderEmptyState(containerId, message) {
+    const container = document.getElementById(containerId);
+    if (container && container.innerHTML.trim() === '') {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px 20px; color: #a0a0c0; font-family: inherit;">
+                <p style="font-size: 15px; margin-bottom: 8px;">📂 Nothing here yet</p>
+                <p style="font-size: 13px; opacity: 0.7;">${message}</p>
+            </div>
+        `;
+    }
+}
