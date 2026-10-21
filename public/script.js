@@ -103,3 +103,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // If you have a specific function handling your send click, you can also manually call:
     // showTypingIndicator('your-chat-container-id');
 });
+
+// --- Safe Auto-trigger Typing Indicator ---
+document.addEventListener("DOMContentLoaded", () => {
+    // Find the send button safely by checking button text
+    const buttons = Array.from(document.querySelectorAll("button"));
+    const sendBtn = buttons.find(b => b.textContent.includes("Send"));
+
+    if (sendBtn) {
+        sendBtn.addEventListener("click", () => {
+            // Find the chat area or default to body to show the typing dots
+            const chatBox = document.querySelector(".chat-container") || document.body;
+            showTypingIndicator(chatBox.id || "chat-box");
+        });
+    }
+});
