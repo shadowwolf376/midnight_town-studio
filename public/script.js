@@ -94,3 +94,12 @@ function hideTypingIndicator() {
         typingDiv.remove();
     }
 }
+
+// --- Auto-trigger Typing Indicator on Send ---
+document.addEventListener("DOMContentLoaded", () => {
+    const sendBtn = document.querySelector("button:has-text('Send'), button"); // Targets your send button
+    const chatContainer = document.querySelector(".chat-messages, [style*='background']") || document.body;
+
+    // If you have a specific function handling your send click, you can also manually call:
+    // showTypingIndicator('your-chat-container-id');
+});
