@@ -790,6 +790,48 @@ window.renderSavedChats = function() {
 };
 </script>
 
+
+<script>
+window.openSavedChat = function(chatId) {
+  const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+  const session = sessions.find(s => s.id === chatId);
+
+  if (!session) return;
+
+  // 1. Hide all views and reveal the chat room view
+  document.querySelectorAll(".app-view, .view-section, [id^="view-"], #chats-view").forEach(el => {
+    el.style.display = "none";
+  });
+  
+  const chatRoom = document.getElementById("view-chat-room");
+  if (chatRoom) {
+    chatRoom.style.display = "block";
+  }
+
+  // 2. Update Header Title
+  const headerTitle = chatRoom ? chatRoom.querySelector("h2, h3, h4, .chat-title") : null;
+  if (headerTitle && session.title) {
+    headerTitle.textContent = session.title;
+  }
+
+  // 3. Inject Backstory & Welcome Message into #chat-messages
+  const chatMessages = document.getElementById("chat-messages");
+  if (chatMessages) {
+    const backstory = session.description || "Step into the candlelight of the lost starlight archive and unearth forgotten realms.";
+    
+    chatMessages.innerHTML = `
+      <div style="background:#130f26; border:1px solid #432c7a; border-radius:12px; padding:16px; margin-bottom:12px;">
+        <h4 style="color:#7c5dfa; margin:0 0 6px 0; font-size:14px; text-transform:uppercase; letter-spacing:0.5px;">📖 Scenario Backstory</h4>
+        <p style="color:#c3c5d4; font-size:14px; margin:0; line-height:1.5;">${backstory}</p>
+      </div>
+      <div style="background:#1b1535; border:1px solid #432c7a; border-radius:12px; padding:14px; color:#fff; font-size:14px;">
+        Welcome to the chat! Type a message below to begin your journey.
+      </div>
+    `;
+  }
+};
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
