@@ -684,6 +684,32 @@ window.switchView = function(viewName) {
   </div>
 </div>
 
+
+<script>
+window.openSavedChat = function(chatId) {
+  const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+  const session = sessions.find(s => s.id === chatId);
+  
+  if (!session) {
+    alert("Session not found!");
+    return;
+  }
+
+  // Look for active chat UI container or create temporary view
+  let chatBox = document.querySelector(".chat-messages") || document.querySelector("[id*="chat"]");
+  if (chatBox) {
+    chatBox.innerHTML = session.htmlContent || `<div style="padding:20px; color:#fff;">Chat session loaded for: ${session.title}</div>`;
+  }
+
+  // Switch view to active chat screen
+  if (typeof window.switchView === "function") {
+    window.switchView("chat");
+  } else {
+    alert("Opening chat session: " + session.title);
+  }
+};
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
