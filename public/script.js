@@ -118,3 +118,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// --- Message Action Controls Helper ---
+function addMessageControls(messageElement, onRegenerate) {
+    if (!messageElement || messageElement.querySelector('.message-actions')) return;
+
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'message-actions';
+    actionsDiv.style.cssText = 'display: flex; gap: 8px; margin-top: 6px; font-size: 12px; opacity: 0.7;';
+
+    const retryBtn = document.createElement('button');
+    retryBtn.textContent = '🔄 Regenerate';
+    retryBtn.style.cssText = 'background: none; border: none; color: #b19cd9; cursor: pointer; padding: 0; font-family: inherit; font-size: 12px;';
+    
+    retryBtn.addEventListener('click', () => {
+        if (typeof onRegenerate === 'function') {
+            onRegenerate();
+        }
+    });
+
+    actionsDiv.appendChild(retryBtn);
+    messageElement.appendChild(actionsDiv);
+}
