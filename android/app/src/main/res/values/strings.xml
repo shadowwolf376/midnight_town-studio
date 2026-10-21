@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MidnightTown</string>
+    <string name="title_activity_main">MidnightTown</string>
+    <string name="package_name">com.midnight.town</string>
+    <string name="custom_url_scheme">com.midnight.town</string>
+</resources>
