@@ -74,45 +74,18 @@
         }
     </style>
     <script src="utils.js">
-<script>
 window.switchView = function(viewName) {
-  // Hide all potential view containers
-  const views = document.querySelectorAll(".view-section, main > div, #chats-view, #home-view, #create-view");
-  views.forEach(v => {
-    if (v.id === "chats-view") {
-      v.style.display = (viewName === "chats") ? "block" : "none";
-    } else if (v.id && (v.id.includes("home") || v.id.includes("create") || v.id.includes("explore") || v.id.includes("profile"))) {
-      v.style.display = (v.id.includes(viewName)) ? "block" : "none";
-    }
-  });
-
-  // If switching to chats, render the list
-  if (viewName === "chats" && typeof renderSavedChats === "function") {
-    renderSavedChats();
-  }
-};
-</script>
-
-window.openSavedChat = function(chatId) {
-    try {
-        const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
-        const session = sessions.find(s => s.id === chatId || s.title === "The Lost Archivist");
-        const chatBox = document.querySelector(".chat-messages, [id*='chat']");
-        
-        if (session && chatBox) {
-            chatBox.innerHTML = session.htmlContent;
+    const views = document.querySelectorAll("[data-view], .view-section, main > div, section");
+    views.forEach(v => {
+        if (v.id === viewName || v.getAttribute("data-view") === viewName || v.classList.contains(viewName)) {
+            v.style.display = "block";
+        } else if (v.id && (v.id.includes("chat") || v.id.includes("create") || v.id.includes("home"))) {
+            v.style.display = "none";
         }
-        
-        // Switch view to chat screen
-        if (typeof openActiveChat === "function") {
-            openActiveChat(chatId);
-        } else {
-            switchView("chat");
-        }
-    } catch(e) {
-        console.error("Error opening chat:", e);
-    }
+    });
 };
+
+
 
 </script>
 
@@ -127,67 +100,6 @@ window.openSavedChat = function(chatId) {
     border-color: #581c87 !important;
   }
 </style>
-
-<script>
-  try { localStorage.removeItem("midnight_saved_session_v3"); } catch(e) {}
-</script>
-
-<script>
-window.renderSavedChats = function() {
-  const container = document.querySelector("#saved-chats-list") || document.querySelector(".saved-chats-container");
-  if (!container) return;
-
-  const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
-  
-  if (sessions.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding: 40px; color: #8a8d9b; background: #130f26; border-radius: 12px; border: 1px dashed #432c7a;">
-      <p style="margin-bottom:10px;">No active chat sessions found.</p>
-      <button onclick="createNewChatSession()" style="background:#7c5dfa; color:white; border:none; padding:8px 16px; border-radius:8px; cursor:pointer;">+ Create New Chat</button>
-    </div>`;
-    return;
-  }
-
-  container.innerHTML = sessions.map(s => `
-    <div class="saved-chat-card" style="background:#130f26; border:1px solid #432c7a; padding:15px; border-radius:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-      <div onclick="openSavedChat('${s.id}')" style="cursor:pointer; flex-grow:1;">
-        <h4 style="margin:0; color:#fff; font-size:16px;">💬 ${s.title || "Untitled Chat"}</h4>
-        <p style="margin:4px 0 0; color:#8a8d9b; font-size:12px;">Last active: ${s.updatedAt || "Just now"}</p>
-      </div>
-      <button onclick="deleteSavedChat('${s.id}')" style="background:#ff4d4d22; color:#ff4d4d; border:1px solid #ff4d4d; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:12px; margin-left:10px;">
-        🗑 Delete
-      </button>
-    </div>
-  `).join("");
-};
-
-window.deleteSavedChat = function(chatId) {
-  let sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
-  sessions = sessions.filter(s => s.id !== chatId);
-  localStorage.setItem("midnight_saved_session_v3", JSON.stringify(sessions));
-  renderSavedChats();
-};
-
-window.createNewChatSession = function() {
-  const title = prompt("Enter a title for your new chat session:", "New Roleplay Session");
-  if (!title) return;
-  
-  const newChat = {
-    id: "chat-" + Date.now(),
-    title: title,
-    updatedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    htmlContent: `<div style="padding:15px; background:#130f26; border-radius:10px; color:#fff;">Started conversation for: <b>${title}</b></div>`
-  };
-
-  const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
-  sessions.unshift(newChat);
-  localStorage.setItem("midnight_saved_session_v3", JSON.stringify(sessions));
-  renderSavedChats();
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderSavedChats();
-});
-</script>
 
 </head>
 <body>
@@ -627,7 +539,87 @@ window.sendMessage = async function() {
             }
             
             listDiv.innerHTML = sessions.map(s => `
-              `
+              <div class="saved-chat-card" data-id="${s.id}" style="background:#130f26; border:1px solid #432c7a; padding:15px; border-radius:12px; cursor:pointer;">
+                <h4 style="margin:0 0 5px 0; color:#f3e8ff; font-size:15px;">${s.title}</h4>
+                <p style="margin:0; color:#aaa; font-size:12px;">Last active: ${s.updatedAt}</p>
+              </div>
+            `).join("");
+          }
+        }
+      } catch(e) {}
+    }
+
+    // Auto-save every few seconds while chatting
+    setInterval(captureActiveChat, 2000);
+    setInterval(updateChatsView, 1000);
+  })();
+</script>
+
+
+<script>
+  (function() {
+    try {
+      const STORAGE_KEY = "midnight_saved_sessions_v3";
+
+      function getSessions() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } 
+        catch(e) { return []; }
+      }
+
+      function saveSessions(sessions) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions)); } 
+        catch(e) {}
+      }
+
+      function captureActiveChat() {
+        try {
+          const chatBox = document.querySelector(".chat-messages, [id*='chat']");
+          if (!chatBox || !chatBox.innerHTML || chatBox.innerHTML.trim() === "") return;
+
+          const title = document.querySelector(".chat-header h2, .scenario-title")?.textContent?.trim() || "The Lost Archivist";
+      const chatId = "chat-" + (existing?.id || Date.now());
+          const htmlContent = chatBox.innerHTML;
+          
+          let sessions = getSessions();
+          const existing = sessions.find(s => s.title === title);
+          
+          if (existing) {
+            existing.htmlContent = htmlContent;
+      if (!existing.id) existing.id = chatId;
+            existing.updatedAt = new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"});
+          } else {
+            sessions.push({
+              id: "session_" + Date.now(),
+              title: title,
+              htmlContent: htmlContent,
+              updatedAt: new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"})
+            });
+          }
+          saveSessions(sessions);
+        } catch(e) {}
+      }
+
+      function updateChatsView() {
+        try {
+          const container = document.querySelector(".your-chats-list, [id*='chats'], main");
+          if (!container) return;
+
+          if (window.location.hash.includes("chats") || (document.body && document.body.textContent.includes("Your chats"))) {
+            const sessions = getSessions();
+            if (sessions.length > 0) {
+              let listDiv = document.getElementById("persistent-chats-container");
+              if (!listDiv) {
+                listDiv = document.createElement("div");
+                listDiv.id = "persistent-chats-container";
+                listDiv.style.cssText = "margin-top: 15px; display: flex; flex-direction: column; gap: 10px;";
+                container.appendChild(listDiv);
+              }
+              
+              listDiv.innerHTML = sessions.map(s => 
+                `<div class="saved-chat-card" onclick="openSavedChat('${s.id || 'lost-archivist'}')" style="background:#130f26; border:1px solid #432c7a; padding:15px; border-radius:12px; cursor:pointer;">
+                  <h4 style="margin:0 0 5px 0; color:#f3e8ff; font-size:15px; pointer-events:none;">💬 ${s.title}</h4>
+                  <p style="margin:0; color:#aaa; font-size:12px; pointer-events:none;">Last active: ${s.updatedAt}</p>
+                </div>`
               ).join("");
             }
           }
@@ -655,52 +647,6 @@ window.sendMessage = async function() {
 
 
 
-
-
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  // Find the actual Chats tab view container
-  let chatsTab = document.querySelector("#chats-view, [data-view="chats"], .chats-section") || document.querySelector("#saved-chats-list");
-  
-  if (!chatsTab) {
-    // If no dedicated section exists, create a clean dedicated view for Chats tab
-    const container = document.createElement("div");
-    container.id = "saved-chats-list";
-    container.style.cssText = "padding: 16px; max-width: 600px; margin: 0 auto;";
-    
-    // Append to main layout container
-    const main = document.querySelector("main") || document.body;
-    main.appendChild(container);
-  } else {
-    chatsTab.id = "saved-chats-list";
-    chatsTab.style.cssText = "padding: 16px; max-width: 600px; margin: 0 auto;";
-  }
-
-  if (typeof renderSavedChats === "function") {
-    renderSavedChats();
-  }
-});
-</script>
-
-
-
-<div id="saved-chats-list"></div>
-</div>
-
-
-
-  <div id="saved-chats-list"></div>
-</div>
-
-
-<div id="chats-view" class="view-section" style="display: none; padding: 20px; max-width: 600px; margin: 0 auto;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; width: 100%;">
-    <h2 style="color:#fff; margin:0; font-size:20px;">Your Active Chats</h2>
-    <button onclick="createNewChatSession()" style="background:#7c5dfa; color:white; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; font-size:14px; font-weight:bold; white-space:nowrap;">+ Create New</button>
-  </div>
-  <div id="saved-chats-list"></div>
-</div>
 
 </body>
 </html>
