@@ -613,7 +613,7 @@ window.sendMessage = async function() {
         try {
           const card = e.target.closest(".saved-chat-card");
           if (card) {
-            const chatId = card.getAttribute("data-id");
+            const chatId = card.getAttribute("data-id") || "lost-archivist";
           if (chatId && typeof openActiveChat === "function") { openActiveChat(chatId); }
           }
         } catch(err) {}
