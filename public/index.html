@@ -73,7 +73,40 @@
             gap: 2px; 
         }
     </style>
-    <script src="utils.js"></script>
+    <script src="utils.js">
+window.switchView = function(viewName) {
+    const views = document.querySelectorAll("[data-view], .view-section, main > div, section");
+    views.forEach(v => {
+        if (v.id === viewName || v.getAttribute("data-view") === viewName || v.classList.contains(viewName)) {
+            v.style.display = "block";
+        } else if (v.id && (v.id.includes("chat") || v.id.includes("create") || v.id.includes("home"))) {
+            v.style.display = "none";
+        }
+    });
+};
+
+window.openSavedChat = function(chatId) {
+    try {
+        const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+        const session = sessions.find(s => s.id === chatId || s.title === "The Lost Archivist");
+        const chatBox = document.querySelector(".chat-messages, [id*='chat']");
+        
+        if (session && chatBox) {
+            chatBox.innerHTML = session.htmlContent;
+        }
+        
+        // Switch view to chat screen
+        if (typeof openActiveChat === "function") {
+            openActiveChat(chatId);
+        } else {
+            switchView("chat");
+        }
+    } catch(e) {
+        console.error("Error opening chat:", e);
+    }
+};
+
+</script>
 
 <style id="royal-purple-theme">
   /* Vibrant Royal Purple Theme Override */
@@ -599,7 +632,7 @@ window.sendMessage = async function() {
               }
               
               listDiv.innerHTML = sessions.map(s => 
-                `<div class="saved-chat-card" data-id="${s.id}" style="background:#130f26; border:1px solid #432c7a; padding:15px; border-radius:12px; cursor:pointer;">
+                `<div class="saved-chat-card" onclick="openSavedChat('${s.id || 'lost-archivist'}')" style="background:#130f26; border:1px solid #432c7a; padding:15px; border-radius:12px; cursor:pointer;">
                   <h4 style="margin:0 0 5px 0; color:#f3e8ff; font-size:15px; pointer-events:none;">💬 ${s.title}</h4>
                   <p style="margin:0; color:#aaa; font-size:12px; pointer-events:none;">Last active: ${s.updatedAt}</p>
                 </div>`
