@@ -689,23 +689,34 @@ window.switchView = function(viewName) {
 window.openSavedChat = function(chatId) {
   const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
   const session = sessions.find(s => s.id === chatId);
+
+  if (!session) return;
+
+  // Find active chat display container
+  const chatMessages = document.querySelector(".chat-messages") || document.querySelector("[id*="chat"]");
   
-  if (!session) {
-    alert("Session not found!");
-    return;
+  if (chatMessages) {
+    const backstory = session.description || "Step into the candlelight of the lost starlight archive and unearth forgotten realms.";
+    
+    chatMessages.innerHTML = `
+      <div class="scenario-backstory" style="background:#130f26; border:1px solid #432c7a; border-radius:12px; padding:16px; margin-bottom:16px;">
+        <h4 style="color:#7c5dfa; margin:0 0 6px 0; font-size:14px; text-transform:uppercase; letter-spacing:0.5px;">📖 Scenario Backstory</h4>
+        <p style="color:#c3c5d4; font-size:14px; margin:0; line-height:1.5;">${backstory}</p>
+      </div>
+      <div class="welcome-message" style="background:#1b1535; border:1px solid #432c7a; border-radius:12px; padding:14px; color:#fff; font-size:14px;">
+        Welcome to the chat! Type a message below to begin your journey.
+      </div>
+    `;
   }
 
-  // Look for active chat UI container or create temporary view
-  let chatBox = document.querySelector(".chat-messages") || document.querySelector("[id*="chat"]");
-  if (chatBox) {
-    chatBox.innerHTML = session.htmlContent || `<div style="padding:20px; color:#fff;">Chat session loaded for: ${session.title}</div>`;
+  // Set chat title in header if element exists
+  const chatHeaderTitle = document.querySelector(".chat-header-title") || document.querySelector("h2, h3, h4");
+  if (chatHeaderTitle && session.title) {
+    chatHeaderTitle.textContent = session.title;
   }
 
-  // Switch view to active chat screen
   if (typeof window.switchView === "function") {
     window.switchView("chat");
-  } else {
-    alert("Opening chat session: " + session.title);
   }
 };
 </script>
