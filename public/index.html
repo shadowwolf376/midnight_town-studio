@@ -832,6 +832,89 @@ window.openSavedChat = function(chatId) {
 };
 </script>
 
+
+<script>
+window.openSavedChat = function(chatId) {
+  const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+  const session = sessions.find(s => s.id === chatId) || { title: "The Lost Archivist", description: "Step into the candlelight of the lost starlight archive and unearth forgotten realms." };
+
+  // 1. Hide all views and reveal view-chat-room
+  document.querySelectorAll(".app-view, .view-section, [id^="view-"], #chats-view").forEach(el => {
+    el.style.display = "none";
+  });
+  
+  const chatRoom = document.getElementById("view-chat-room");
+  if (chatRoom) {
+    chatRoom.style.display = "block";
+  }
+
+  // 2. Set Header Title
+  const headerTitle = chatRoom ? chatRoom.querySelector("h2, h3, h4, .chat-title") : null;
+  if (headerTitle) {
+    headerTitle.textContent = session.title;
+  }
+
+  // 3. Inject Backstory into #chat-messages
+  const chatMessages = document.getElementById("chat-messages");
+  if (chatMessages) {
+    const backstory = session.description || "Step into the candlelight of the lost starlight archive and unearth forgotten realms.";
+    chatMessages.innerHTML = `
+      <div style="background:#130f26; border:1px solid #432c7a; border-radius:12px; padding:16px; margin-bottom:12px;">
+        <h4 style="color:#7c5dfa; margin:0 0 6px 0; font-size:14px; text-transform:uppercase; letter-spacing:0.5px;">📖 Scenario Backstory</h4>
+        <p style="color:#c3c5d4; font-size:14px; margin:0; line-height:1.5;">${backstory}</p>
+      </div>
+      <div style="background:#1b1535; border:1px solid #432c7a; border-radius:12px; padding:14px; color:#fff; font-size:14px;">
+        Welcome to the chat! Type a message below to begin your journey.
+      </div>
+    `;
+  }
+};
+
+window.renderSavedChats = function() {
+  const container = document.querySelector("#saved-chats-list");
+  if (!container) return;
+
+  const sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+
+  if (sessions.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding: 40px; color: #8a8d9b; background: #130f26; border-radius: 12px; border: 1px dashed #432c7a;">
+      <p style="margin-bottom:10px;">No active chat sessions found.</p>
+      <button onclick="createNewChatSession()" style="background:#7c5dfa; color:white; border:none; padding:8px 16px; border-radius:8px; cursor:pointer;">+ Create New Chat</button>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = sessions.map(s => `
+    <div class="saved-chat-card" data-chat-id="${s.id}" style="background:#130f26; border:1px solid #432c7a; padding:15px; border-radius:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+      <div class="card-click-area" style="flex-grow:1;">
+        <h4 style="margin:0; color:#fff; font-size:16px;">💬 ${s.title || "Untitled Chat"}</h4>
+        <p style="margin:4px 0 0; color:#8a8d9b; font-size:12px;">Last active: ${s.updatedAt || "Just now"}</p>
+      </div>
+      <button class="card-delete-btn" data-delete-id="${s.id}" style="background:#ff4d4d22; color:#ff4d4d; border:1px solid #ff4d4d; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:12px; margin-left:10px;">
+        🗑 Delete
+      </button>
+    </div>
+  `).join("");
+};
+
+// Global Event Delegation listener for guaranteed tapping
+document.addEventListener("click", function(e) {
+  const deleteBtn = e.target.closest(".card-delete-btn");
+  if (deleteBtn) {
+    e.stopPropagation();
+    const chatId = deleteBtn.getAttribute("data-delete-id");
+    if (typeof deleteSavedChat === "function") deleteSavedChat(chatId);
+    return;
+  }
+
+  const card = e.target.closest(".saved-chat-card");
+  if (card) {
+    const chatId = card.getAttribute("data-chat-id");
+    if (chatId) openSavedChat(chatId);
+  }
+});
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
