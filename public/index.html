@@ -950,6 +950,38 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+
+<script>
+// Function to save current chat HTML state
+window.saveCurrentChatHistory = function(chatId) {
+  if (!chatId) return;
+  const chatMessages = document.getElementById("chat-messages");
+  if (!chatMessages) return;
+
+  let sessions = JSON.parse(localStorage.getItem("midnight_saved_session_v3") || "[]");
+  const index = sessions.findIndex(s => s.id === chatId);
+
+  if (index !== -1) {
+    sessions[index].chatHistoryHtml = chatMessages.innerHTML;
+    sessions[index].updatedAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    localStorage.setItem("midnight_saved_session_v3", JSON.stringify(sessions));
+  }
+};
+
+// Auto-save whenever a new message is added to #chat-messages
+const observer = new MutationObserver(() => {
+  const activeSessionId = window.currentActiveChatId || "default-session";
+  window.saveCurrentChatHistory(activeSessionId);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const chatMessages = document.getElementById("chat-messages");
+  if (chatMessages) {
+    observer.observe(chatMessages, { childList: true, subtree: true });
+  }
+});
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
