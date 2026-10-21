@@ -525,6 +525,7 @@ window.sendMessage = async function() {
         
         if (existing) {
           existing.htmlContent = htmlContent;
+      if (!existing.id) existing.id = chatId;
           existing.updatedAt = new Date().toLocaleTimeString();
         } else {
           sessions.push({
@@ -594,7 +595,8 @@ window.sendMessage = async function() {
           const chatBox = document.querySelector(".chat-messages, [id*='chat']");
           if (!chatBox || !chatBox.innerHTML || chatBox.innerHTML.trim() === "") return;
 
-          const title = "The Lost Archivist";
+          const title = document.querySelector(".chat-header h2, .scenario-title")?.textContent?.trim() || "The Lost Archivist";
+      const chatId = "chat-" + (existing?.id || Date.now());
           const htmlContent = chatBox.innerHTML;
           
           let sessions = getSessions();
@@ -602,6 +604,7 @@ window.sendMessage = async function() {
           
           if (existing) {
             existing.htmlContent = htmlContent;
+      if (!existing.id) existing.id = chatId;
             existing.updatedAt = new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"});
           } else {
             sessions.push({
