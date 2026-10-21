@@ -60,3 +60,16 @@ function renderEmptyState(containerId, message) {
         `;
     }
 }
+
+// --- Skeleton Loader Helper ---
+function renderSkeletonLoader(containerId) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.innerHTML = `
+            <div style="padding: 20px; opacity: 0.6;">
+                <div style="height: 16px; background: rgba(255, 255, 255, 0.15); border-radius: 4px; margin-bottom: 12px; width: 80%;"></div>
+                <div style="height: 16px; background: rgba(255, 255, 255, 0.15); border-radius: 4px; width: 50%;"></div>
+            </div>
+        `;
+    }
+}
