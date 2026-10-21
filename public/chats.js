@@ -129,3 +129,34 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }, 100);
 });
+
+// --- MESSAGE ACTION CONTROLS ---
+function addMessageControls(messageElement, onRegenerate) {
+    if (!messageElement || messageElement.querySelector('.message-actions')) return;
+
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'message-actions';
+    actionsDiv.style.cssText = 'display: flex; gap: 12px; margin-top: 8px; font-size: 12px; opacity: 0.8;';
+
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = '📋 Copy';
+    copyBtn.style.cssText = 'background: none; border: none; color: #b19cd9; cursor: pointer; padding: 0; font-family: inherit;';
+    copyBtn.onclick = () => {
+        navigator.clipboard.writeText(messageElement.innerText);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = '📋 Copy', 2000);
+    };
+
+    actionsDiv.appendChild(copyBtn);
+    
+    if (onRegenerate) {
+        const regenBtn = document.createElement('button');
+        regenBtn.textContent = '🔄 Regenerate';
+        regenBtn.style.cssText = 'background: none; border: none; color: #b19cd9; cursor: pointer; padding: 0; font-family: inherit;';
+        regenBtn.onclick = () => onRegenerate();
+        actionsDiv.appendChild(regenBtn);
+    }
+
+    messageElement.appendChild(actionsDiv);
+}
+window.addMessageControls = addMessageControls;
