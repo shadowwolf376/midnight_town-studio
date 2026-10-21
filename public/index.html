@@ -1032,6 +1032,37 @@ window.alert = function(msg) {
 };
 </script>
 
+
+<script>
+window.appendAiMessage = function(text) {
+  const chatMessages = document.getElementById("chat-messages");
+  if (!chatMessages) return;
+
+  // Clean out raw safety metadata or system logs if passed by mistake
+  if (!text || text.includes("User Safety:") || text.includes("Safety:")) {
+    text = "*The Archivist considers your words carefully before speaking...*";
+  }
+
+  const aiBubble = document.createElement("div");
+  aiBubble.style.cssText = "background:#1b1535; border:1px solid #432c7a; border-radius:12px; padding:14px; color:#fff; font-size:14px; margin-top:10px;";
+  aiBubble.innerHTML = text;
+
+  // Remove any leftover metadata bubbles before adding the real response
+  chatMessages.querySelectorAll("div").forEach(el => {
+    if (el.textContent.includes("User Safety:")) {
+      el.remove();
+    }
+  });
+
+  chatMessages.appendChild(aiBubble);
+
+  // Trigger history save after message is appended
+  if (typeof window.persistCurrentChat === "function") {
+    window.persistCurrentChat();
+  }
+};
+</script>
+
 </body>
 </html>
 <script>function openSettings() {
