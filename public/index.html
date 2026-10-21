@@ -649,21 +649,32 @@ window.sendMessage = async function() {
 
 
 
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  let listEl = document.querySelector("#saved-chats-list") || document.querySelector(".saved-chats-container");
-  if (!listEl) {
-    listEl = document.createElement("div");
-    listEl.id = "saved-chats-list";
-    listEl.style.cssText = "padding: 20px; max-width: 600px; margin: 0 auto;";
-    const mainContent = document.querySelector("main") || document.body;
-    mainContent.appendChild(listEl);
+  // Find the actual Chats tab view container
+  let chatsTab = document.querySelector("#chats-view, [data-view="chats"], .chats-section") || document.querySelector("#saved-chats-list");
+  
+  if (!chatsTab) {
+    // If no dedicated section exists, create a clean dedicated view for Chats tab
+    const container = document.createElement("div");
+    container.id = "saved-chats-list";
+    container.style.cssText = "padding: 16px; max-width: 600px; margin: 0 auto;";
+    
+    // Append to main layout container
+    const main = document.querySelector("main") || document.body;
+    main.appendChild(container);
+  } else {
+    chatsTab.id = "saved-chats-list";
+    chatsTab.style.cssText = "padding: 16px; max-width: 600px; margin: 0 auto;";
   }
+
   if (typeof renderSavedChats === "function") {
     renderSavedChats();
   }
 });
 </script>
+
 
 </body>
 </html>
