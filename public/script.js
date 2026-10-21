@@ -73,3 +73,24 @@ function renderSkeletonLoader(containerId) {
         `;
     }
 }
+
+// --- Typing Indicator Helper ---
+function showTypingIndicator(containerId) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        hideTypingIndicator(); // Prevent duplicates
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'typing-indicator';
+        typingDiv.style.cssText = 'padding: 10px 15px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); border-radius: 12px; width: fit-content; color: #b19cd9; font-style: italic; font-size: 14px; animation: pulse 1.5s infinite;';
+        typingDiv.innerHTML = '✨ Character is typing...';
+        container.appendChild(typingDiv);
+        container.scrollTop = container.scrollHeight;
+    }
+}
+
+function hideTypingIndicator() {
+    const typingDiv = document.getElementById('typing-indicator');
+    if (typingDiv) {
+        typingDiv.remove();
+    }
+}
