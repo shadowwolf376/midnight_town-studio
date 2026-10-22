@@ -1,33 +1,31 @@
-// --- MIDNIGHTTOWN CHAT CONTROLLER ---
+// --- MIDNIGHTTOWN CHAT LIST & STORAGE ---
 
 function getSavedChats() {
   try {
     const data = localStorage.getItem("mt_chats");
-    if (data && JSON.parse(data).length > 0) return JSON.parse(data);
+    if (data && JSON.parse(data).length > 0) {
+      return JSON.parse(data);
+    }
   } catch(e) {}
 
-  const initial = [
+  // Initial default chat if storage is empty
+  const defaultChats = [
     {
       id: "lost-archivist",
       name: "The Lost Archivist",
       avatar: "🕯️",
       updatedAt: "Today",
       history: [
-        { sender: "ai", text: "*The room is dim, illuminated only by the flickering glow...* Welcome to Shadow Vale, traveler." }
-      ]
-    },
-    {
-      id: "harley-sawyer",
-      name: "Harley Sawyer",
-      avatar: "👁️",
-      updatedAt: "07/31",
-      history: [
-        { sender: "ai", text: "*Sam pushes off from the doorframe and takes a step closer...*" }
+        { sender: "ai", text: "*The room is dim, illuminated only by the flickering glow of candlelight...* Welcome to Shadow Vale, traveler." }
       ]
     }
   ];
-  localStorage.setItem("mt_chats", JSON.stringify(initial));
-  return initial;
+  localStorage.setItem("mt_chats", JSON.stringify(defaultChats));
+  return defaultChats;
+}
+
+function saveChats(chats) {
+  localStorage.setItem("mt_chats", JSON.stringify(chats));
 }
 
 function renderChatsList() {
@@ -35,34 +33,47 @@ function renderChatsList() {
   if (!container) return;
 
   const chats = getSavedChats();
-
-  // Forcefully overwrite whatever static HTML is inside
-  let html = "";
+  container.innerHTML = "";
 
   chats.forEach(chat => {
     const lastMsg = chat.history.length > 0 ? chat.history[chat.history.length - 1].text : "No messages yet";
-    const shortSnippet = lastMsg.length > 45 ? lastMsg.substring(0, 45) + "..." : lastMsg;
+    const shortSnippet = lastMsg.length > 50 ? lastMsg.substring(0, 50) + "..." : lastMsg;
 
-    html += `
-      <div onclick="openActiveChat('${chat.id}'); if(typeof switchView==='function')switchView('chat-room');" 
-           style="display:flex; align-items:center; gap:14px; padding:14px; background:#110c24; border:1px solid #2d1f52; border-radius:14px; margin-bottom:12px; cursor:pointer;">
-        <div style="font-size:22px; background:#20153f; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-          ${chat.avatar || "💬"}
+    const card = document.createElement("div");
+    card.style.cssText = `
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: #110c24;
+      border: 1px solid #2d1f52;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    `;
+
+    card.innerHTML = `
+      <div style="font-size:22px; background:#20153f; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        ${chat.avatar || "💬"}
+      </div>
+      <div style="flex:1; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <strong style="color:#fff; font-size:16px;">${chat.name}</strong>
+          <span style="font-size:12px; color:#777;">${chat.updatedAt || "Recent"}</span>
         </div>
-        <div style="flex:1; overflow:hidden;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <strong style="color:#fff; font-size:16px;">${chat.name}</strong>
-            <span style="font-size:12px; color:#777;">${chat.updatedAt || "Recent"}</span>
-          </div>
-          <div style="font-size:13px; color:#aaa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-            ${shortSnippet}
-          </div>
+        <div style="font-size:13px; color:#aaa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          ${shortSnippet}
         </div>
       </div>
     `;
-  });
 
-  container.innerHTML = html;
+    card.onclick = () => {
+      if (typeof openActiveChat === "function") openActiveChat(chat.id);
+      if (typeof switchView === "function") switchView("chat-room");
+    };
+
+    container.appendChild(card);
+  });
 }
 
 function openActiveChat(chatId) {
@@ -101,9 +112,10 @@ function openActiveChat(chatId) {
   box.scrollTop = box.scrollHeight;
 }
 
-// Automatically render when DOM loads and when window gains focus
-document.addEventListener("DOMContentLoaded", renderChatsList);
-window.addEventListener("focus", renderChatsList);
+document.addEventListener("DOMContentLoaded", () => {
+  renderChatsList();
+});
 
 window.renderChatsList = renderChatsList;
 window.openActiveChat = openActiveChat;
+window.getSavedChats = getSavedChats;
