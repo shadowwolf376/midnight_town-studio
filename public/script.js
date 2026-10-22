@@ -169,3 +169,27 @@ document.addEventListener("click", (e) => {
         }, 50);
     }
 });
+
+
+function startScenarioChat(scenarioName, avatarIcon) {
+    let chats = [];
+    try {
+        chats = JSON.parse(localStorage.getItem("mt_chats")) || [];
+    } catch(e) {}
+
+    const newId = "chat-" + Date.now();
+    const newChat = {
+        id: newId,
+        name: scenarioName || "New Roleplay Session",
+        avatar: avatarIcon || "💬",
+        updatedAt: "Just now",
+        history: [{ sender: "ai", text: "*Welcome to " + (scenarioName || "the session") + ".*" }]
+    };
+
+    chats.unshift(newChat);
+    localStorage.setItem("mt_chats", JSON.stringify(chats));
+    localStorage.setItem("mt_active_chat", newId);
+
+    if (typeof openActiveChat === "function") openActiveChat(newId);
+    if (typeof switchView === "function") switchView("chat-room");
+}
