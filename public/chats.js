@@ -9,6 +9,8 @@ function getSavedChats() {
   const initial = [{
     id: "lost-archivist",
     name: "The Lost Archivist",
+    avatar: "🕯️",
+    updatedAt: "Today",
     history: [
       { sender: "ai", text: "*The room is dim, illuminated only by the flickering glow...* Welcome to Shadow Vale, traveler." }
     ]
@@ -19,6 +21,60 @@ function getSavedChats() {
 
 function saveChats(chats) {
   localStorage.setItem("mt_chats", JSON.stringify(chats));
+}
+
+// Render Emochi-style list on the Chats tab
+function renderChatsList() {
+  const container = document.getElementById("saved-chats-list");
+  if (!container) return;
+
+  const chats = getSavedChats();
+  container.innerHTML = "";
+
+  if (chats.length === 0) {
+    container.innerHTML = `<div style="text-align:center; color:#888; padding:20px;">No active chat sessions found.</div>`;
+    return;
+  }
+
+  chats.forEach(chat => {
+    const lastMsg = chat.history.length > 0 ? chat.history[chat.history.length - 1].text : "No messages yet";
+    const shortSnippet = lastMsg.length > 45 ? lastMsg.substring(0, 45) + "..." : lastMsg;
+
+    const item = document.createElement("div");
+    item.style.cssText = `
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #130f26;
+      border: 1px solid #432c7a;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    `;
+
+    item.innerHTML = `
+      <div style="font-size:24px; background:#2b204e; width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        ${chat.avatar || "💬"}
+      </div>
+      <div style="flex:1; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="color:#fff; font-size:15px;">${chat.name}</strong>
+          <span style="font-size:11px; color:#888;">${chat.updatedAt || "Active"}</span>
+        </div>
+        <div style="font-size:12px; color:#aaa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px;">
+          ${shortSnippet}
+        </div>
+      </div>
+    `;
+
+    item.onclick = () => {
+      openActiveChat(chat.id);
+      if (typeof switchView === "function") switchView("chat-room");
+    };
+
+    container.appendChild(item);
+  });
 }
 
 function addMessageControls(element, msg, chatId, index) {
@@ -40,7 +96,7 @@ function addMessageControls(element, msg, chatId, index) {
   };
   actions.appendChild(copyBtn);
 
-  // Regenerate (AI only)
+  // Regenerate
   if (msg.sender === "ai") {
     const regenBtn = document.createElement("span");
     regenBtn.innerHTML = "🔄 Regenerate";
@@ -89,7 +145,7 @@ function openActiveChat(chatId) {
   let chat = chats.find(c => c.id === chatId);
 
   if (!chat) {
-    chat = { id: chatId, name: "Active Session", history: [] };
+    chat = { id: chatId, name: "Active Session", avatar: "💬", history: [] };
     chats.push(chat);
     saveChats(chats);
   }
@@ -117,14 +173,16 @@ function openActiveChat(chatId) {
   });
 
   box.scrollTop = box.scrollHeight;
+  renderChatsList();
 }
 
-// Auto-restore chat on boot
 window.addEventListener("DOMContentLoaded", () => {
+  renderChatsList();
   const activeId = localStorage.getItem("mt_active_chat") || "lost-archivist";
   openActiveChat(activeId);
 });
 
 window.openActiveChat = openActiveChat;
+window.renderChatsList = renderChatsList;
 window.getSavedChats = getSavedChats;
 window.saveChats = saveChats;
